@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS buscyl.usuarios (
     apellidos         VARCHAR(150) NOT NULL,
     dni               VARCHAR(9)   NOT NULL,
     telefono          VARCHAR(15)  NOT NULL,
-    contrasena        VARCHAR(255) NOT NULL,
+    contrasena        VARCHAR(255) DEFAULT NULL,
     fecha_nacimiento  DATE        NOT NULL,
     fecha_registro    DATE        NOT NULL,
     id_empresa        BIGINT      NULL,
