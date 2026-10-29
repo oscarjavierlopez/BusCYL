@@ -14,14 +14,14 @@ public class RolServiceImpl implements RolService {
     @Autowired
     private RolRepository rolRepository;
 
-    public List<RolResponse> getRoles(){
+    @Override
+    public List<RolResponse> getRoles() {
         return rolRepository.findAll()
-        .stream()
-        .map(rol -> new RolResponse(
-            rol.getId(),
-            rol.getNombre()
-        ))
-        .toList();
+                .stream()
+                .map(rol -> new RolResponse(
+                        rol.getId(),
+                        rol.getNombre()))
+                .toList();
     }
 
 }
