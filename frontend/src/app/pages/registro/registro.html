@@ -1,0 +1,123 @@
+<main class="registro-page">
+  <section class="registro-card" aria-labelledby="registro-title">
+    <header class="registro-header">
+      <p class="registro-eyebrow">BusCyL</p>
+      <h1 id="registro-title">Registro de usuario</h1>
+      <p>Cumplimente los siguientes datos para crear su cuenta.</p>
+    </header>
+
+    <form [formGroup]="registroForm" (ngSubmit)="submit()" novalidate>
+      <div class="form-grid">
+        <div class="form-field form-field-full">
+          <label for="email">Correo electrónico</label>
+          <input id="email" type="email" formControlName="email" maxlength="150" autocomplete="email" />
+          @if (registroForm.controls.email.touched && registroForm.controls.email.invalid) {
+            <p class="field-error" role="alert">
+              @if (registroForm.controls.email.errors?.['required']) { El correo electrónico es obligatorio. }
+              @if (registroForm.controls.email.errors?.['email']) { Introduzca un correo electrónico válido. }
+              @if (registroForm.controls.email.errors?.['maxlength']) { El correo electrónico no puede superar los 150 caracteres. }
+            </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="idRol">Rol</label>
+          <select id="idRol" formControlName="idRol">
+            <option value="" disabled>Seleccione un rol</option>
+            <option value="admin">Admin</option>
+            <option value="pasajero">Pasajero</option>
+          </select>
+          @if (registroForm.controls.idRol.touched && registroForm.controls.idRol.invalid) {
+            <p class="field-error" role="alert">Seleccione un rol.</p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="dni">DNI</label>
+          <input id="dni" type="text" formControlName="dni" maxlength="9" autocomplete="off" />
+          @if (registroForm.controls.dni.touched && registroForm.controls.dni.invalid) {
+            <p class="field-error" role="alert">
+              @if (registroForm.controls.dni.errors?.['required']) { El DNI es obligatorio. }
+              @if (registroForm.controls.dni.errors?.['maxlength']) { El DNI no puede superar los 9 caracteres. }
+              @if (registroForm.controls.dni.errors?.['pattern']) { el campo dni no tiene un formato válido }
+            </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" type="text" formControlName="nombre" maxlength="100" autocomplete="given-name" />
+          @if (registroForm.controls.nombre.touched && registroForm.controls.nombre.invalid) {
+            <p class="field-error" role="alert">
+              @if (registroForm.controls.nombre.errors?.['required']) { El nombre es obligatorio. }
+              @if (registroForm.controls.nombre.errors?.['maxlength']) { El nombre no puede superar los 100 caracteres. }
+            </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="apellidos">Apellidos</label>
+          <input id="apellidos" type="text" formControlName="apellidos" maxlength="150" autocomplete="family-name" />
+          @if (registroForm.controls.apellidos.touched && registroForm.controls.apellidos.invalid) {
+            <p class="field-error" role="alert">
+              @if (registroForm.controls.apellidos.errors?.['required']) { Los apellidos son obligatorios. }
+              @if (registroForm.controls.apellidos.errors?.['maxlength']) { Los apellidos no pueden superar los 150 caracteres. }
+            </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="telefono">Teléfono</label>
+          <input id="telefono" type="tel" formControlName="telefono" maxlength="15" autocomplete="tel" />
+          @if (registroForm.controls.telefono.touched && registroForm.controls.telefono.invalid) {
+            <p class="field-error" role="alert">
+              @if (registroForm.controls.telefono.errors?.['required']) { El teléfono es obligatorio. }
+              @if (registroForm.controls.telefono.errors?.['maxlength']) { El teléfono no puede superar los 15 caracteres. }
+              @if (registroForm.controls.telefono.errors?.['pattern']) { el campo telefono no tiene un formato válido }
+            </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="fechaNacimiento">Fecha de nacimiento</label>
+          <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento" autocomplete="bday" />
+          @if (registroForm.controls.fechaNacimiento.touched && registroForm.controls.fechaNacimiento.invalid) {
+            <p class="field-error" role="alert">La fecha de nacimiento es obligatoria.</p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="fechaRegistro">Fecha de registro</label>
+          <input id="fechaRegistro" type="date" formControlName="fechaRegistro" />
+          @if (registroForm.controls.fechaRegistro.touched && registroForm.controls.fechaRegistro.invalid) {
+            <p class="field-error" role="alert">La fecha de registro es obligatoria.</p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="contrasena">Contraseña</label>
+          <input id="contrasena" type="password" formControlName="contrasena" maxlength="255" autocomplete="new-password" />
+          @if (registroForm.controls.contrasena.touched && registroForm.controls.contrasena.invalid) {
+            <p class="field-error" role="alert">
+              @if (registroForm.controls.contrasena.errors?.['required']) { La contraseña es obligatoria. }
+              @if (registroForm.controls.contrasena.errors?.['maxlength']) { La contraseña no puede superar los 255 caracteres. }
+            </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="repetirContrasena">Repetir contraseña</label>
+          <input id="repetirContrasena" type="password" formControlName="repetirContrasena" maxlength="255" autocomplete="new-password" />
+          @if (registroForm.controls.repetirContrasena.touched && registroForm.controls.repetirContrasena.errors?.['required']) {
+            <p class="field-error" role="alert">Debe repetir la contraseña.</p>
+          }
+          @if (registroForm.controls.repetirContrasena.touched && registroForm.errors?.['contrasenasNoCoinciden']) {
+            <p class="field-error" role="alert">Las contraseñas no coinciden.</p>
+          }
+        </div>
+      </div>
+
+      <button type="submit" class="submit-button">Registrarse</button>
+    </form>
+  </section>
+</main>

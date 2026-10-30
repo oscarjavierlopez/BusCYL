@@ -110,6 +110,10 @@
 }
 
 .boton-cuenta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     min-height: 38px;
     padding: 0 16px;
     border: 1px solid #ba0c2f;
