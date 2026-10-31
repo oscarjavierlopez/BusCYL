@@ -1,4 +1,4 @@
-package com.buscyl.api.service;
+package com.buscyl.api.Auth;
 
 public interface AuthService {
 

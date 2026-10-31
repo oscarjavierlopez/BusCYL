@@ -1,4 +1,4 @@
-package com.buscyl.api.dto;
+package com.buscyl.api.Auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
