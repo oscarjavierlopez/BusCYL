@@ -75,14 +75,6 @@
         </div>
 
         <div class="form-field">
-          <label for="fechaRegistro">Fecha de registro</label>
-          <input id="fechaRegistro" type="date" formControlName="fechaRegistro" />
-          @if (registroForm.controls.fechaRegistro.touched && registroForm.controls.fechaRegistro.invalid) {
-            <p class="field-error" role="alert">La fecha de registro es obligatoria.</p>
-          }
-        </div>
-
-        <div class="form-field">
           <label for="contrasena">Contraseña</label>
           <input id="contrasena" type="password" formControlName="contrasena" minlength="8" maxlength="255" autocomplete="new-password" />
           @if (registroForm.controls.contrasena.touched && registroForm.controls.contrasena.invalid) {
