@@ -21,18 +21,6 @@
         </div>
 
         <div class="form-field">
-          <label for="idRol">Rol</label>
-          <select id="idRol" formControlName="idRol">
-            <option value="" disabled>Seleccione un rol</option>
-            <option value="admin">Admin</option>
-            <option value="pasajero">Pasajero</option>
-          </select>
-          @if (registroForm.controls.idRol.touched && registroForm.controls.idRol.invalid) {
-            <p class="field-error" role="alert">Seleccione un rol.</p>
-          }
-        </div>
-
-        <div class="form-field">
           <label for="dni">DNI</label>
           <input id="dni" type="text" formControlName="dni" maxlength="9" autocomplete="off" />
           @if (registroForm.controls.dni.touched && registroForm.controls.dni.invalid) {

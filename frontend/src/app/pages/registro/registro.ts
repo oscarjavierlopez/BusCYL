@@ -20,7 +20,6 @@ export class Registro {
   registroForm = this.formBuilder.nonNullable.group(
     {
       email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]],
-      idRol: ['', [Validators.required]],
       nombre: ['', [Validators.required, Validators.maxLength(100)]],
       apellidos: ['', [Validators.required, Validators.maxLength(150)]],
       dni: ['', [Validators.required, Validators.maxLength(9), Validators.pattern(/^\d{8}[a-zA-Z]$/)]],
