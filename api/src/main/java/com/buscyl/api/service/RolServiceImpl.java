@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.buscyl.api.dto.RolResponse;
+import com.buscyl.api.entity.Rol;
 import com.buscyl.api.repository.RolRepository;
 
 @Service
@@ -22,6 +23,11 @@ public class RolServiceImpl implements RolService {
                         rol.getId(),
                         rol.getNombre()))
                 .toList();
+    }
+
+    @Override
+    public Rol getIdRolByName(String nombre) {
+        return rolRepository.findByNombre(nombre.toLowerCase()).get();
     }
 
 }
