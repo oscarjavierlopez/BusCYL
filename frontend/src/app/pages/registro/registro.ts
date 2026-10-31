@@ -35,7 +35,6 @@ export class Registro {
       ],
       repetirContrasena: ['', [Validators.required]],
       fechaNacimiento: ['', [Validators.required]],
-      fechaRegistro: ['', [Validators.required]],
     },
     { validators: this.contrasenasCoinciden },
   );
