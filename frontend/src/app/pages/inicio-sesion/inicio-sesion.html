@@ -1,0 +1,36 @@
+<main class="inicio-sesion-page">
+  <section class="inicio-sesion-card" aria-labelledby="inicio-sesion-title">
+    <header class="inicio-sesion-header">
+      <p class="inicio-sesion-eyebrow">BusCyL</p>
+      <h1 id="inicio-sesion-title">Iniciar sesión</h1>
+      <p>Introduzca los datos con los que se registró para acceder a su cuenta.</p>
+    </header>
+
+    <form [formGroup]="inicioSesionForm" (ngSubmit)="submit()" novalidate>
+      <div class="form-field">
+        <label for="email">Correo electrónico</label>
+        <input id="email" type="email" formControlName="email" maxlength="150" autocomplete="email" />
+        @if (inicioSesionForm.controls.email.touched && inicioSesionForm.controls.email.invalid) {
+          <p class="field-error" role="alert">
+            @if (inicioSesionForm.controls.email.errors?.['required']) { El correo electrónico es obligatorio. }
+            @if (inicioSesionForm.controls.email.errors?.['email']) { Introduzca un correo electrónico válido. }
+            @if (inicioSesionForm.controls.email.errors?.['maxlength']) { El correo electrónico no puede superar los 150 caracteres. }
+          </p>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="contrasena">Contraseña</label>
+        <input id="contrasena" type="password" formControlName="contrasena" maxlength="255" autocomplete="current-password" />
+        @if (inicioSesionForm.controls.contrasena.touched && inicioSesionForm.controls.contrasena.invalid) {
+          <p class="field-error" role="alert">
+            @if (inicioSesionForm.controls.contrasena.errors?.['required']) { La contraseña es obligatoria. }
+            @if (inicioSesionForm.controls.contrasena.errors?.['maxlength']) { La contraseña no puede superar los 255 caracteres. }
+          </p>
+        }
+      </div>
+
+      <button type="submit" class="submit-button">Acceder</button>
+    </form>
+  </section>
+</main>
