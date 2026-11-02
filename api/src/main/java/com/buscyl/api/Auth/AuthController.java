@@ -1,5 +1,6 @@
 package com.buscyl.api.Auth;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,27 +9,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired 
+    @Autowired
     private AuthService authService;
 
     @PostMapping("/login")
-    public String login(@RequestBody String entity) {
-        //TODO: process POST request
-        
-        return entity;
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+
+        return ResponseEntity.ok(authService.login(request));
     }
-    
+
     @PostMapping("/register")
-    public String register(@RequestBody String entity) {
-        //TODO: process POST request
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
         
-        return entity;
+        return ResponseEntity.ok(authService.register(request));
     }
-    
+
 }

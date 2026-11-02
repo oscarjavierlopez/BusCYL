@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Locale;
 
 @Entity
 @Getter 
@@ -30,4 +31,8 @@ public class Rol {
 
     @OneToMany(mappedBy = "rol")
     private List<Usuario> usuarios;
+
+    public String getAuthority() {
+    return "ROLE_" + nombre.toUpperCase(Locale.ROOT).replace(' ', '_');
+}
 }
