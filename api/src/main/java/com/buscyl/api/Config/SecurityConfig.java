@@ -2,6 +2,7 @@ package com.buscyl.api.Config;
 
 import static jakarta.servlet.DispatcherType.ERROR;
 import static jakarta.servlet.DispatcherType.FORWARD;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 import java.beans.BeanProperty;
 
@@ -35,6 +36,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http){
         return http
         .csrf(csrf-> csrf.disable())
+        .cors(withDefaults())
         .authorizeHttpRequests(authRequest -> 
             authRequest
             .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
