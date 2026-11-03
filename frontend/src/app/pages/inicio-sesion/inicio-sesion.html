@@ -21,11 +21,22 @@
 
       <div class="form-field">
         <label for="contrasena">Contraseña</label>
-        <input id="contrasena" type="password" formControlName="contrasena" maxlength="255" autocomplete="current-password" />
+        <div class="password-input">
+          <input id="contrasena" [type]="mostrarContrasena ? 'text' : 'password'" formControlName="contrasena" maxlength="255" autocomplete="current-password" />
+          <button type="button" class="password-toggle" [attr.aria-label]="mostrarContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'" [attr.aria-pressed]="mostrarContrasena" (click)="alternarVisibilidadContrasena()">
+            <i class="bi bi-eye-fill" aria-hidden="true"></i>
+          </button>
+        </div>
         @if (inicioSesionForm.controls.contrasena.touched && inicioSesionForm.controls.contrasena.invalid) {
           <p class="field-error" role="alert">
             @if (inicioSesionForm.controls.contrasena.errors?.['required']) { La contraseña es obligatoria. }
             @if (inicioSesionForm.controls.contrasena.errors?.['maxlength']) { La contraseña no puede superar los 255 caracteres. }
+          </p>
+        }
+
+        @if (mostrarErrorLogin()) {
+          <p class="field-error" role="alert">
+            Usuario o contraseña incorrectos
           </p>
         }
       </div>

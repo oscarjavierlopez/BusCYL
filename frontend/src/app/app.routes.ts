@@ -11,4 +11,7 @@ export const routes: Routes = [
     {
         path: 'inicio-sesion', loadComponent: () => import('./pages/inicio-sesion/inicio-sesion').then(m => m.InicioSesion),
     },
+    {
+        path: 'private', loadComponent: () => import('./pages/private/layout/layout').then(m => m.Layout),
+    },
 ];

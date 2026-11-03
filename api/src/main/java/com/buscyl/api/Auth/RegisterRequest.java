@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 
@@ -19,7 +20,7 @@ public record RegisterRequest(
 
         @NotBlank(message = "El telefono es obligatorio") @Pattern(regexp = "^\\d{9}$", message = "El telefono no cumple un formato válido") String telefono,
 
-        @NotBlank(message = "La fecha de nacimiento es obligatoria") @Past(message = "La fecha de nacimiento no es válida") LocalDate fechaNacimiento,
+        @NotNull (message = "La fecha de nacimiento es obligatoria") @Past(message = "La fecha de nacimiento no es válida") LocalDate fechaNacimiento,
 
         @NotBlank(message = "La contraseña es obligatoria") @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=(?:.*\\d){2})(?=(?:.*[^A-Za-z0-9\\s]){2}).{8,}$", message = "La contraseña no cumple un formato válido") String contrasena) {
 

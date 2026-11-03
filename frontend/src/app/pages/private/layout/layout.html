@@ -1,0 +1,32 @@
+<div class="private-layout">
+  <nav class="private-nav" aria-label="Navegación principal">
+    <a class="home-button" [routerLink]="['/']" aria-label="Ir a inicio" title="Inicio">
+      <i class="bi bi-house-door-fill" aria-hidden="true"></i>
+    </a>
+
+    <div class="nav-actions">
+      <button class="logout-button" type="button" (click)="logout()">
+        <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+        <span>Cerrar sesión</span>
+      </button>
+
+      <button class="user-button" type="button" aria-label="Información de usuario" title="Información de usuario">
+        {{ inicialesUsuario() }}
+      </button>
+    </div>
+  </nav>
+
+  <main class="private-content">
+    <router-outlet />
+  </main>
+
+  <footer class="private-footer">
+    <div class="footer-brand">Junta de Castilla y León</div>
+    <div class="footer-links" aria-label="Información institucional">
+      <span>Aviso legal</span>
+      <span>Accesibilidad</span>
+      <span>Protección de datos</span>
+      <span>Contacto</span>
+    </div>
+  </footer>
+</div>

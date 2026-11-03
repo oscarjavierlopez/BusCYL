@@ -1,5 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { RegistroRequest } from '../../models/registro-request';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro',
@@ -9,12 +12,29 @@ import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Va
 })
 export class Registro {
   private formBuilder = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  mostrarContrasena: boolean = false;
+  mostrarRepetirContrasena: boolean = false;
 
   private contrasenasCoinciden = (control: AbstractControl): ValidationErrors | null => {
     const contrasena = control.get('contrasena')?.value;
     const repetirContrasena = control.get('repetirContrasena')?.value;
 
     return contrasena === repetirContrasena ? null : { contrasenasNoCoinciden: true };
+  };
+
+  private fechaNacimientoPasada = (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) {
+      return null;
+    }
+
+    const fechaNacimiento = new Date(`${control.value}T00:00:00`);
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    return fechaNacimiento < hoy ? null : { fechaNoPasada: true };
   };
 
   registroForm = this.formBuilder.nonNullable.group(
@@ -34,10 +54,43 @@ export class Registro {
         ],
       ],
       repetirContrasena: ['', [Validators.required]],
-      fechaNacimiento: ['', [Validators.required]],
+      fechaNacimiento: ['', [Validators.required, this.fechaNacimientoPasada]],
     },
     { validators: this.contrasenasCoinciden },
   );
 
-  submit(): void {}
+  submit(): void {
+    if (this.registroForm.valid) {
+      let registroRequest: RegistroRequest = {
+        email: this.registroForm.value.email!,
+        dni: this.registroForm.value.dni!,
+        nombre: this.registroForm.value.nombre!,
+        apellidos: this.registroForm.value.apellidos!,
+        telefono: this.registroForm.value.telefono!,
+        fechaNacimiento: this.registroForm.value.fechaNacimiento!,
+        contrasena: this.registroForm.value.contrasena!
+      }
+      this.authService.register(registroRequest)
+        .subscribe({
+          next: (authResponse) => {
+            this.router.navigate(["/private"]);
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
+    }
+    else {
+      this.registroForm.markAllAsTouched();
+    }
+  }
+
+  alternarVisibilidadContrasena(campo: 'contrasena' | 'repetirContrasena'): void {
+    if (campo === 'contrasena') {
+      this.mostrarContrasena = !this.mostrarContrasena;
+      return;
+    }
+
+    this.mostrarRepetirContrasena = !this.mostrarRepetirContrasena;
+  }
 }
