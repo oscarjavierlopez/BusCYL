@@ -1,3 +1,34 @@
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
 body {
   margin: 0;
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  padding-right: 3rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.2rem;
+  display: grid;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  color: #292929;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  place-items: center;
+  transform: translateY(-50%);
+}
+
+.password-toggle:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0;
 }

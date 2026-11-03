@@ -13,7 +13,7 @@ import com.buscyl.api.dto.RolResponse;
 import com.buscyl.api.service.RolService;
 
 @RestController
-@CrossOrigin(origins = "*", methods= {RequestMethod.GET})
+@CrossOrigin(origins = "*")
 @RequestMapping("/roles")
 public class RolController {
 

@@ -70,13 +70,21 @@
           <label for="fechaNacimiento">Fecha de nacimiento</label>
           <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento" autocomplete="bday" />
           @if (registroForm.controls.fechaNacimiento.touched && registroForm.controls.fechaNacimiento.invalid) {
-            <p class="field-error" role="alert">La fecha de nacimiento es obligatoria.</p>
+            <p class="field-error" role="alert">
+              @if (registroForm.controls.fechaNacimiento.errors?.['required']) { La fecha de nacimiento es obligatoria. }
+              @if (registroForm.controls.fechaNacimiento.errors?.['fechaNoPasada']) { La fecha de nacimiento debe ser una fecha pasada. }
+            </p>
           }
         </div>
 
         <div class="form-field">
           <label for="contrasena">Contraseña</label>
-          <input id="contrasena" type="password" formControlName="contrasena" minlength="8" maxlength="255" autocomplete="new-password" />
+          <div class="password-input">
+            <input id="contrasena" [type]="mostrarContrasena ? 'text' : 'password'" formControlName="contrasena" minlength="8" maxlength="255" autocomplete="new-password" />
+            <button type="button" class="password-toggle" [attr.aria-label]="mostrarContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'" [attr.aria-pressed]="mostrarContrasena" (click)="alternarVisibilidadContrasena('contrasena')">
+              <i class="bi bi-eye-fill" aria-hidden="true"></i>
+            </button>
+          </div>
           @if (registroForm.controls.contrasena.touched && registroForm.controls.contrasena.invalid) {
             <p class="field-error" role="alert">
               @if (registroForm.controls.contrasena.errors?.['required']) { La contraseña es obligatoria. }
@@ -89,7 +97,12 @@
 
         <div class="form-field">
           <label for="repetirContrasena">Repetir contraseña</label>
-          <input id="repetirContrasena" type="password" formControlName="repetirContrasena" maxlength="255" autocomplete="new-password" />
+          <div class="password-input">
+            <input id="repetirContrasena" [type]="mostrarRepetirContrasena ? 'text' : 'password'" formControlName="repetirContrasena" maxlength="255" autocomplete="new-password" />
+            <button type="button" class="password-toggle" [attr.aria-label]="mostrarRepetirContrasena ? 'Ocultar contraseña' : 'Mostrar contraseña'" [attr.aria-pressed]="mostrarRepetirContrasena" (click)="alternarVisibilidadContrasena('repetirContrasena')">
+              <i class="bi bi-eye-fill" aria-hidden="true"></i>
+            </button>
+          </div>
           @if (registroForm.controls.repetirContrasena.touched && registroForm.controls.repetirContrasena.errors?.['required']) {
             <p class="field-error" role="alert">Debe repetir la contraseña.</p>
           }
