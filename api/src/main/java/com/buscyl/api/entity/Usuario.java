@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -68,6 +69,9 @@ public class Usuario implements UserDetails {
 
     @Column(name = "activo", nullable = false)
     private Boolean activo;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Invitacion> invitaciones;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
