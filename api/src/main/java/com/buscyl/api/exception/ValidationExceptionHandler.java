@@ -17,9 +17,17 @@ public class ValidationExceptionHandler {
             MethodArgumentNotValidException exception) {
         Map<String, String> errors = new LinkedHashMap<>();
 
-        exception.getBindingResult().getFieldErrors().forEach(error ->
-                errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
+        exception.getBindingResult().getFieldErrors()
+                .forEach(error -> errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalStateException(
+            IllegalStateException exception) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("message", exception.getMessage()));
     }
 }
