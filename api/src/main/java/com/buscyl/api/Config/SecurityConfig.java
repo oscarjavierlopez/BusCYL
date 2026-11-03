@@ -1,5 +1,8 @@
 package com.buscyl.api.Config;
 
+import static jakarta.servlet.DispatcherType.ERROR;
+import static jakarta.servlet.DispatcherType.FORWARD;
+
 import java.beans.BeanProperty;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,7 @@ public class SecurityConfig {
         .csrf(csrf-> csrf.disable())
         .authorizeHttpRequests(authRequest -> 
             authRequest
+            .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
             .requestMatchers("/auth/**").permitAll()
             .requestMatchers("/roles").hasRole("ADMINISTRADOR")
             .anyRequest().authenticated()
