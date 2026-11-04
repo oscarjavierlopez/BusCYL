@@ -1,6 +1,6 @@
 package com.buscyl.api.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,11 +37,11 @@ public class Invitacion {
     private String token;
 
     @Column(name = "fecha_creacion", nullable = false)
-    private LocalDate fechaCreacion;
+    private LocalDateTime fechaCreacion;
 
     @Column(name = "fecha_expiracion", nullable = false)
-    private LocalDate fechaExpiracion;
+    private LocalDateTime fechaExpiracion;
 
     @Column(name = "fecha_uso")
-    private LocalDate fechaUso;
+    private LocalDateTime fechaUso;
 }

@@ -47,4 +47,12 @@ public class ExceptionsHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("error", "Usuario Ya creado"));
     }
+
+    @ExceptionHandler(TokenAlreadyCreateException.class)
+    public ResponseEntity<Map<String, String>> TokenAlreadyCreateException(
+            TokenAlreadyCreateException exception) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", exception.getMessage()));
+    }
 }
