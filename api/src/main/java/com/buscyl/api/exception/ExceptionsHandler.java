@@ -3,6 +3,7 @@ package com.buscyl.api.exception;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ValidationExceptionHandler {
+public class ExceptionsHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(
@@ -28,6 +29,22 @@ public class ValidationExceptionHandler {
             IllegalStateException exception) {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("message", exception.getMessage()));
+                .body(Map.of("error", exception.getMessage()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, String>> NotFoundException(
+            NotFoundException exception) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", exception.getMessage()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, String>> DataIntegrityViolationException(
+            DataIntegrityViolationException exception) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", "Usuario Ya creado"));
     }
 }

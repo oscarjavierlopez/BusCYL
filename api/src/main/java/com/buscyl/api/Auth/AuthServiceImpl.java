@@ -21,6 +21,7 @@ import com.buscyl.api.Jwt.JwtService;
 import com.buscyl.api.entity.Invitacion;
 import com.buscyl.api.entity.Rol;
 import com.buscyl.api.entity.Usuario;
+import com.buscyl.api.exception.NotFoundException;
 import com.buscyl.api.repository.InvitacionRepository;
 import com.buscyl.api.repository.RolRepository;
 import com.buscyl.api.repository.UsuarioRepository;
@@ -62,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
                                                 request.contrasena()));
                 UserDetails usuario = usuarioRepository.findByEmail(request.email()).orElseThrow();
                 Usuario usuarioRegistrado = usuarioRepository.findByEmail(request.email())
-                                .orElseThrow(() -> new IllegalStateException("No existe el usuario"));
+                                .orElseThrow(() -> new NotFoundException("No existe el usuario"));
                 String token = jwtService.getToken(
                                 usuarioRegistrado,
                                 usuarioRegistrado.getId(),
@@ -80,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
         public AuthResponse register(RegisterRequest request) {
 
                 Rol rolPasajero = rolRepository.findByNombre("pasajero")
-                                .orElseThrow(() -> new IllegalStateException("No existe el rol"));
+                                .orElseThrow(() -> new NotFoundException("No existe el rol"));
 
                 Usuario usuario = Usuario.builder()
                                 .email(request.email())
@@ -112,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
         @Override
         public ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request) {
                 Usuario usuario = usuarioRepository.findByEmail(request.email())
-                                .orElseThrow(() -> new IllegalStateException("No existe el usuario"));
+                                .orElseThrow(() -> new NotFoundException("No existe el usuario"));
 
                 String token = generarTokenInvitacion();
 
