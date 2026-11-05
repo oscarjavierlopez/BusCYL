@@ -12,6 +12,9 @@ export const routes: Routes = [
         path: 'inicio-sesion', loadComponent: () => import('./pages/inicio-sesion/inicio-sesion').then(m => m.InicioSesion),
     },
     {
+        path: 'forgot-password', loadComponent: () => import('./pages/forgot-password/forgot-password').then(m => m.ForgotPassword),
+    },
+    {
         path: 'private', loadComponent: () => import('./pages/private/layout/layout').then(m => m.Layout),
     },
 ];

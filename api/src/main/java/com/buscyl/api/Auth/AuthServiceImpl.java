@@ -118,7 +118,7 @@ public class AuthServiceImpl implements AuthService {
                 Usuario usuario = usuarioRepository.findByEmailAndActivo(request.email(), true)
                                 .orElseThrow(() -> new NotFoundException("Usuario no válido"));
 
-                boolean existsToken = invitacionRepository.obtenerTokenUsuario(request.email()) != null;
+                boolean existsToken = !invitacionRepository.obtenerTokenUsuario(request.email()).isEmpty();
                 if (existsToken)
                         throw new TokenAlreadyCreateException("El usuario ya tiene un token activo");
 

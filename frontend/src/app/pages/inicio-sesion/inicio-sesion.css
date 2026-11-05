@@ -75,6 +75,23 @@ input:focus {
   line-height: 1.35;
 }
 
+.forgot-password-link {
+  display: inline-block;
+  margin-top: 0.85rem;
+  color: #bd1934;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.forgot-password-link:hover {
+  color: #941126;
+}
+
+.forgot-password-link:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.15rem;
+}
+
 .submit-button {
   width: 100%;
   min-height: 2.65rem;
