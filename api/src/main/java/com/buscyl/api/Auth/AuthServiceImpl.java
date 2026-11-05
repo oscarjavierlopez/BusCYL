@@ -64,8 +64,8 @@ public class AuthServiceImpl implements AuthService {
                                 .authenticate(new UsernamePasswordAuthenticationToken(request.email(),
                                                 request.contrasena()));
                 UserDetails usuario = usuarioRepository.findByEmail(request.email()).orElseThrow();
-                Usuario usuarioRegistrado = usuarioRepository.findByEmail(request.email())
-                                .orElseThrow(() -> new NotFoundException("No existe el usuario"));
+                Usuario usuarioRegistrado = usuarioRepository.findByEmailAndActivo(request.email(), true)
+                                .orElseThrow(() -> new NotFoundException("Usuario no válido"));
                 String token = jwtService.getToken(
                                 usuarioRegistrado,
                                 usuarioRegistrado.getId(),
@@ -114,8 +114,8 @@ public class AuthServiceImpl implements AuthService {
 
         @Override
         public ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request) {
-                Usuario usuario = usuarioRepository.findByEmail(request.email())
-                                .orElseThrow(() -> new NotFoundException("No existe el usuario"));
+                Usuario usuario = usuarioRepository.findByEmailAndActivo(request.email(), true)
+                                .orElseThrow(() -> new NotFoundException("Usuario no válido"));
 
                 boolean existsToken = invitacionRepository.obtenerTokenUsuario(request.email()) != null ;
                 if(existsToken) throw new TokenAlreadyCreateException("El usuario ya tiene un token activo");
