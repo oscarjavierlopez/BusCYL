@@ -10,7 +10,8 @@ public record AuthResponse(
     String email,
     String nombre,
     String apellidos,
-    String rol
+    String rol,
+    long exp
 ) {
 
 }

@@ -1,22 +1,28 @@
-import { Component, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { RegistroRequest } from '../../models/registro-request';
 import { Router } from '@angular/router';
+import { toast, NgxSonnerToaster } from 'ngx-sonner';
+import { obtenerMensajeErrorAutenticacion } from '../../utils/auth-error-message';
+import { resetearErroresAlModificarFormulario } from '../../utils/form-error-reset';
 
 @Component({
   selector: 'app-registro',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgxSonnerToaster],
   templateUrl: './registro.html',
   styleUrl: './registro.css',
 })
-export class Registro {
+export class Registro implements OnInit {
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
   mostrarContrasena: boolean = false;
   mostrarRepetirContrasena: boolean = false;
+  mensajeError = signal<string | null>(null);
 
   private contrasenasCoinciden = (control: AbstractControl): ValidationErrors | null => {
     const contrasena = control.get('contrasena')?.value;
@@ -59,7 +65,13 @@ export class Registro {
     { validators: this.contrasenasCoinciden },
   );
 
+  ngOnInit(): void {
+    resetearErroresAlModificarFormulario(this.registroForm, this.mensajeError, this.destroyRef);
+  }
+
   submit(): void {
+    this.mensajeError.set(null);
+
     if (this.registroForm.valid) {
       let registroRequest: RegistroRequest = {
         email: this.registroForm.value.email!,
@@ -73,10 +85,13 @@ export class Registro {
       this.authService.register(registroRequest)
         .subscribe({
           next: (authResponse) => {
-            this.router.navigate(["/private"]);
+            toast.success(`Ha iniciado sesión como ${authResponse.email}`);
+            setTimeout(() => {
+              this.router.navigate(["/private"]);
+            }, 3000);
           },
-          error: (err) => {
-            console.error(err);
+          error: (err: HttpErrorResponse) => {
+            this.mensajeError.set(err.status === 409 ? 'Ya existe un usuario con esos credenciales pruebe a iniciar sesión' : obtenerMensajeErrorAutenticacion(err, 'No se ha podido completar el registro.'));
           }
         });
     }

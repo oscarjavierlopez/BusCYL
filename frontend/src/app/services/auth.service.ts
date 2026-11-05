@@ -18,10 +18,34 @@ export class AuthService {
   currentUserLoginOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   currentUserData: BehaviorSubject<AuthResponse | null> = new BehaviorSubject<AuthResponse | null>(null);
 
+  constructor() {
+    const usuario = this.obtenerUsuarioAlmacenado();
+
+    this.currentUserData.next(usuario);
+    this.currentUserLoginOn.next(usuario !== null);
+  }
+
   private obtenerHeaders() {
     return new HttpHeaders({
       'Content-Type': 'application/json'
     });
+  }
+
+  private obtenerUsuarioAlmacenado(): AuthResponse | null {
+    const usuarioAlmacenado = localStorage.getItem('usuario');
+
+    if (!usuarioAlmacenado) {
+      return null;
+    }
+
+    try {
+      const usuario = JSON.parse(usuarioAlmacenado) as AuthResponse;
+
+      return usuario.token && typeof usuario.exp === 'number' ? usuario : null;
+    } catch {
+      localStorage.removeItem('usuario');
+      return null;
+    }
   }
 
   register(data: RegistroRequest): Observable<AuthResponse> {
@@ -56,7 +80,8 @@ export class AuthService {
 
 
   logout(): void {
-    localStorage.clear();
+    localStorage.removeItem('usuario');
+    this.currentUserData.next(null);
     this.currentUserLoginOn.next(false);
   }
 
@@ -64,7 +89,7 @@ export class AuthService {
     return this.currentUserData.asObservable();
   }
 
-  get token(): String | null {
+  get token(): string | null {
     return this.currentUserData.value?.token ?? null;
   }
 
