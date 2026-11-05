@@ -64,8 +64,9 @@ public class Usuario implements UserDetails {
     @Column(name = "fecha_registro", nullable = false)
     private LocalDate fechaRegistro;
 
-    @Column(name = "id_empresa")
-    private Integer idEmpresa;
+    @ManyToOne
+    @JoinColumn(name = "id_empresa")
+    private Empresa empresa;
 
     @Column(name = "activo", nullable = false)
     private Boolean activo;
