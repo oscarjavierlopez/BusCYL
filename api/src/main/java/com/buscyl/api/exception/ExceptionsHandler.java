@@ -55,4 +55,12 @@ public class ExceptionsHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("error", exception.getMessage()));
     }
+
+    @ExceptionHandler(PasswordMatchException.class)
+    public ResponseEntity<Map<String, String>> PasswordMatchException(
+            PasswordMatchException exception) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", exception.getMessage()));
+    }
 }
