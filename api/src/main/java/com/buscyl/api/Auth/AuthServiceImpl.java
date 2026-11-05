@@ -23,6 +23,7 @@ import com.buscyl.api.entity.Invitacion;
 import com.buscyl.api.entity.Rol;
 import com.buscyl.api.entity.Usuario;
 import com.buscyl.api.exception.NotFoundException;
+import com.buscyl.api.exception.PasswordMatchException;
 import com.buscyl.api.exception.TokenAlreadyCreateException;
 import com.buscyl.api.repository.InvitacionRepository;
 import com.buscyl.api.repository.RolRepository;
@@ -117,8 +118,9 @@ public class AuthServiceImpl implements AuthService {
                 Usuario usuario = usuarioRepository.findByEmailAndActivo(request.email(), true)
                                 .orElseThrow(() -> new NotFoundException("Usuario no válido"));
 
-                boolean existsToken = invitacionRepository.obtenerTokenUsuario(request.email()) != null ;
-                if(existsToken) throw new TokenAlreadyCreateException("El usuario ya tiene un token activo");
+                boolean existsToken = invitacionRepository.obtenerTokenUsuario(request.email()) != null;
+                if (existsToken)
+                        throw new TokenAlreadyCreateException("El usuario ya tiene un token activo");
 
                 String token = generarTokenInvitacion();
 
@@ -159,6 +161,23 @@ public class AuthServiceImpl implements AuthService {
                                                 + "\n\nEl enlace caduca en 24 horas.");
 
                 mailSender.send(mensaje);
+        }
+
+        @Override
+        public void resetPassword(ResetPasswordRequest request) {
+                Invitacion invitacion = invitacionRepository.obtenerInvitacion(request.token())
+                                .orElseThrow(() -> new NotFoundException("Invitación no válida"));
+
+                Usuario usuario = invitacion.getUsuario();
+
+                boolean passwordMatch = passwordEncoder.matches(request.contrasena(), usuario.getContrasena());
+                if(passwordMatch) throw new PasswordMatchException("La contraseña actual no puede ser igual que la anterior");
+
+                usuario.setContrasena(passwordEncoder.encode(request.contrasena()));
+                usuarioRepository.save(usuario);
+
+                invitacion.setFechaUso(LocalDateTime.now());
+                invitacionRepository.save(invitacion);
         }
 
 }

@@ -12,4 +12,6 @@ public interface AuthService {
 
     ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request);
 
+    void resetPassword(ResetPasswordRequest request);
+
 }
