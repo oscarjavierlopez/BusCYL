@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.buscyl.api.dto.RolResponse;
 import com.buscyl.api.entity.Rol;
+import com.buscyl.api.mapper.Mapper;
 import com.buscyl.api.repository.RolRepository;
 
 @Service
@@ -19,9 +20,7 @@ public class RolServiceImpl implements RolService {
     public List<RolResponse> getRoles() {
         return rolRepository.findAll()
                 .stream()
-                .map(rol -> new RolResponse(
-                        rol.getId(),
-                        rol.getNombre()))
+                .map(Mapper::toDTO)
                 .toList();
     }
 
