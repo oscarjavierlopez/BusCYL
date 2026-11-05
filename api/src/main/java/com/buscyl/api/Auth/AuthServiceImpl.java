@@ -68,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
                 authenticationManager
                                 .authenticate(new UsernamePasswordAuthenticationToken(request.email(),
                                                 request.contrasena()));
-                UserDetails usuario = usuarioRepository.findByEmail(request.email()).orElseThrow();
+                UserDetails usuario = usuarioRepository.findByEmail(request.email()).orElseThrow(() -> new NotFoundException("Usuario no válido"));
                 Usuario usuarioRegistrado = usuarioRepository.findByEmailAndActivo(request.email(), true)
                                 .orElseThrow(() -> new NotFoundException("Usuario no válido"));
                 String token = jwtService.getToken(
