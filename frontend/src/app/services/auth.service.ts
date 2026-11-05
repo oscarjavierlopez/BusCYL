@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment.development';
@@ -50,8 +50,8 @@ export class AuthService {
     return this.httpClient.post<string>(`${environment.apiUrl}${this.baseUrl}/forgot-password`, data, { headers: this.obtenerHeaders() });
   }
 
-  resetPassword(data: ResetPasswordRequest): Observable<void> {
-    return this.httpClient.post<void>(`${environment.apiUrl}${this.baseUrl}/reset-password`, data, { headers: this.obtenerHeaders() });
+  resetPassword(data: ResetPasswordRequest): Observable<HttpResponse<void>> {
+    return this.httpClient.post<void>(`${environment.apiUrl}${this.baseUrl}/reset-password`, data, { headers: this.obtenerHeaders(), observe: 'response' });
   }
 
 
