@@ -115,6 +115,26 @@ input:focus {
   outline-offset: 0.15rem;
 }
 
+.account-link {
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.account-link a {
+  color: #bd1934;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.account-link a:hover {
+  color: #941126;
+}
+
+.account-link a:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.15rem;
+}
+
 @media (max-width: 40rem) {
   .inicio-sesion-page {
     padding: 1.5rem 1rem;
