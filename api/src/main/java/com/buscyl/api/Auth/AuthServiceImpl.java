@@ -1,6 +1,7 @@
 package com.buscyl.api.Auth;
 
 import java.security.SecureRandom;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -59,6 +60,9 @@ public class AuthServiceImpl implements AuthService {
         @Value("${buscyl.frontend.reset-password-url}")
         private String resetPasswordUrl;
 
+        @Value("${buscyl.jwt.expiration-seconds}")
+        private Long expiration;
+
         @Override
         public AuthResponse login(LoginRequest request) {
                 authenticationManager
@@ -77,7 +81,8 @@ public class AuthServiceImpl implements AuthService {
                                 usuarioRegistrado.getEmail(),
                                 usuarioRegistrado.getNombre(),
                                 usuarioRegistrado.getApellidos(),
-                                usuarioRegistrado.getRol().getNombre());
+                                usuarioRegistrado.getRol().getNombre(),
+                                Instant.now().toEpochMilli() + (expiration * 1000L));
         }
 
         @Override
@@ -110,7 +115,8 @@ public class AuthServiceImpl implements AuthService {
                                 nuevoUsuario.getEmail(),
                                 nuevoUsuario.getNombre(),
                                 nuevoUsuario.getApellidos(),
-                                nuevoUsuario.getRol().getNombre());
+                                nuevoUsuario.getRol().getNombre(),
+                                Instant.now().toEpochMilli() + (expiration * 1000L));
         }
 
         @Override
@@ -171,7 +177,8 @@ public class AuthServiceImpl implements AuthService {
                 Usuario usuario = invitacion.getUsuario();
 
                 boolean passwordMatch = passwordEncoder.matches(request.contrasena(), usuario.getContrasena());
-                if(passwordMatch) throw new PasswordMatchException("La contraseña actual no puede ser igual que la anterior");
+                if (passwordMatch)
+                        throw new PasswordMatchException("La contraseña actual no puede ser igual que la anterior");
 
                 usuario.setContrasena(passwordEncoder.encode(request.contrasena()));
                 usuarioRepository.save(usuario);

@@ -1,10 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ResetPasswordRequest } from '../../models/reset-password-request';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toast, NgxSonnerToaster } from 'ngx-sonner';
+import { obtenerMensajeErrorAutenticacion } from '../../utils/auth-error-message';
+import { resetearErroresAlModificarFormulario } from '../../utils/form-error-reset';
 
 @Component({
   selector: 'app-reset-password',
@@ -17,15 +19,16 @@ export class ResetPassword implements OnInit {
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-
-  protected readonly toast = toast;
+  private destroyRef = inject(DestroyRef);
 
   private token = '';
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.token = params['token'];
-    })
+    });
+
+    resetearErroresAlModificarFormulario(this.resetPasswordForm, this.mensajeError, this.destroyRef);
   };
 
   private contrasenasCoinciden = (control: AbstractControl): ValidationErrors | null => {
@@ -55,9 +58,9 @@ export class ResetPassword implements OnInit {
     { validators: this.contrasenasCoinciden },
   );
 
-  mensajeError = signal<string | null>(null);
   mostrarContrasena = signal<boolean>(false);
   mostrarRepetirContrasena = signal<boolean>(false);
+  mensajeError = signal<string | null>(null);
 
   submit(): void {
     if (this.resetPasswordForm.valid) {
@@ -78,7 +81,7 @@ export class ResetPassword implements OnInit {
           }
         },
         error: (err: HttpErrorResponse) => {
-          this.mensajeError.set(typeof err.error?.error === 'string' ? err.error.error : 'No se ha podido cambiar la contraseña. Inténtelo de nuevo tras 15 minutos.');
+          this.mensajeError.set(obtenerMensajeErrorAutenticacion(err, 'No se ha podido cambiar la contraseña.'));
         },
       });
     } else {

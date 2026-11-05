@@ -5,4 +5,5 @@ export interface AuthResponse {
   nombre: string;
   apellidos: string;
   rol: string;
+  exp: null | number;
 }
