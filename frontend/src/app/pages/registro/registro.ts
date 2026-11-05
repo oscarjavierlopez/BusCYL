@@ -3,14 +3,14 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { RegistroRequest } from '../../models/registro-request';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { toast, NgxSonnerToaster } from 'ngx-sonner';
 import { obtenerMensajeErrorAutenticacion } from '../../utils/auth-error-message';
 import { resetearErroresAlModificarFormulario } from '../../utils/form-error-reset';
 
 @Component({
   selector: 'app-registro',
-  imports: [ReactiveFormsModule, NgxSonnerToaster],
+  imports: [ReactiveFormsModule, RouterLink, NgxSonnerToaster],
   templateUrl: './registro.html',
   styleUrl: './registro.css',
 })

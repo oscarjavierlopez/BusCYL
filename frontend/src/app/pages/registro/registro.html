@@ -114,6 +114,10 @@
 
       <button type="submit" class="submit-button">Registrarse</button>
 
+      <p class="account-link">
+        ¿Ya tiene una cuenta? <a routerLink="/inicio-sesion">Inicie sesión</a>
+      </p>
+
       @if (mensajeError()) {
         <p class="field-error" role="alert">{{ mensajeError() }}</p>
       }

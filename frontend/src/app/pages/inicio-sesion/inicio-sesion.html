@@ -40,6 +40,10 @@
 
       <button type="submit" class="submit-button">Acceder</button>
 
+      <p class="account-link">
+        ¿No tiene una cuenta? <a routerLink="/registro">Regístrese</a>
+      </p>
+
       @if (mensajeError()) {
         <p class="field-error" role="alert">{{ mensajeError() }}</p>
       }
