@@ -24,9 +24,4 @@ public class RolServiceImpl implements RolService {
                 .toList();
     }
 
-    @Override
-    public Rol getIdRolByName(String nombre) {
-        return rolRepository.findByNombre(nombre.toLowerCase()).get();
-    }
-
 }

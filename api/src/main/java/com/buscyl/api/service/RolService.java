@@ -8,5 +8,4 @@ import com.buscyl.api.entity.Rol;
 public interface RolService {
     List<RolResponse> getRoles();
 
-    Rol getIdRolByName(String nombre);
 }

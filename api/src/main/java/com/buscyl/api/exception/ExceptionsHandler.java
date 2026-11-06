@@ -63,4 +63,12 @@ public class ExceptionsHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("error", exception.getMessage()));
     }
+
+    @ExceptionHandler(PaginaNoValidaException.class)
+    public ResponseEntity<Map<String, String>> PaginaNoValidaException(
+            PaginaNoValidaException exception) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", exception.getMessage()));
+    }
 }
