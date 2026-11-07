@@ -1,9 +1,11 @@
 package com.buscyl.api.mapper;
 
 import com.buscyl.api.dto.EmpresaResponse;
+import com.buscyl.api.dto.LocalidadResponse;
 import com.buscyl.api.dto.RolResponse;
 import com.buscyl.api.dto.UsuarioResponse;
 import com.buscyl.api.entity.Empresa;
+import com.buscyl.api.entity.Localidad;
 import com.buscyl.api.entity.Rol;
 import com.buscyl.api.entity.Usuario;
 
@@ -40,6 +42,14 @@ public class Mapper {
         .localidad(empresa.getLocalidad().getNombre())
         .provincia(empresa.getLocalidad().getProvincia().getNombre())
         .activo(empresa.getActivo())
+        .build();
+    }
+
+    public static LocalidadResponse toDto(Localidad localidad){
+        return LocalidadResponse.builder()
+        .id(localidad.getId())
+        .nombre(localidad.getNombre())
+        .provincia(localidad.getProvincia().getNombre())
         .build();
     }
 }
