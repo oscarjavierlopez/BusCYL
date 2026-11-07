@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.buscyl.api.dto.EmpresaCreateRequest;
 import com.buscyl.api.dto.EmpresaResponse;
-import com.buscyl.api.dto.UsuarioUpdateRequest;
+import com.buscyl.api.dto.EmpresaUpdateRequest;
 
 public interface EmpresaService {
     List<EmpresaResponse> obtenerEmpresas();
@@ -13,7 +13,7 @@ public interface EmpresaService {
 
     EmpresaResponse crearEmpresa(EmpresaCreateRequest request);
 
-    EmpresaResponse actualizarEmpresa(Long id, UsuarioUpdateRequest request);
+    EmpresaResponse actualizarEmpresa(Long id, EmpresaUpdateRequest request);
 
     void desactivarEmpresa(Long id);
 

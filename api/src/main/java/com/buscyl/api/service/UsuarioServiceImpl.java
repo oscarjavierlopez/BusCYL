@@ -151,11 +151,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public void activarUsuario(Long id) {
-        Usuario usuarioDesactivar = usuarioRepository.findById(id)
+        Usuario usuarioactivar = usuarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
-        usuarioDesactivar.setActivo(true);
-        usuarioRepository.save(usuarioDesactivar);
+        usuarioactivar.setActivo(true);
+        usuarioRepository.save(usuarioactivar);
     }
 
 }
