@@ -45,10 +45,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authRequest -> authRequest
                         .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/usuarios", "/usuarios/**").permitAll()
-                        .requestMatchers("/empresas", "/empresas/**").permitAll()
-                        .requestMatchers("/localidades", "/localidades/**").permitAll()
-                        .requestMatchers("/invitaciones", "/invitaciones/**").permitAll()
+                        .requestMatchers("/usuarios", "/usuarios/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/empresas", "/empresas/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/localidades", "/localidades/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/invitaciones", "/invitaciones/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/roles").hasRole("ADMINISTRADOR")
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptionHandling -> exceptionHandling
