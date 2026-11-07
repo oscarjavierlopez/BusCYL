@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/usuarios", "/usuarios/**").permitAll()
                         .requestMatchers("/empresas", "/empresas/**").permitAll()
+                        .requestMatchers("/localidades", "/localidades/**").permitAll()
                         .requestMatchers("/roles").hasRole("ADMINISTRADOR")
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptionHandling -> exceptionHandling
