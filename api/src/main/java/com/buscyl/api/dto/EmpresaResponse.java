@@ -1,5 +1,8 @@
 package com.buscyl.api.dto;
 
+import lombok.Builder;
+
+@Builder 
 public record EmpresaResponse(
     Long id,
     String nombre,
@@ -9,6 +12,7 @@ public record EmpresaResponse(
     String email,
     String direccion,
     String localidad,
+    String provincia,
     Boolean activo
 ) {
 
