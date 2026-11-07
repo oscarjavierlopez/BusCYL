@@ -97,19 +97,24 @@ public class EmpresaServiceImpl implements EmpresaService {
         }
 
         return Mapper.toDto(empresaRepository.save(empresaActualizar));
-        ;
     }
 
     @Override
     public void desactivarEmpresa(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'desactivarEmpresa'");
+        Empresa empresaDesactivar = empresaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Empresa no encontrada"));
+
+        empresaDesactivar.setActivo(false);
+        empresaRepository.save(empresaDesactivar);
     }
 
     @Override
     public void activarEmpresa(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'activarEmpresa'");
+        Empresa empresaActivar = empresaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Empresa no encontrada"));
+
+        empresaActivar.setActivo(true);
+        empresaRepository.save(empresaActivar);
     }
 
 }
