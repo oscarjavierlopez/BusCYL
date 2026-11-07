@@ -10,14 +10,12 @@ public record EmpresaUpdateRequest(
 
         @Pattern(regexp = "^[A-HJ-NP-SUVW]\\d{7}[0-9A-J]$", message = "El CIF no cumple un formato válido") String cif,
 
-        String telefono,
+        @Pattern(regexp = "^\\d{9}$", message = "El telefono no cumple un formato válido") String telefono,
 
         @Email(message = "El email no cumple un formato válido") String email,
 
         String direccion,
 
-        Long localidad,
-
-        Boolean activo) {
+        Long localidad) {
 
 }
