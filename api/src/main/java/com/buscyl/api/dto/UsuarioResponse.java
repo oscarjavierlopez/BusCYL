@@ -1,7 +1,10 @@
 package com.buscyl.api.dto;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
+import lombok.Builder;
+
+@Builder
 public record UsuarioResponse(
     Long id,
     String email,
@@ -10,8 +13,7 @@ public record UsuarioResponse(
     String apellidos,
     String dni,
     String telefono,
-    Date fechaNacimiento,
-    Date fecha_registro,
+    LocalDate fechaNacimiento,
     String empresa,
     boolean activo
 ) {
