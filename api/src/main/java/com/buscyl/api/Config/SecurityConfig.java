@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/usuarios", "/usuarios/**").permitAll()
+                        .requestMatchers("/empresas", "/empresas/**").permitAll()
                         .requestMatchers("/roles").hasRole("ADMINISTRADOR")
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptionHandling -> exceptionHandling

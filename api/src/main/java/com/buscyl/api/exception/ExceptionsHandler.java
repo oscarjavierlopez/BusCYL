@@ -45,7 +45,7 @@ public class ExceptionsHandler {
             DataIntegrityViolationException exception) {
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("error", "Usuario Ya creado"));
+                .body(Map.of("error", "Ya existe un registro con los datos proporcionados"));
     }
 
     @ExceptionHandler(TokenAlreadyCreateException.class)
