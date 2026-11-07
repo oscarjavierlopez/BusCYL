@@ -11,10 +11,12 @@ import com.buscyl.api.dto.EmpresaUpdateRequest;
 import com.buscyl.api.dto.UsuarioUpdateRequest;
 import com.buscyl.api.entity.Empresa;
 import com.buscyl.api.entity.Localidad;
+import com.buscyl.api.entity.Usuario;
 import com.buscyl.api.exception.NotFoundException;
 import com.buscyl.api.mapper.Mapper;
 import com.buscyl.api.repository.EmpresaRepository;
 import com.buscyl.api.repository.LocalidadRepository;
+import com.buscyl.api.repository.UsuarioRepository;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
@@ -24,6 +26,9 @@ public class EmpresaServiceImpl implements EmpresaService {
 
     @Autowired
     private LocalidadRepository localidadRepository;
+
+    @Autowired 
+    private UsuarioRepository usuarioRepository;
 
     @Override
     public List<EmpresaResponse> obtenerEmpresas() {
@@ -105,6 +110,12 @@ public class EmpresaServiceImpl implements EmpresaService {
                 .orElseThrow(() -> new NotFoundException("Empresa no encontrada"));
 
         empresaDesactivar.setActivo(false);
+
+        List<Usuario> usuariosEmpresa = empresaDesactivar.getUsuarios();
+        for (Usuario usuario : usuariosEmpresa) {
+            usuario.setActivo(false);
+            usuarioRepository.save(usuario);
+        }
         empresaRepository.save(empresaDesactivar);
     }
 
@@ -114,6 +125,12 @@ public class EmpresaServiceImpl implements EmpresaService {
                 .orElseThrow(() -> new NotFoundException("Empresa no encontrada"));
 
         empresaActivar.setActivo(true);
+
+        List<Usuario> usuariosEmpresa = empresaActivar.getUsuarios();
+        for (Usuario usuario : usuariosEmpresa) {
+            usuario.setActivo(true);
+            usuarioRepository.save(usuario);
+        }
         empresaRepository.save(empresaActivar);
     }
 
