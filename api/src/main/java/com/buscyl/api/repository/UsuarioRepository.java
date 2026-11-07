@@ -25,6 +25,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         @Query(value = "SELECT COUNT(*) FROM buscyl.usuarios \r\n" + //
                         "WHERE CONCAT(LOWER(nombre), '', LOWER(apellidos)) LIKE CONCAT('%', :nombreApellidos, '%')\r\n" + //
                         "AND activo = :activo\r\n", nativeQuery = true)
-        long obtenerTotalUsuarios(@Param("nombreApellidos") String nombreApellidos,
+        long obtenerUsuariosFiltrados(@Param("nombreApellidos") String nombreApellidos,
                         @Param("activo") boolean activo);
+
+        @Query(value = "SELECT COUNT(*) FROM buscyl.usuarios", nativeQuery = true)
+        long obtenerTotalUsuarios();
 }

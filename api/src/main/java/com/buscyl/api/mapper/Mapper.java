@@ -18,6 +18,9 @@ public class Mapper {
         .rol(usuario.getRol().getNombre())
         .nombre(usuario.getNombre())
         .apellidos(usuario.getApellidos())
+        .dni(usuario.getDni())
+        .telefono(usuario.getTelefono())
+        .fechaNacimiento(usuario.getFechaNacimiento())
         .empresa(usuario.getEmpresa() != null ? usuario.getEmpresa().getNombre() : null)
         .activo(usuario.getActivo())
         .build();
