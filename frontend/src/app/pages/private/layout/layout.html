@@ -1,8 +1,13 @@
 <div class="private-layout">
   <nav class="private-nav" aria-label="Navegación principal">
-    <a class="home-button" [routerLink]="['/']" aria-label="Ir a inicio" title="Inicio">
-      <i class="bi bi-house-door-fill" aria-hidden="true"></i>
-    </a>
+    <div class="nav-main-links">
+      <a class="home-button" [routerLink]="['/']" aria-label="Ir a inicio" title="Inicio">
+        <i class="bi bi-house-door-fill" aria-hidden="true"></i>
+      </a>
+      @if (usuario()?.rol == "administrador") {
+      <a class="usuarios-link" routerLink="/private/usuarios" routerLinkActive="usuarios-link-active" [routerLinkActiveOptions]="{ exact: false }">Usuarios</a>
+      }
+    </div>
 
     <div class="nav-actions">
       <button class="logout-button" type="button" (click)="logout()">
