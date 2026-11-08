@@ -18,6 +18,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                         "FROM buscyl.usuarios\r\n" + //
                         "WHERE CONCAT(LOWER(nombre), '', LOWER(apellidos)) LIKE CONCAT('%', :nombreApellidos, '%')\r\n" + //
                         "AND activo = :activo\r\n" + //
+                        "ORDER BY id\r\n" + //
                         "LIMIT 20 OFFSET (:pagina - 1) * 20", nativeQuery = true)
         List<Usuario> obtenerUsuarios(@Param("pagina") int pagina, @Param("nombreApellidos") String nombreApellidos,
                         @Param("activo") boolean activo);

@@ -88,7 +88,7 @@ export class Registro implements OnInit {
             toast.success(`Ha iniciado sesión como ${authResponse.email}`);
             setTimeout(() => {
               this.router.navigate(["/private"]);
-            }, 3000);
+            }, 1000);
           },
           error: (err: HttpErrorResponse) => {
             this.mensajeError.set(err.status === 409 ? 'Ya existe un usuario con esos credenciales pruebe a iniciar sesión' : obtenerMensajeErrorAutenticacion(err, 'No se ha podido completar el registro.'));

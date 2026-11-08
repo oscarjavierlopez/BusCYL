@@ -54,7 +54,7 @@ export class InicioSesion implements OnInit {
             toast.success(`Ha iniciado sesión como ${authResponse.email}`);
             setTimeout(() => {
               this.router.navigate(["/private"]);
-            }, 3000);
+            }, 1000);
           },
           error: (err: HttpErrorResponse) => {
             this.mensajeError.set(err.status === 401 ? 'usuario o contraseña incorrectos' : obtenerMensajeErrorAutenticacion(err, 'No se ha podido iniciar sesión.'));

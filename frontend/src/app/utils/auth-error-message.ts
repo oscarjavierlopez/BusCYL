@@ -5,5 +5,17 @@ export function obtenerMensajeErrorAutenticacion(error: HttpErrorResponse, mensa
     return 'No se pudo completar la acción, inténtelo de nuevo dentro de 15 minutos';
   }
 
-  return typeof error.error?.error === 'string' ? error.error.error : mensajePorDefecto;
+  if (typeof error.error?.error === 'string') {
+    return error.error.error;
+  }
+
+  if (error.error && typeof error.error === 'object') {
+    const mensajeValidacion = Object.values(error.error).find((valor): valor is string => typeof valor === 'string');
+
+    if (mensajeValidacion) {
+      return mensajeValidacion;
+    }
+  }
+
+  return mensajePorDefecto;
 }

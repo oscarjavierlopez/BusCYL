@@ -22,10 +22,9 @@
           <label for="rol">Rol</label>
           <select id="rol" formControlName="rol">
             <option value="">Seleccione un rol</option>
-            <option value="1">Administrador</option>
-            <option value="2">Coordinador de empresa</option>
-            <option value="3">Conductor</option>
-            <option value="4">Pasajero</option>
+            @for (rol of roles(); track rol.id) {
+              <option [ngValue]="rol.id">{{rol.nombre}}</option>
+            }
           </select>
           @if (crearUsuarioForm.controls.rol.touched && crearUsuarioForm.controls.rol.errors?.['required']) {
             <p class="field-error" role="alert">El rol es obligatorio.</p>
@@ -33,10 +32,15 @@
         </div>
 
         <div class="form-field">
-          <label for="empresa">Identificador de empresa <span class="optional-field">(opcional)</span></label>
-          <input id="empresa" type="number" formControlName="empresa" step="1" inputmode="numeric" />
-          @if (crearUsuarioForm.controls.empresa.touched && crearUsuarioForm.controls.empresa.errors?.['pattern']) {
-            <p class="field-error" role="alert">El identificador de empresa debe ser un número entero.</p>
+          <label for="empresa">Empresa <span class="optional-field">(opcional)</span></label>
+          <select id="empresa" formControlName="empresa">
+            <option value="">Seleccione una empresa</option>
+            @for (empresa of empresas(); track empresa.id) {
+              <option [ngValue]="empresa.id">{{empresa.nombre}}</option>
+            }
+          </select>
+          @if (crearUsuarioForm.controls.empresa.touched && crearUsuarioForm.errors?.['empresaObligatoria']) {
+            <p class="field-error" role="alert">Debe seleccionar una empresa</p>
           }
         </div>
 
@@ -97,6 +101,11 @@
       </div>
 
       <button type="submit" class="submit-button">Añadir usuario</button>
+
+      @if (mensajeError()) {
+        <p class="field-error" role="alert">{{ mensajeError() }}</p>
+      }
     </form>
   </div>
+  <ngx-sonner-toaster position="bottom-right" />
 </section>
