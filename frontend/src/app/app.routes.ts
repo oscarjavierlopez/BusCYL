@@ -18,6 +18,15 @@ export const routes: Routes = [
         path: 'reset-password', loadComponent: () => import('./pages/reset-password/reset-password').then(m => m.ResetPassword),
     },
     {
-        path: 'private', loadComponent: () => import('./pages/private/layout/layout').then(m => m.Layout),
+        path: 'private',
+        loadComponent: () => import('./pages/private/layout/layout').then(m => m.Layout),
+        children: [
+            {
+                path: 'usuarios', loadComponent: () => import('./pages/private/administrador/usuarios/usuarios').then(m => m.Usuarios),
+            },
+            {
+                path: 'usuarios/crear', loadComponent: () => import('./pages/private/administrador/crear-usuario/crear-usuario').then(m => m.CrearUsuario),
+            },
+        ],
     },
 ];

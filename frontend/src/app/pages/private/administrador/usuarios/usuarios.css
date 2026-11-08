@@ -1,0 +1,282 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.usuarios-page {
+  box-sizing: border-box;
+  width: min(100%, 76rem);
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  color: #292929;
+}
+
+.usuarios-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 0.1rem solid #bd1934;
+}
+
+.usuarios-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.usuarios-header p {
+  margin: 0.65rem 0 0;
+  color: #4a4a4a;
+}
+
+.add-user-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.65rem;
+  padding: 0.6rem 1rem;
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  background: #bd1934;
+  border: 0.1rem solid #bd1934;
+}
+
+.add-user-link:hover {
+  background: #941126;
+  border-color: #941126;
+}
+
+.add-user-link:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.15rem;
+}
+
+.usuarios-filtros {
+  margin: 2rem 0 1.5rem;
+}
+
+.usuarios-filtros label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-weight: 700;
+}
+
+.search-input {
+  position: relative;
+}
+
+.search-input i {
+  position: absolute;
+  top: 50%;
+  left: 0.8rem;
+  color: #4a4a4a;
+  transform: translateY(-50%);
+}
+
+.search-input input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.6rem 0.75rem 0.6rem 2.5rem;
+  color: #292929;
+  font: inherit;
+  background: #ffffff;
+  border: 0.1rem solid #767676;
+}
+
+.search-input input:focus {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.1rem;
+  border-color: #1a73a8;
+}
+
+.estado-filtro {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.25rem;
+}
+
+.estado-button {
+  min-height: 2.5rem;
+  padding: 0.35rem 0;
+  color: #292929;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-bottom: 0.2rem solid transparent;
+}
+
+.estado-button-selected {
+  font-weight: 700;
+  border-bottom-color: #bd1934;
+}
+
+.estado-button:focus-visible,
+.action-button:focus-visible,
+.pagination-button:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.15rem;
+}
+
+.tabla-contenedor {
+  overflow-x: auto;
+  background: #ffffff;
+  border-top: 0.25rem solid #bd1934;
+}
+
+table {
+  width: 100%;
+  min-width: 55rem;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.95rem 1rem;
+  text-align: left;
+  border: 0.1rem solid #d8d8d8;
+}
+
+th {
+  font-weight: 700;
+  background: #f0f0f0;
+}
+
+td {
+  vertical-align: middle;
+}
+
+tbody tr:hover {
+  background: #fafafa;
+}
+
+th:last-child,
+td:last-child {
+  width: 10.75rem;
+  text-align: center;
+}
+
+.acciones {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.action-button,
+.pagination-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.55rem;
+  font: inherit;
+  cursor: pointer;
+  background: #ffffff;
+  border: 0.1rem solid currentcolor;
+}
+
+.edit-button,
+.invite-button {
+  color: #1a73a8;
+}
+
+.deactivate-button {
+  color: #a6001c;
+}
+
+.action-button:hover {
+  color: #ffffff;
+}
+
+.edit-button:hover,
+.invite-button:hover {
+  background: #1a73a8;
+}
+
+.deactivate-button:hover {
+  background: #a6001c;
+}
+
+.empty-state {
+  padding: 2rem;
+  color: #4a4a4a;
+  text-align: center;
+}
+
+.paginacion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.paginacion p {
+  margin: 0;
+  color: #000000;
+  font-weight: bold;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pagination-button {
+  color: #292929;
+  border-color: #767676;
+}
+
+.pagination-button:hover {
+  color: #ffffff;
+  background: #4a4a4a;
+  border-color: #4a4a4a;
+}
+
+.pagination-button:disabled,
+.pagination-button:disabled:hover {
+  color: #767676;
+  cursor: not-allowed;
+  background: #e8e8e8;
+  border-color: #b6b6b6;
+}
+
+.pagination-button-current,
+.pagination-button-current:hover {
+  color: #ffffff;
+  cursor: default;
+  background: #bd1934;
+  border-color: #bd1934;
+}
+
+@media (max-width: 40rem) {
+  .usuarios-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .usuarios-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .usuarios-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .estado-filtro {
+    gap: 1.5rem;
+  }
+
+  .paginacion {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

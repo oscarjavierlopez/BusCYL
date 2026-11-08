@@ -1,0 +1,93 @@
+<section class="usuarios-page" aria-labelledby="usuarios-title">
+  <header class="usuarios-header">
+    <div>
+      <h1 id="usuarios-title">Gestión de usuarios</h1>
+      <p>Consulte, busque y gestione las cuentas registradas.</p>
+    </div>
+    <a class="add-user-link" routerLink="/private/usuarios/crear">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      Añadir usuario
+    </a>
+  </header>
+
+  <div class="usuarios-filtros">
+    <label for="buscar-usuario">Buscar usuario</label>
+    <div class="search-input">
+      <i class="bi bi-search" aria-hidden="true"></i>
+      <input id="buscar-usuario" type="search" placeholder="Busque un usuario..." autocomplete="off" (input)="manejarBusqueda($event)" />
+    </div>
+
+    <div class="estado-filtro" aria-label="Estado de las cuentas">
+      <button type="button" class="estado-button" [class.estado-button-selected]="activoValue()" [attr.aria-pressed]="activoValue()" (click)="seleccionarEstado(true)">Activos</button>
+      <button type="button" class="estado-button" [class.estado-button-selected]="!activoValue()" [attr.aria-pressed]="!activoValue()" (click)="seleccionarEstado(false)">Inactivos</button>
+    </div>
+  </div>
+
+  @if (usuariosPaginados(); as paginaUsuarios) {
+  <div class="tabla-contenedor" tabindex="0">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Email</th>
+          <th scope="col">Rol</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Empresa</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (usuario of paginaUsuarios.usuarios; track usuario.id) {
+        <tr>
+          <td>{{ usuario.email }}</td>
+          <td>{{ usuario.rol }}</td>
+          <td>{{ usuario.nombre }} {{ usuario.apellidos }}</td>
+          <td>{{ usuario.empresa ?? '-' }}</td>
+          <td>
+            <div class="acciones" aria-label="Acciones para {{ usuario.nombre }} {{ usuario.apellidos }}">
+              <button type="button" class="action-button edit-button" aria-label="Editar usuario"
+                title="Editar usuario">
+                <i class="bi bi-pencil-fill" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="action-button deactivate-button" aria-label="Desactivar usuario"
+                title="Desactivar usuario">
+                <i class="bi bi-person-x-fill" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="action-button invite-button" aria-label="Enviar invitación"
+                title="Enviar invitación">
+                <i class="bi bi-envelope-fill" aria-hidden="true"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td class="empty-state" colspan="5">No hay usuarios disponibles.</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="paginacion" aria-label="Paginación de usuarios">
+    <p>Mostrando {{ paginaUsuarios.usuarios.length }} de {{ paginaUsuarios.totalUsuarios }} usuarios</p>
+    <div class="pagination-controls">
+      @if (paginaUsuarios.pagina != 1) {
+      <button type="button" class="pagination-button" aria-label="Ir a la primera página"
+        title="Primera página">1</button>
+      }
+      <button [disabled]="paginaUsuarios.paginaPrevia == null" type="button" class="pagination-button" aria-label="Ir a la página anterior" title="Página anterior">
+        <i class="bi bi-chevron-left" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="pagination-button pagination-button-current" aria-current="page"
+        title="Página actual">{{ paginaUsuarios.pagina }}</button>
+      <button [disabled]="paginaUsuarios.paginaSiguiente == null" type="button" class="pagination-button" aria-label="Ir a la página siguiente" title="Página siguiente">
+        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+      @if (paginaUsuarios.pagina != 1 && paginaUsuarios.pagina != paginaUsuarios.totalPaginas) {
+      <button type="button" class="pagination-button" aria-label="Ir a la última página" title="Última página">{{
+        paginaUsuarios.totalPaginas }}</button>
+      }
+    </div>
+  </footer>
+  }
+</section>
