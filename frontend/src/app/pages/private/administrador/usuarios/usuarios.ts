@@ -93,4 +93,10 @@ export class Usuarios implements OnInit {
       this.obtenerUsuarios();
     }, 300);
   }
+
+  cambiarPagina(pagina:number): void{
+    this.pagina.set(pagina);
+    this.modificarQueryParams()
+    this.obtenerUsuarios();
+  }
 }

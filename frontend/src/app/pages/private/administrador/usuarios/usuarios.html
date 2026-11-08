@@ -73,18 +73,18 @@
     <div class="pagination-controls">
       @if (paginaUsuarios.pagina != 1) {
       <button type="button" class="pagination-button" aria-label="Ir a la primera página"
-        title="Primera página">1</button>
+        title="Primera página" (click)="cambiarPagina(1)">1</button>
       }
-      <button [disabled]="paginaUsuarios.paginaPrevia == null" type="button" class="pagination-button" aria-label="Ir a la página anterior" title="Página anterior">
+      <button [disabled]="paginaUsuarios.paginaPrevia == null" type="button" class="pagination-button" aria-label="Ir a la página anterior" title="Página anterior" (click)="cambiarPagina(paginaUsuarios.paginaPrevia!)">
         <i class="bi bi-chevron-left" aria-hidden="true"></i>
       </button>
       <button type="button" class="pagination-button pagination-button-current" aria-current="page"
         title="Página actual">{{ paginaUsuarios.pagina }}</button>
-      <button [disabled]="paginaUsuarios.paginaSiguiente == null" type="button" class="pagination-button" aria-label="Ir a la página siguiente" title="Página siguiente">
+      <button [disabled]="paginaUsuarios.paginaSiguiente == null" type="button" class="pagination-button" aria-label="Ir a la página siguiente" title="Página siguiente" (click)="cambiarPagina(paginaUsuarios.paginaSiguiente!)">
         <i class="bi bi-chevron-right" aria-hidden="true"></i>
       </button>
-      @if (paginaUsuarios.pagina != 1 && paginaUsuarios.pagina != paginaUsuarios.totalPaginas) {
-      <button type="button" class="pagination-button" aria-label="Ir a la última página" title="Última página">{{
+      @if (paginaUsuarios.pagina != paginaUsuarios.totalPaginas) {
+      <button type="button" class="pagination-button" aria-label="Ir a la última página" title="Última página" (click)="cambiarPagina(paginaUsuarios.totalPaginas)">{{
         paginaUsuarios.totalPaginas }}</button>
       }
     </div>
