@@ -1,10 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { UsuariosService } from '../../../../services/usuarios.service';
 import { UsuariosPaginados } from '../../../../models/usuarios-paginados';
 
 @Component({
   selector: 'app-usuarios',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.css',
 })

@@ -24,6 +24,9 @@ export const routes: Routes = [
             {
                 path: 'usuarios', loadComponent: () => import('./pages/private/administrador/usuarios/usuarios').then(m => m.Usuarios),
             },
+            {
+                path: 'usuarios/crear', loadComponent: () => import('./pages/private/administrador/crear-usuario/crear-usuario').then(m => m.CrearUsuario),
+            },
         ],
     },
 ];

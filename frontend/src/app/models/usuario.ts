@@ -1,5 +1,5 @@
 export interface Usuario {
-    id: number;
+    id?: number;
     email: string;
     rol: string | number;
     nombre: string;
@@ -7,6 +7,6 @@ export interface Usuario {
     dni: string;
     telefono: string;
     fechaNacimiento: string;
-    empresa: string | null | number;
-    activo: boolean;
+    empresa?: string | null | number;
+    activo?: boolean ;
 }
