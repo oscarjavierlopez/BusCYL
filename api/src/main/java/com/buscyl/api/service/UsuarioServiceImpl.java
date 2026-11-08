@@ -36,7 +36,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     public UsuariosResponse obtenerUsuarios(int pagina, String nombreApellidos, boolean activo) {
         long totalUsuarios = usuarioRepository.obtenerTotalUsuarios();
         long totalUsuariosFiltrados = usuarioRepository.obtenerUsuariosFiltrados(nombreApellidos, activo);
-        int totalPaginas = (int) Math.ceil(totalUsuarios / 20.0);
+        int totalPaginas = (int) Math.ceil(totalUsuariosFiltrados / 20.0);
 
         if ((pagina > totalPaginas || pagina < 1) || (totalUsuariosFiltrados > 0 && pagina != 1))
             throw new PaginaNoValidaException("Página no válida");
@@ -47,7 +47,7 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .toList();
 
         Integer paginaPrevia = (pagina - 1) > 0 ? (pagina - 1) : null;
-        Integer paginaSiguiente = (pagina + 1) < totalPaginas ? (pagina + 1) : null;
+        Integer paginaSiguiente = (pagina + 1) <= totalPaginas ? (pagina + 1) : null;
 
         return UsuariosResponse.builder()
                 .totalUsuarios(totalUsuarios)

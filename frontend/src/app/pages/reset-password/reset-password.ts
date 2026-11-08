@@ -77,7 +77,7 @@ export class ResetPassword implements OnInit {
             toast.success('La contraseña ha sido reestablecida');
             setTimeout(() => {
               this.router.navigate(['/inicio-sesion']);
-            }, 3000);
+            }, 1000);
           }
         },
         error: (err: HttpErrorResponse) => {

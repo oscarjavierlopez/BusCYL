@@ -1,19 +1,60 @@
-import { Component, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { UsuariosService } from '../../../../services/usuarios.service';
 import { email } from '@angular/forms/signals';
 import { Usuario } from '../../../../models/usuario';
+import { Empresa } from '../../../../models/empresa';
+import { Rol } from '../../../../models/rol';
+import { EmpresasService } from '../../../../services/empresas.service';
+import { RolesService } from '../../../../services/roles.service';
+import { Router } from '@angular/router';
+import {toast, NgxSonnerToaster } from 'ngx-sonner';
+import { obtenerMensajeErrorAutenticacion } from '../../../../utils/auth-error-message';
+import { resetearErroresAlModificarFormulario } from '../../../../utils/form-error-reset';
 
 
 @Component({
   selector: 'app-crear-usuario',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgxSonnerToaster],
   templateUrl: './crear-usuario.html',
   styleUrl: './crear-usuario.css',
 })
-export class CrearUsuario {
+export class CrearUsuario implements OnInit {
   private formBuilder = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
   private usuariosService = inject(UsuariosService);
+  private empresasService = inject(EmpresasService);
+  private rolesService = inject(RolesService);
+
+  empresas = signal<Empresa[]>([]);
+  roles = signal<Rol[]>([]);
+  mensajeError = signal<string | null>(null);
+
+  ngOnInit(): void {
+    resetearErroresAlModificarFormulario(this.crearUsuarioForm, this.mensajeError, this.destroyRef);
+
+    this.empresasService.obtenerEmpresas()
+      .subscribe({
+        next: (empresas) => {
+          this.empresas.set(empresas);
+        },
+        error: (error) => {
+          console.error('Ocurrió un error:', error);
+        }
+      });
+
+    this.rolesService.obtenerRoles()
+      .subscribe({
+        next: (roles) => {
+          this.roles.set(roles);
+        },
+        error: (error) => {
+          console.error('Ocurrió un error:', error);
+        }
+      });
+  }
 
   private noSoloEspacios = (control: AbstractControl): ValidationErrors | null => {
     if (typeof control.value === 'string' && control.value.length > 0 && control.value.trim().length === 0) {
@@ -35,6 +76,15 @@ export class CrearUsuario {
     return fechaNacimiento < hoy ? null : { fechaNoPasada: true };
   };
 
+  private empresaObligatoriaSegunRol = (control: AbstractControl): ValidationErrors | null => {
+    const rol = control.get('rol')?.value;
+    const empresa = control.get('empresa')?.value;
+    const requiereEmpresa = rol === 2 || rol === 3;
+    const empresaNoSeleccionada = empresa === null || empresa === undefined || empresa === '';
+
+    return requiereEmpresa && empresaNoSeleccionada ? { empresaObligatoria: true } : null;
+  };
+
   crearUsuarioForm = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     rol: ['', [Validators.required]],
@@ -43,10 +93,12 @@ export class CrearUsuario {
     apellidos: ['', [Validators.required, this.noSoloEspacios]],
     telefono: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
     fechaNacimiento: ['', [Validators.required, this.fechaNacimientoPasada]],
-    empresa: ['', [Validators.pattern(/^-?\d+$/)]],
-  });
+    empresa: [''],
+  }, { validators: this.empresaObligatoriaSegunRol });
 
   submit(): void {
+    this.mensajeError.set(null);
+
     if (this.crearUsuarioForm.valid) {
       let nuevoUsuario: Usuario = {
         email: this.crearUsuarioForm.value.email!,
@@ -58,17 +110,20 @@ export class CrearUsuario {
         fechaNacimiento: this.crearUsuarioForm.value.fechaNacimiento!
       }
 
-      if (this.crearUsuarioForm.value.empresa! != null) {
+      if (this.crearUsuarioForm.value.empresa! != '') {
         nuevoUsuario = { ...nuevoUsuario, empresa: this.crearUsuarioForm.value.empresa! };
       }
 
       this.usuariosService.crearUsuario(nuevoUsuario)
         .subscribe({
           next: (respuesta) => {
-            
+            toast.success("Usuario añadido correctamente");
+            setTimeout(() => {
+              this.router.navigate(["/private/usuarios"]);
+            }, 1000);
           },
-          error: (error) => {
-            console.error('Ocurrió un error:', error);
+          error: (error: HttpErrorResponse) => {
+            this.mensajeError.set(obtenerMensajeErrorAutenticacion(error, 'No se ha podido crear el usuario.'));
           }
         });
     }
