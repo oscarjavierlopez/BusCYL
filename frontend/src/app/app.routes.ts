@@ -7,7 +7,7 @@ export const routes: Routes = [
     {
         path: 'registro', loadComponent: () => import('./pages/registro/registro').then(m => m.Registro),
     },
-    
+
     {
         path: 'inicio-sesion', loadComponent: () => import('./pages/inicio-sesion/inicio-sesion').then(m => m.InicioSesion),
     },
@@ -26,6 +26,9 @@ export const routes: Routes = [
             },
             {
                 path: 'usuarios/crear', loadComponent: () => import('./pages/private/administrador/crear-usuario/crear-usuario').then(m => m.CrearUsuario),
+            },
+            {
+                path: 'usuarios/editar/:id', loadComponent: () => import('./pages/private/administrador/editar-usuario/editar-usuario').then(m => m.EditarUsuario),
             },
         ],
     },

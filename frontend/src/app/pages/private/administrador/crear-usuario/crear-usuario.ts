@@ -8,7 +8,7 @@ import { Empresa } from '../../../../models/empresa';
 import { Rol } from '../../../../models/rol';
 import { EmpresasService } from '../../../../services/empresas.service';
 import { RolesService } from '../../../../services/roles.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {toast, NgxSonnerToaster } from 'ngx-sonner';
 import { obtenerMensajeErrorAutenticacion } from '../../../../utils/auth-error-message';
 import { resetearErroresAlModificarFormulario } from '../../../../utils/form-error-reset';
@@ -16,7 +16,7 @@ import { resetearErroresAlModificarFormulario } from '../../../../utils/form-err
 
 @Component({
   selector: 'app-crear-usuario',
-  imports: [ReactiveFormsModule, NgxSonnerToaster],
+  imports: [ReactiveFormsModule, RouterLink, NgxSonnerToaster],
   templateUrl: './crear-usuario.html',
   styleUrl: './crear-usuario.css',
 })

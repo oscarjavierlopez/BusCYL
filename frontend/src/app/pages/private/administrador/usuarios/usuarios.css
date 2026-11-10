@@ -182,6 +182,13 @@ td:last-child {
   border: 0.1rem solid currentcolor;
 }
 
+.action-button {
+  box-sizing: border-box;
+  line-height: 1;
+  text-decoration: none;
+  appearance: none;
+}
+
 .edit-button,
 .invite-button {
   color: #1a73a8;

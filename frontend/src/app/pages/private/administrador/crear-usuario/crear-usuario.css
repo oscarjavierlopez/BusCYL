@@ -82,14 +82,27 @@ select:focus {
   line-height: 1.35;
 }
 
-.submit-button {
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.submit-button,
+.cancel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 10.5rem;
   min-height: 2.65rem;
-  margin-top: 2rem;
   padding: 0.6rem 1.25rem;
   color: #ffffff;
   font: inherit;
   font-weight: 700;
+}
+
+.submit-button {
   cursor: pointer;
   background: #bd1934;
   border: 0.1rem solid #bd1934;
@@ -101,6 +114,23 @@ select:focus {
 }
 
 .submit-button:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.15rem;
+}
+
+.cancel-button {
+  color: #292929;
+  text-decoration: none;
+  background: #f0f0f0;
+  border: 0.1rem solid #767676;
+}
+
+.cancel-button:hover {
+  background: #e0e0e0;
+  border-color: #4a4a4a;
+}
+
+.cancel-button:focus-visible {
   outline: 0.2rem solid #1a73a8;
   outline-offset: 0.15rem;
 }
@@ -122,7 +152,12 @@ select:focus {
     grid-column: auto;
   }
 
-  .submit-button {
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .submit-button,
+  .cancel-button {
     width: 100%;
   }
 }
