@@ -2,10 +2,22 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UsuariosService } from '../../../../services/usuarios.service';
 import { UsuariosPaginados } from '../../../../models/usuarios-paginados';
+import { toast, NgxSonnerToaster } from 'ngx-sonner';
+
+declare const Swal: {
+  fire: (options: {
+    title: string;
+    icon: 'warning';
+    showCancelButton: boolean;
+    confirmButtonText: string;
+    cancelButtonText: string;
+    confirmButtonColor: string;
+  }) => Promise<{ isConfirmed: boolean }>;
+};
 
 @Component({
   selector: 'app-usuarios',
-  imports: [RouterLink],
+  imports: [RouterLink, NgxSonnerToaster],
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.css',
 })
@@ -76,6 +88,7 @@ export class Usuarios implements OnInit {
 
   seleccionarEstado(activo: boolean): void {
     this.activoValue.set(activo);
+    this.pagina.set(1);
     this.modificarQueryParams();
     this.obtenerUsuarios();
   }
@@ -89,6 +102,7 @@ export class Usuarios implements OnInit {
 
     this.temporizadorBusqueda = setTimeout(() => {
       this.nombreApellidos.set(input.value);
+      this.pagina.set(1);
       this.modificarQueryParams();
       this.obtenerUsuarios();
     }, 300);
@@ -98,5 +112,59 @@ export class Usuarios implements OnInit {
     this.pagina.set(pagina);
     this.modificarQueryParams()
     this.obtenerUsuarios();
+  }
+
+  private confirmarCambioEstado(mensaje: string, colorConfirmacion: string, accion: () => void): void {
+    Swal.fire({
+      title: mensaje,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: colorConfirmacion,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        accion();
+      }
+    });
+  }
+
+  private eliminarUsuarioPaginado(id: number): void {
+    this.usuariosPaginados.update((paginaUsuarios) => {
+      if (!paginaUsuarios) {
+        return null;
+      }
+
+      return {
+        ...paginaUsuarios,
+        usuarios: paginaUsuarios.usuarios.filter((usuario) => usuario.id !== id),
+      };
+    });
+  }
+
+  desactivarUsuario(id: number, email: string): void {
+    this.confirmarCambioEstado(`desea desactivar el usuario ${email}`, '#a6001c', () => {
+      this.usuariosService.desactivarUsuario(id).subscribe({
+        next: () =>{ 
+          this.eliminarUsuarioPaginado(id);
+          toast.info(`EL usuario ${email} ha sido desactivado`)
+        },
+      });
+    });
+  }
+
+  activarUsuario(id: number, email: string): void {
+    this.confirmarCambioEstado(`desea activar el usuario ${email}`, '#2f6b45', () => {
+      this.usuariosService.activarUsuario(id).subscribe({
+        next: () =>{ 
+          this.eliminarUsuarioPaginado(id);
+          toast.info(`EL usuario ${email} ha sido activado`)
+        },
+      });
+    });
+  }
+
+  enviarInvitacion(email: string): void{
+
   }
 }

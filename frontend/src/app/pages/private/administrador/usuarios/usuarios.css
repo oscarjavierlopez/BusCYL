@@ -191,6 +191,10 @@ td:last-child {
   color: #a6001c;
 }
 
+.activate-button {
+  color: #2f6b45;
+}
+
 .action-button:hover {
   color: #ffffff;
 }
@@ -202,6 +206,10 @@ td:last-child {
 
 .deactivate-button:hover {
   background: #a6001c;
+}
+
+.activate-button:hover {
+  background: #2f6b45;
 }
 
 .empty-state {
