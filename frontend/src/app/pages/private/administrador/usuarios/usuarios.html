@@ -15,7 +15,7 @@
     <div class="search-input">
       <i class="bi bi-search" aria-hidden="true"></i>
       <input id="buscar-usuario" type="search" placeholder="Busque un usuario..." autocomplete="off"
-        (input)="manejarBusqueda($event)" />
+        [value]="nombreApellidos()" (input)="manejarBusqueda($event)" />
     </div>
 
     <div class="estado-filtro" aria-label="Estado de las cuentas">

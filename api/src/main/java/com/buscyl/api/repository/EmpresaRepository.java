@@ -11,7 +11,7 @@ import com.buscyl.api.entity.Empresa;
 public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     @Query(value = "SELECT * \r\n" + //
             "FROM buscyl.empresas\r\n" + //
-            "WHERE nombre LIKE CONCAT('%', :nombre, '%')\r\n" + //
+            "WHERE LOWER(nombre) LIKE CONCAT('%', :nombre, '%')\r\n" + //
             "AND activo = :activo\r\n" + //
             "ORDER BY id\r\n" + //
             "LIMIT 20 OFFSET (:pagina - 1) * 20", nativeQuery = true)
@@ -20,7 +20,7 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
 
     @Query(value = "SELECT COUNT(*) \r\n" + //
             "FROM buscyl.empresas\r\n" + //
-            "WHERE nombre LIKE CONCAT('%', :nombre, '%')\r\n" + //
+            "WHERE LOWER(nombre) LIKE CONCAT('%', :nombre, '%')\r\n" + //
             "AND activo = :activo\r\n", nativeQuery = true)
     long obtenerEmpresasFiltradas(@Param("nombre") String nombre,
             @Param("activo") boolean activo);
