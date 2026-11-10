@@ -11,10 +11,10 @@
           <label for="email">Correo electrónico</label>
           <input id="email" type="email" formControlName="email" autocomplete="email" />
           @if (crearUsuarioForm.controls.email.touched && crearUsuarioForm.controls.email.invalid) {
-            <p class="field-error" role="alert">
-              @if (crearUsuarioForm.controls.email.errors?.['required']) { El correo electrónico es obligatorio. }
-              @if (crearUsuarioForm.controls.email.errors?.['email']) { Introduzca un correo electrónico válido. }
-            </p>
+          <p class="field-error" role="alert">
+            @if (crearUsuarioForm.controls.email.errors?.['required']) { El correo electrónico es obligatorio. }
+            @if (crearUsuarioForm.controls.email.errors?.['email']) { Introduzca un correo electrónico válido. }
+          </p>
           }
         </div>
 
@@ -23,11 +23,11 @@
           <select id="rol" formControlName="rol">
             <option value="">Seleccione un rol</option>
             @for (rol of roles(); track rol.id) {
-              <option [ngValue]="rol.id">{{rol.nombre}}</option>
+            <option [ngValue]="rol.id">{{rol.nombre}}</option>
             }
           </select>
           @if (crearUsuarioForm.controls.rol.touched && crearUsuarioForm.controls.rol.errors?.['required']) {
-            <p class="field-error" role="alert">El rol es obligatorio.</p>
+          <p class="field-error" role="alert">El rol es obligatorio.</p>
           }
         </div>
 
@@ -36,11 +36,13 @@
           <select id="empresa" formControlName="empresa">
             <option value="">Seleccione una empresa</option>
             @for (empresa of empresas(); track empresa.id) {
-              <option [ngValue]="empresa.id">{{empresa.nombre}}</option>
+            @if (empresa.activo) {
+            <option [ngValue]="empresa.id">{{empresa.nombre}}</option>
+            }
             }
           </select>
           @if (crearUsuarioForm.controls.empresa.touched && crearUsuarioForm.errors?.['empresaObligatoria']) {
-            <p class="field-error" role="alert">Debe seleccionar una empresa</p>
+          <p class="field-error" role="alert">Debe seleccionar una empresa</p>
           }
         </div>
 
@@ -48,10 +50,10 @@
           <label for="dni">DNI</label>
           <input id="dni" type="text" formControlName="dni" maxlength="9" autocomplete="off" />
           @if (crearUsuarioForm.controls.dni.touched && crearUsuarioForm.controls.dni.invalid) {
-            <p class="field-error" role="alert">
-              @if (crearUsuarioForm.controls.dni.errors?.['required']) { El DNI es obligatorio. }
-              @if (crearUsuarioForm.controls.dni.errors?.['pattern']) { El DNI debe contener 8 dígitos y una letra. }
-            </p>
+          <p class="field-error" role="alert">
+            @if (crearUsuarioForm.controls.dni.errors?.['required']) { El DNI es obligatorio. }
+            @if (crearUsuarioForm.controls.dni.errors?.['pattern']) { El DNI debe contener 8 dígitos y una letra. }
+          </p>
           }
         </div>
 
@@ -59,10 +61,10 @@
           <label for="telefono">Teléfono</label>
           <input id="telefono" type="tel" formControlName="telefono" maxlength="9" autocomplete="tel" />
           @if (crearUsuarioForm.controls.telefono.touched && crearUsuarioForm.controls.telefono.invalid) {
-            <p class="field-error" role="alert">
-              @if (crearUsuarioForm.controls.telefono.errors?.['required']) { El teléfono es obligatorio. }
-              @if (crearUsuarioForm.controls.telefono.errors?.['pattern']) { El teléfono debe contener 9 dígitos. }
-            </p>
+          <p class="field-error" role="alert">
+            @if (crearUsuarioForm.controls.telefono.errors?.['required']) { El teléfono es obligatorio. }
+            @if (crearUsuarioForm.controls.telefono.errors?.['pattern']) { El teléfono debe contener 9 dígitos. }
+          </p>
           }
         </div>
 
@@ -70,10 +72,11 @@
           <label for="nombre">Nombre</label>
           <input id="nombre" type="text" formControlName="nombre" autocomplete="given-name" />
           @if (crearUsuarioForm.controls.nombre.touched && crearUsuarioForm.controls.nombre.invalid) {
-            <p class="field-error" role="alert">
-              @if (crearUsuarioForm.controls.nombre.errors?.['required']) { El nombre es obligatorio. }
-              @if (crearUsuarioForm.controls.nombre.errors?.['soloEspacios']) { El nombre no puede contener solo espacios. }
-            </p>
+          <p class="field-error" role="alert">
+            @if (crearUsuarioForm.controls.nombre.errors?.['required']) { El nombre es obligatorio. }
+            @if (crearUsuarioForm.controls.nombre.errors?.['soloEspacios']) { El nombre no puede contener solo espacios.
+            }
+          </p>
           }
         </div>
 
@@ -81,10 +84,11 @@
           <label for="apellidos">Apellidos</label>
           <input id="apellidos" type="text" formControlName="apellidos" autocomplete="family-name" />
           @if (crearUsuarioForm.controls.apellidos.touched && crearUsuarioForm.controls.apellidos.invalid) {
-            <p class="field-error" role="alert">
-              @if (crearUsuarioForm.controls.apellidos.errors?.['required']) { Los apellidos son obligatorios. }
-              @if (crearUsuarioForm.controls.apellidos.errors?.['soloEspacios']) { Los apellidos no pueden contener solo espacios. }
-            </p>
+          <p class="field-error" role="alert">
+            @if (crearUsuarioForm.controls.apellidos.errors?.['required']) { Los apellidos son obligatorios. }
+            @if (crearUsuarioForm.controls.apellidos.errors?.['soloEspacios']) { Los apellidos no pueden contener solo
+            espacios. }
+          </p>
           }
         </div>
 
@@ -92,10 +96,12 @@
           <label for="fechaNacimiento">Fecha de nacimiento</label>
           <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento" autocomplete="bday" />
           @if (crearUsuarioForm.controls.fechaNacimiento.touched && crearUsuarioForm.controls.fechaNacimiento.invalid) {
-            <p class="field-error" role="alert">
-              @if (crearUsuarioForm.controls.fechaNacimiento.errors?.['required']) { La fecha de nacimiento es obligatoria. }
-              @if (crearUsuarioForm.controls.fechaNacimiento.errors?.['fechaNoPasada']) { La fecha de nacimiento debe ser una fecha pasada. }
-            </p>
+          <p class="field-error" role="alert">
+            @if (crearUsuarioForm.controls.fechaNacimiento.errors?.['required']) { La fecha de nacimiento es
+            obligatoria. }
+            @if (crearUsuarioForm.controls.fechaNacimiento.errors?.['fechaNoPasada']) { La fecha de nacimiento debe ser
+            una fecha pasada. }
+          </p>
           }
         </div>
       </div>
@@ -103,7 +109,7 @@
       <button type="submit" class="submit-button">Añadir usuario</button>
 
       @if (mensajeError()) {
-        <p class="field-error" role="alert">{{ mensajeError() }}</p>
+      <p class="field-error" role="alert">{{ mensajeError() }}</p>
       }
     </form>
   </div>

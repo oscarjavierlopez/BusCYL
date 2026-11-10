@@ -37,8 +37,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         long totalUsuarios = usuarioRepository.obtenerTotalUsuarios();
         long totalUsuariosFiltrados = usuarioRepository.obtenerUsuariosFiltrados(nombreApellidos, activo);
         int totalPaginas = (int) Math.ceil(totalUsuariosFiltrados / 20.0);
+        totalPaginas = totalPaginas > 0 ? totalPaginas : 1;
 
-        if ((pagina > totalPaginas || pagina < 1) || (totalUsuariosFiltrados > 0 && pagina != 1))
+        if ((pagina > totalPaginas || pagina < 1))
             throw new PaginaNoValidaException("Página no válida");
 
         List<UsuarioResponse> usuarios = usuarioRepository.obtenerUsuarios(pagina, nombreApellidos, activo)
@@ -101,7 +102,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuarioActualizar = usuarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
-        if(request.email() != null){
+        if (request.email() != null) {
             usuarioActualizar.setEmail(request.email());
         }
 
@@ -111,20 +112,20 @@ public class UsuarioServiceImpl implements UsuarioService {
             usuarioActualizar.setRol(rol);
         }
 
-        if(request.nombre() != null){
+        if (request.nombre() != null) {
             usuarioActualizar.setNombre(request.nombre());
         }
 
-        if(request.apellidos() != null){
+        if (request.apellidos() != null) {
             usuarioActualizar.setApellidos(request.apellidos());
         }
 
         if (request.dni() != null) {
-            usuarioActualizar.setDni(request.dni());            
+            usuarioActualizar.setDni(request.dni());
         }
 
         if (request.telefono() != null) {
-            usuarioActualizar.setTelefono(request.telefono());            
+            usuarioActualizar.setTelefono(request.telefono());
         }
 
         if (request.fechaNacimiento() != null) {

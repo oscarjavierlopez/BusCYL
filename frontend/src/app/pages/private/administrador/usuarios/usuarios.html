@@ -14,12 +14,15 @@
     <label for="buscar-usuario">Buscar usuario</label>
     <div class="search-input">
       <i class="bi bi-search" aria-hidden="true"></i>
-      <input id="buscar-usuario" type="search" placeholder="Busque un usuario..." autocomplete="off" (input)="manejarBusqueda($event)" />
+      <input id="buscar-usuario" type="search" placeholder="Busque un usuario..." autocomplete="off"
+        (input)="manejarBusqueda($event)" />
     </div>
 
     <div class="estado-filtro" aria-label="Estado de las cuentas">
-      <button type="button" class="estado-button" [class.estado-button-selected]="activoValue()" [attr.aria-pressed]="activoValue()" (click)="seleccionarEstado(true)">Activos</button>
-      <button type="button" class="estado-button" [class.estado-button-selected]="!activoValue()" [attr.aria-pressed]="!activoValue()" (click)="seleccionarEstado(false)">Inactivos</button>
+      <button type="button" class="estado-button" [class.estado-button-selected]="activoValue()"
+        [attr.aria-pressed]="activoValue()" (click)="seleccionarEstado(true)">Activos</button>
+      <button type="button" class="estado-button" [class.estado-button-selected]="!activoValue()"
+        [attr.aria-pressed]="!activoValue()" (click)="seleccionarEstado(false)">Inactivos</button>
     </div>
   </div>
 
@@ -48,10 +51,17 @@
                 title="Editar usuario">
                 <i class="bi bi-pencil-fill" aria-hidden="true"></i>
               </button>
+              @if (usuario.activo) {
               <button type="button" class="action-button deactivate-button" aria-label="Desactivar usuario"
-                title="Desactivar usuario">
-                <i class="bi bi-person-x-fill" aria-hidden="true"></i>
+                title="Desactivar usuario" (click)="desactivarUsuario(usuario.id!, usuario.email)">
+                <i class="bi bi-person-fill-dash" aria-hidden="true"></i>
               </button>
+              }@else {
+              <button type="button" class="action-button activate-button" aria-label="Activar usuario"
+                title="Activar usuario" (click)="activarUsuario(usuario.id!, usuario.email)">
+                <i class="bi bi-person-fill-check" aria-hidden="true"></i>
+              </button>
+              }
               <button type="button" class="action-button invite-button" aria-label="Enviar invitación"
                 title="Enviar invitación">
                 <i class="bi bi-envelope-fill" aria-hidden="true"></i>
@@ -72,22 +82,28 @@
     <p>Mostrando {{ paginaUsuarios.usuarios.length }} de {{ paginaUsuarios.totalUsuarios }} usuarios</p>
     <div class="pagination-controls">
       @if (paginaUsuarios.pagina != 1) {
-      <button type="button" class="pagination-button" aria-label="Ir a la primera página"
-        title="Primera página" (click)="cambiarPagina(1)">1</button>
+      <button type="button" class="pagination-button" aria-label="Ir a la primera página" title="Primera página"
+        (click)="cambiarPagina(1)">1</button>
       }
-      <button [disabled]="paginaUsuarios.paginaPrevia == null" type="button" class="pagination-button" aria-label="Ir a la página anterior" title="Página anterior" (click)="cambiarPagina(paginaUsuarios.paginaPrevia!)">
+      <button [disabled]="paginaUsuarios.paginaPrevia == null" type="button" class="pagination-button"
+        aria-label="Ir a la página anterior" title="Página anterior"
+        (click)="cambiarPagina(paginaUsuarios.paginaPrevia!)">
         <i class="bi bi-chevron-left" aria-hidden="true"></i>
       </button>
       <button type="button" class="pagination-button pagination-button-current" aria-current="page"
         title="Página actual">{{ paginaUsuarios.pagina }}</button>
-      <button [disabled]="paginaUsuarios.paginaSiguiente == null" type="button" class="pagination-button" aria-label="Ir a la página siguiente" title="Página siguiente" (click)="cambiarPagina(paginaUsuarios.paginaSiguiente!)">
+      <button [disabled]="paginaUsuarios.paginaSiguiente == null" type="button" class="pagination-button"
+        aria-label="Ir a la página siguiente" title="Página siguiente"
+        (click)="cambiarPagina(paginaUsuarios.paginaSiguiente!)">
         <i class="bi bi-chevron-right" aria-hidden="true"></i>
       </button>
       @if (paginaUsuarios.pagina != paginaUsuarios.totalPaginas) {
-      <button type="button" class="pagination-button" aria-label="Ir a la última página" title="Última página" (click)="cambiarPagina(paginaUsuarios.totalPaginas)">{{
+      <button type="button" class="pagination-button" aria-label="Ir a la última página" title="Última página"
+        (click)="cambiarPagina(paginaUsuarios.totalPaginas)">{{
         paginaUsuarios.totalPaginas }}</button>
       }
     </div>
   </footer>
   }
+  <ngx-sonner-toaster position="bottom-right" />
 </section>
