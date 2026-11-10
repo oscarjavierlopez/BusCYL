@@ -8,11 +8,13 @@ import org.springframework.stereotype.Service;
 import com.buscyl.api.dto.EmpresaCreateRequest;
 import com.buscyl.api.dto.EmpresaResponse;
 import com.buscyl.api.dto.EmpresaUpdateRequest;
+import com.buscyl.api.dto.EmpresasResponse;
 import com.buscyl.api.dto.UsuarioUpdateRequest;
 import com.buscyl.api.entity.Empresa;
 import com.buscyl.api.entity.Localidad;
 import com.buscyl.api.entity.Usuario;
 import com.buscyl.api.exception.NotFoundException;
+import com.buscyl.api.exception.PaginaNoValidaException;
 import com.buscyl.api.mapper.Mapper;
 import com.buscyl.api.repository.EmpresaRepository;
 import com.buscyl.api.repository.LocalidadRepository;
@@ -27,7 +29,7 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Autowired
     private LocalidadRepository localidadRepository;
 
-    @Autowired 
+    @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Override
@@ -132,6 +134,35 @@ public class EmpresaServiceImpl implements EmpresaService {
             usuarioRepository.save(usuario);
         }
         empresaRepository.save(empresaActivar);
+    }
+
+    @Override
+    public EmpresasResponse obtenerEmpresasPaginadas(int pagina, String nombre, boolean activo) {
+        long totalEmpresas = empresaRepository.obtenerTotalEmpresas();
+        long totalEmpresasFiltradas = empresaRepository.obtenerEmpresasFiltradas(nombre, activo);
+        int totalPaginas = (int) Math.ceil(totalEmpresasFiltradas / 20.0);
+        totalPaginas = totalPaginas > 0 ? totalPaginas : 1;
+
+        if ((pagina > totalPaginas || pagina < 1))
+            throw new PaginaNoValidaException("Página no válida");
+
+        List<EmpresaResponse> empresas = empresaRepository.obtenerEmpresasPaginadas(pagina, nombre, activo)
+        .stream()
+        .map(Mapper::toDto)
+        .toList();
+
+        Integer paginaPrevia = (pagina - 1) > 0 ? (pagina - 1) : null;
+        Integer paginaSiguiente = (pagina + 1) <= totalPaginas ? (pagina + 1) : null;
+
+        return EmpresasResponse.builder()
+        .totalEmpresas(totalEmpresas)
+        .totalPaginas(totalPaginas)
+        .paginaPrevia(paginaPrevia)
+        .pagina(pagina)
+        .paginaSiguiente(paginaSiguiente)
+        .empresas(empresas)
+        .build();
+
     }
 
 }

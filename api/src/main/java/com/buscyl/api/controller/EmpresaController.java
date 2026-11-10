@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.buscyl.api.dto.EmpresaCreateRequest;
 import com.buscyl.api.dto.EmpresaResponse;
 import com.buscyl.api.dto.EmpresaUpdateRequest;
+import com.buscyl.api.dto.EmpresasResponse;
+import com.buscyl.api.dto.UsuariosResponse;
 import com.buscyl.api.service.EmpresaService;
 
 import jakarta.validation.Valid;
@@ -33,6 +36,15 @@ public class EmpresaController {
     @GetMapping
     public ResponseEntity<List<EmpresaResponse>> obtenerEmpresas() {
         return ResponseEntity.ok(empresaService.obtenerEmpresas());
+    }
+
+    @GetMapping(params = {"pagina", "nombre", "activo"})
+    public ResponseEntity<EmpresasResponse> obtenerEmpresasPaginadas(
+            @RequestParam int pagina,
+            @RequestParam String nombre,
+            @RequestParam boolean activo) {
+        nombre = nombre != null ? nombre.toLowerCase() : "";
+        return ResponseEntity.ok(empresaService.obtenerEmpresasPaginadas(pagina, nombre, activo));
     }
 
     @GetMapping("{id}")

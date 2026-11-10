@@ -6,6 +6,7 @@
       </a>
       @if (usuario()?.rol == "administrador") {
       <a class="usuarios-link" routerLink="/private/usuarios" routerLinkActive="usuarios-link-active" [routerLinkActiveOptions]="{ exact: false }">Usuarios</a>
+      <a class="usuarios-link" routerLink="/private/empresas" routerLinkActive="empresas-link-active" [routerLinkActiveOptions]="{ exact: false }">Empresas</a>
       }
     </div>
 

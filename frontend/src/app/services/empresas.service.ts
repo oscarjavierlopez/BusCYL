@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Empresa } from '../models/empresa';
+import { Empresas } from '../pages/private/administrador/empresas/empresas';
+import { EmpresasPaginadas } from '../models/empresas-paginadas';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +15,15 @@ export class EmpresasService {
 
   obtenerEmpresas(): Observable<Empresa[]> {
     return this.httpClient.get<Empresa[]>(this.baseUrl);
+  }
+
+  obtenerEmpresasPaginadas(pagina: number, nombre: string, activo: boolean): Observable<EmpresasPaginadas> {
+    const params = new HttpParams()
+      .set('pagina', pagina)
+      .set('nombre', nombre)
+      .set('activo', activo);
+
+    return this.httpClient.get<EmpresasPaginadas>(this.baseUrl, { params });
   }
 
   obtenerEmpresa(id: number): Observable<Empresa> {

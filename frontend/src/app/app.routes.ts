@@ -30,6 +30,9 @@ export const routes: Routes = [
             {
                 path: 'usuarios/editar/:id', loadComponent: () => import('./pages/private/administrador/editar-usuario/editar-usuario').then(m => m.EditarUsuario),
             },
+            {
+                path: 'empresas', loadComponent: () => import('./pages/private/administrador/empresas/empresas').then(m => m.Empresas),
+            },
         ],
     },
 ];

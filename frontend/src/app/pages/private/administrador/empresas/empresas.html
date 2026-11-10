@@ -1,0 +1,107 @@
+<section class="empresas-page" aria-labelledby="empresas-title">
+  <header class="empresas-header">
+    <div>
+      <h1 id="empresas-title">Gestión de empresas</h1>
+      <p>Consulte, busque y gestione las empresas registradas.</p>
+    </div>
+    <button type="button" class="add-company-button">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      Añadir empresa
+    </button>
+  </header>
+
+  <div class="empresas-filtros">
+    <label for="buscar-empresa">Buscar empresa</label>
+    <div class="search-input">
+      <i class="bi bi-search" aria-hidden="true"></i>
+      <input id="buscar-empresa" type="search" placeholder="Busque una empresa..." autocomplete="off" [value]="nombre()"
+        (input)="manejarBusqueda($event)" />
+    </div>
+
+    <div class="estado-filtro" aria-label="Estado de las empresas">
+      <button type="button" class="estado-button" [class.estado-button-selected]="activoValue()"
+        [attr.aria-pressed]="activoValue()" (click)="seleccionarEstado(true)">Activas</button>
+      <button type="button" class="estado-button" [class.estado-button-selected]="!activoValue()"
+        [attr.aria-pressed]="!activoValue()" (click)="seleccionarEstado(false)">Inactivas</button>
+    </div>
+  </div>
+
+  @if (empresasPaginadas(); as paginaEmpresas) {
+  <div class="tabla-contenedor" tabindex="0">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Nombre</th>
+          <th scope="col">CIF</th>
+          <th scope="col">Contacto</th>
+          <th scope="col">Localidad</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (empresa of paginaEmpresas.empresas; track empresa.id) {
+        <tr>
+          <td>{{ empresa.nombre }}</td>
+          <td>{{ empresa.cif }}</td>
+          <td>
+            <span class="contacto-email">{{ empresa.email }}</span>
+            <span>{{ empresa.telefono }}</span>
+          </td>
+          <td>{{ empresa.localidad }} ({{empresa.provincia}})</td>
+          <td>
+            <div class="acciones" aria-label="Acciones para {{ empresa.nombre }}">
+              <button type="button" class="action-button edit-button" aria-label="Editar empresa"
+                title="Editar empresa">
+                <i class="bi bi-pencil-fill" aria-hidden="true"></i>
+              </button>
+              @if (empresa.activo) {
+              <button type="button" class="action-button deactivate-button" aria-label="Desactivar empresa"
+                title="Desactivar empresa" (click)="desactivarEmpresa(empresa.id!, empresa.nombre)">
+                <i class="bi bi-building-dash" aria-hidden="true"></i>
+              </button>
+              } @else {
+              <button type="button" class="action-button activate-button" aria-label="Activar empresa"
+                title="Activar empresa" (click)="activarEmpresa(empresa.id!, empresa.nombre)">
+                <i class="bi bi-building-check" aria-hidden="true"></i>
+              </button>
+              }
+            </div>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td class="empty-state" colspan="5">No hay empresas disponibles.</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="paginacion" aria-label="Paginación de empresas">
+    <p>Mostrando {{ paginaEmpresas.empresas.length }} de {{ paginaEmpresas.totalEmpresas }} empresas</p>
+    <div class="pagination-controls">
+      @if (paginaEmpresas.pagina != 1) {
+      <button type="button" class="pagination-button" aria-label="Ir a la primera página" title="Primera página"
+        (click)="cambiarPagina(1)">1</button>
+      }
+      <button [disabled]="paginaEmpresas.paginaPrevia == null" type="button" class="pagination-button"
+        aria-label="Ir a la página anterior" title="Página anterior"
+        (click)="cambiarPagina(paginaEmpresas.paginaPrevia!)">
+        <i class="bi bi-chevron-left" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="pagination-button pagination-button-current" aria-current="page"
+        title="Página actual">{{ paginaEmpresas.pagina }}</button>
+      <button [disabled]="paginaEmpresas.paginaSiguiente == null" type="button" class="pagination-button"
+        aria-label="Ir a la página siguiente" title="Página siguiente"
+        (click)="cambiarPagina(paginaEmpresas.paginaSiguiente!)">
+        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+      @if (paginaEmpresas.pagina != paginaEmpresas.totalPaginas) {
+      <button type="button" class="pagination-button" aria-label="Ir a la última página" title="Última página"
+        (click)="cambiarPagina(paginaEmpresas.totalPaginas)">{{ paginaEmpresas.totalPaginas }}</button>
+      }
+    </div>
+  </footer>
+  }
+  <ngx-sonner-toaster position="bottom-right" />
+</section>
