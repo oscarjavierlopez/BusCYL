@@ -3,11 +3,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UsuariosService } from '../../../../services/usuarios.service';
 import { UsuariosPaginados } from '../../../../models/usuarios-paginados';
 import { toast, NgxSonnerToaster } from 'ngx-sonner';
+import { InvitacionesService } from '../../../../services/invitaciones.service';
 
 declare const Swal: {
   fire: (options: {
     title: string;
-    icon: 'warning';
+    icon: 'question';
     showCancelButton: boolean;
     confirmButtonText: string;
     cancelButtonText: string;
@@ -23,6 +24,7 @@ declare const Swal: {
 })
 export class Usuarios implements OnInit {
   private usuariosService = inject(UsuariosService);
+  private invitacionesService = inject(InvitacionesService);
   usuariosPaginados = signal<UsuariosPaginados | null>(null);
   nombreApellidos = signal<string>('');
   activoValue = signal<boolean>(true);
@@ -43,18 +45,18 @@ export class Usuarios implements OnInit {
   }
 
   modificarQueryParams(): void {
-    let queryParams:{activo?: string, nombreApellidos?: string, pagina?:number} = {};
+    let queryParams: { activo?: string, nombreApellidos?: string, pagina?: number } = {};
 
     if (!this.activoValue()) {
-      queryParams = {...queryParams, activo: "false"};
+      queryParams = { ...queryParams, activo: "false" };
     }
 
     if (/.*\S.*/.test(this.nombreApellidos())) {
-      queryParams = {...queryParams, nombreApellidos: this.nombreApellidos()}
+      queryParams = { ...queryParams, nombreApellidos: this.nombreApellidos() }
     }
 
     if (this.pagina() != 1) {
-      queryParams = {...queryParams, pagina: this.pagina()}
+      queryParams = { ...queryParams, pagina: this.pagina() }
     }
 
     this.router.navigate([], {
@@ -64,7 +66,7 @@ export class Usuarios implements OnInit {
 
   }
 
-  leerQueryParams(): void{
+  leerQueryParams(): void {
     this.route.queryParams.subscribe(params => {
       if (params["pagina"]) {
         this.pagina.set(Number(params["pagina"]));
@@ -108,7 +110,7 @@ export class Usuarios implements OnInit {
     }, 300);
   }
 
-  cambiarPagina(pagina:number): void{
+  cambiarPagina(pagina: number): void {
     this.pagina.set(pagina);
     this.modificarQueryParams()
     this.obtenerUsuarios();
@@ -117,7 +119,7 @@ export class Usuarios implements OnInit {
   private confirmarCambioEstado(mensaje: string, colorConfirmacion: string, accion: () => void): void {
     Swal.fire({
       title: mensaje,
-      icon: 'warning',
+      icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar',
@@ -143,28 +145,39 @@ export class Usuarios implements OnInit {
   }
 
   desactivarUsuario(id: number, email: string): void {
-    this.confirmarCambioEstado(`desea desactivar el usuario ${email}`, '#a6001c', () => {
+    this.confirmarCambioEstado(`¿desea desactivar el usuario ${email}?`, '#a6001c', () => {
       this.usuariosService.desactivarUsuario(id).subscribe({
-        next: () =>{ 
+        next: () => {
           this.eliminarUsuarioPaginado(id);
-          toast.info(`EL usuario ${email} ha sido desactivado`)
+          toast.info(`El usuario ${email} ha sido desactivado`)
         },
       });
     });
   }
 
   activarUsuario(id: number, email: string): void {
-    this.confirmarCambioEstado(`desea activar el usuario ${email}`, '#2f6b45', () => {
+    this.confirmarCambioEstado(`¿desea activar el usuario ${email}?`, '#2f6b45', () => {
       this.usuariosService.activarUsuario(id).subscribe({
-        next: () =>{ 
+        next: () => {
           this.eliminarUsuarioPaginado(id);
-          toast.info(`EL usuario ${email} ha sido activado`)
+          toast.info(`El usuario ${email} ha sido activado`)
         },
       });
     });
   }
 
-  enviarInvitacion(email: string): void{
-
+  enviarInvitacion(email: string): void {
+    this.confirmarCambioEstado(`¿Desea enviar invitación al usuario ${email}?`, '#1a73a8', () => {
+      this.invitacionesService.enviarInvitacion({ email: email }).subscribe(
+        {
+          next: () => {
+            toast.info(`Se envió una invitación al usuario ${email}`)
+          },
+          error: (err) => {
+            toast.error(err.error.error);
+          }
+        }
+      );
+    });
   }
 }
