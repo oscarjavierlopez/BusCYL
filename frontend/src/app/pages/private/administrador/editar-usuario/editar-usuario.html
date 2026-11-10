@@ -1,0 +1,129 @@
+<section class="crear-usuario-page" aria-labelledby="crear-usuario-title">
+    <div class="crear-usuario-card">
+        <header class="crear-usuario-header">
+            <h1 id="crear-usuario-title">Crear usuario</h1>
+            <p>Introduzca los datos necesarios para dar de alta una cuenta de usuario.</p>
+        </header>
+
+        <form [formGroup]="editarUsuarioForm" (ngSubmit)="submit()" novalidate>
+            <div class="form-grid">
+                <div class="form-field form-field-full">
+                    <label for="email">Correo electrónico</label>
+                    <input id="email" type="email" formControlName="email" autocomplete="email" />
+                    @if (editarUsuarioForm.controls.email.touched && editarUsuarioForm.controls.email.invalid) {
+                    <p class="field-error" role="alert">
+                        @if (editarUsuarioForm.controls.email.errors?.['required']) { El correo electrónico es
+                        obligatorio. }
+                        @if (editarUsuarioForm.controls.email.errors?.['email']) { Introduzca un correo electrónico
+                        válido. }
+                    </p>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <label for="rol">Rol</label>
+                    <select id="rol" formControlName="rol">
+                        <option value="">Seleccione un rol</option>
+                        @for (rol of roles(); track rol.id) {
+                        <option [ngValue]="rol.id">{{rol.nombre}}</option>
+                        }
+                    </select>
+                    @if (editarUsuarioForm.controls.rol.touched && editarUsuarioForm.controls.rol.errors?.['required']) {
+                    <p class="field-error" role="alert">El rol es obligatorio.</p>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <label for="empresa">Empresa <span class="optional-field">(opcional)</span></label>
+                    <select id="empresa" formControlName="empresa">
+                        <option value="">Seleccione una empresa</option>
+                        @for (empresa of empresas(); track empresa.id) {
+                        @if (empresa.activo) {
+                        <option [ngValue]="empresa.id">{{empresa.nombre}}</option>
+                        }
+                        }
+                    </select>
+                    @if (editarUsuarioForm.controls.empresa.touched && editarUsuarioForm.errors?.['empresaObligatoria']) {
+                    <p class="field-error" role="alert">Debe seleccionar una empresa</p>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <label for="dni">DNI</label>
+                    <input id="dni" type="text" formControlName="dni" maxlength="9" autocomplete="off" />
+                    @if (editarUsuarioForm.controls.dni.touched && editarUsuarioForm.controls.dni.invalid) {
+                    <p class="field-error" role="alert">
+                        @if (editarUsuarioForm.controls.dni.errors?.['required']) { El DNI es obligatorio. }
+                        @if (editarUsuarioForm.controls.dni.errors?.['pattern']) { El DNI debe contener 8 dígitos y una
+                        letra. }
+                    </p>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <label for="telefono">Teléfono</label>
+                    <input id="telefono" type="tel" formControlName="telefono" maxlength="9" autocomplete="tel" />
+                    @if (editarUsuarioForm.controls.telefono.touched && editarUsuarioForm.controls.telefono.invalid) {
+                    <p class="field-error" role="alert">
+                        @if (editarUsuarioForm.controls.telefono.errors?.['required']) { El teléfono es obligatorio. }
+                        @if (editarUsuarioForm.controls.telefono.errors?.['pattern']) { El teléfono debe contener 9
+                        dígitos. }
+                    </p>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <label for="nombre">Nombre</label>
+                    <input id="nombre" type="text" formControlName="nombre" autocomplete="given-name" />
+                    @if (editarUsuarioForm.controls.nombre.touched && editarUsuarioForm.controls.nombre.invalid) {
+                    <p class="field-error" role="alert">
+                        @if (editarUsuarioForm.controls.nombre.errors?.['required']) { El nombre es obligatorio. }
+                        @if (editarUsuarioForm.controls.nombre.errors?.['soloEspacios']) { El nombre no puede contener
+                        solo espacios.
+                        }
+                    </p>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <label for="apellidos">Apellidos</label>
+                    <input id="apellidos" type="text" formControlName="apellidos" autocomplete="family-name" />
+                    @if (editarUsuarioForm.controls.apellidos.touched && editarUsuarioForm.controls.apellidos.invalid) {
+                    <p class="field-error" role="alert">
+                        @if (editarUsuarioForm.controls.apellidos.errors?.['required']) { Los apellidos son obligatorios.
+                        }
+                        @if (editarUsuarioForm.controls.apellidos.errors?.['soloEspacios']) { Los apellidos no pueden
+                        contener solo
+                        espacios. }
+                    </p>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <label for="fechaNacimiento">Fecha de nacimiento</label>
+                    <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento" autocomplete="bday" />
+                    @if (editarUsuarioForm.controls.fechaNacimiento.touched &&
+                    editarUsuarioForm.controls.fechaNacimiento.invalid) {
+                    <p class="field-error" role="alert">
+                        @if (editarUsuarioForm.controls.fechaNacimiento.errors?.['required']) { La fecha de nacimiento es
+                        obligatoria. }
+                        @if (editarUsuarioForm.controls.fechaNacimiento.errors?.['fechaNoPasada']) { La fecha de
+                        nacimiento debe ser
+                        una fecha pasada. }
+                    </p>
+                    }
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-button">Editar usuario</button>
+                <a class="cancel-button" routerLink="/private/usuarios">Cancelar</a>
+            </div>
+
+            @if (mensajeError()) {
+            <p class="field-error" role="alert">{{ mensajeError() }}</p>
+            }
+        </form>
+    </div>
+    <ngx-sonner-toaster position="bottom-right" />
+</section>
