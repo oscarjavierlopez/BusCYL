@@ -32,6 +32,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private EmpresaRepository empresaRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public UsuariosResponse obtenerUsuarios(int pagina, String nombreApellidos, boolean activo) {
         long totalUsuarios = usuarioRepository.obtenerTotalUsuarios();
@@ -148,15 +151,27 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         usuarioDesactivar.setActivo(false);
         usuarioRepository.save(usuarioDesactivar);
+
+        String destinatario = usuarioDesactivar.getEmail();
+        String asunto = "Desactivación de usuario";
+        String cuerpo = "Estimado " + usuarioDesactivar.getNombre() + " " + usuarioDesactivar.getApellidos() + ":\n\n"
+                + "Le informamos de que su usuario ha sido desactivado.";
+        emailService.enviarEmail(destinatario, asunto, cuerpo);
     }
 
     @Override
     public void activarUsuario(Long id) {
-        Usuario usuarioactivar = usuarioRepository.findById(id)
+        Usuario usuarioActivar = usuarioRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
-        usuarioactivar.setActivo(true);
-        usuarioRepository.save(usuarioactivar);
+        usuarioActivar.setActivo(true);
+        usuarioRepository.save(usuarioActivar);
+
+        String destinatario = usuarioActivar.getEmail();
+        String asunto = "Activación de usuario";
+        String cuerpo = "Estimado " + usuarioActivar.getNombre() + " " + usuarioActivar.getApellidos() + ":\n\n"
+                + "Le informamos de que su usuario ha sido activado.";
+        emailService.enviarEmail(destinatario, asunto, cuerpo);
     }
 
 }

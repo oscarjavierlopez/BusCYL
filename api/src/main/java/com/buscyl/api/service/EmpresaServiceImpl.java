@@ -30,7 +30,7 @@ public class EmpresaServiceImpl implements EmpresaService {
     private LocalidadRepository localidadRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
 
     @Override
     public List<EmpresaResponse> obtenerEmpresas() {
@@ -115,8 +115,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
         List<Usuario> usuariosEmpresa = empresaDesactivar.getUsuarios();
         for (Usuario usuario : usuariosEmpresa) {
-            usuario.setActivo(false);
-            usuarioRepository.save(usuario);
+            usuarioService.desactivarUsuario(usuario.getId());
         }
         empresaRepository.save(empresaDesactivar);
     }
@@ -130,8 +129,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
         List<Usuario> usuariosEmpresa = empresaActivar.getUsuarios();
         for (Usuario usuario : usuariosEmpresa) {
-            usuario.setActivo(true);
-            usuarioRepository.save(usuario);
+            usuarioService.activarUsuario(usuario.getId());
         }
         empresaRepository.save(empresaActivar);
     }
