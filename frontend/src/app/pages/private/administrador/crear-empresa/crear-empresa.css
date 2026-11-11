@@ -1,0 +1,51 @@
+@import '../crear-usuario/crear-usuario.css';
+
+.localidad-selector {
+  position: relative;
+}
+
+.localidades-sugerencias {
+  position: absolute;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 14rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  background: #ffffff;
+  border: 0.1rem solid #767676;
+  border-top: 0;
+}
+
+.localidades-sugerencias button {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.65rem;
+  color: #292929;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: #ffffff;
+  border: 0;
+}
+
+.localidades-sugerencias button:hover,
+.localidades-sugerencias button:focus-visible {
+  background: #f0f0f0;
+}
+
+.localidades-sugerencias button:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: -0.2rem;
+}
+
+.localidades-sin-resultados {
+  margin: 0;
+  padding: 0.6rem 0.65rem;
+  color: #4a4a4a;
+  background: #ffffff;
+  border: 0.1rem solid #767676;
+  border-top: 0;
+}

@@ -33,6 +33,9 @@ export const routes: Routes = [
             {
                 path: 'empresas', loadComponent: () => import('./pages/private/administrador/empresas/empresas').then(m => m.Empresas),
             },
+            {
+                path: 'empresas/crear', loadComponent: () => import('./pages/private/administrador/crear-empresa/crear-empresa').then(m => m.CrearEmpresa),
+            },
         ],
     },
 ];
