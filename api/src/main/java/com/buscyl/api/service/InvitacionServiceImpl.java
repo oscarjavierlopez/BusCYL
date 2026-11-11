@@ -29,7 +29,7 @@ public class InvitacionServiceImpl implements InvitacionService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private JavaMailSender mailSender;
+    private EmailService emailService;
 
     @Value("${buscyl.mail.from}")
     private String mailFrom;
@@ -73,18 +73,13 @@ public class InvitacionServiceImpl implements InvitacionService {
 
     private void enviarInvitacion(String destinatario, String token) {
         String enlace = resetPasswordUrl + "?token=" + token;
+        String asunto = "Restablecimiento de contraseña";
+        String cuerpo = "Hemos recibido una solicitud para restablecer tu contraseña.\n\n"
+                + "Accede al siguiente enlace para continuar:\n"
+                + enlace
+                + "\n\nEl enlace caduca en 24 horas.";
 
-        SimpleMailMessage mensaje = new SimpleMailMessage();
-        mensaje.setFrom(mailFrom);
-        mensaje.setTo(destinatario);
-        mensaje.setSubject("Restablecimiento de contraseña");
-        mensaje.setText(
-                "Hemos recibido una solicitud para restablecer tu contraseña.\n\n"
-                        + "Accede al siguiente enlace para continuar:\n"
-                        + enlace
-                        + "\n\nEl enlace caduca en 24 horas.");
-
-        mailSender.send(mensaje);
+        emailService.enviarEmail(destinatario, asunto, cuerpo);
     }
 
 }
