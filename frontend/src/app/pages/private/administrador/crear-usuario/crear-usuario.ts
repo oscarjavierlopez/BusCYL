@@ -13,6 +13,7 @@ import {toast, NgxSonnerToaster } from 'ngx-sonner';
 import { obtenerMensajeErrorAutenticacion } from '../../../../utils/auth-error-message';
 import { resetearErroresAlModificarFormulario } from '../../../../utils/form-error-reset';
 import { normalizarTextoBusqueda } from '../../../../utils/text-search-normalizer';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class CrearUsuario implements OnInit {
   private usuariosService = inject(UsuariosService);
   private empresasService = inject(EmpresasService);
   private rolesService = inject(RolesService);
+  private location = inject(Location);
 
   empresas = signal<Empresa[]>([]);
   empresasFiltradas = signal<Empresa[]>([]);
@@ -152,7 +154,7 @@ export class CrearUsuario implements OnInit {
           next: (respuesta) => {
             toast.success("Usuario añadido correctamente");
             setTimeout(() => {
-              this.router.navigate(["/private/usuarios"]);
+              this.location.back();
             }, 1000);
           },
           error: (error: HttpErrorResponse) => {

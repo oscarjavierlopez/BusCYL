@@ -12,6 +12,7 @@ import { Usuario } from '../../../../models/usuario';
 import { HttpErrorResponse } from '@angular/common/http';
 import { obtenerMensajeErrorAutenticacion } from '../../../../utils/auth-error-message';
 import { normalizarTextoBusqueda } from '../../../../utils/text-search-normalizer';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-editar-usuario',
@@ -26,6 +27,7 @@ export class EditarUsuario implements OnInit {
   private usuariosService = inject(UsuariosService);
   private empresasService = inject(EmpresasService);
   private rolesService = inject(RolesService);
+  private location = inject(Location);
 
   empresas = signal<Empresa[]>([]);
   empresasFiltradas = signal<Empresa[]>([]);
@@ -205,7 +207,7 @@ export class EditarUsuario implements OnInit {
           next: (respuesta) => {
             toast.success("Usuario editado correctamente");
             setTimeout(() => {
-              this.router.navigate(["/private/usuarios"]);
+              this.location.back();
             }, 1000);
           },
           error: (error: HttpErrorResponse) => {
