@@ -11,6 +11,7 @@ import { Rol } from '../../../../models/rol';
 import { Usuario } from '../../../../models/usuario';
 import { HttpErrorResponse } from '@angular/common/http';
 import { obtenerMensajeErrorAutenticacion } from '../../../../utils/auth-error-message';
+import { normalizarTextoBusqueda } from '../../../../utils/text-search-normalizer';
 
 @Component({
   selector: 'app-editar-usuario',
@@ -27,6 +28,9 @@ export class EditarUsuario implements OnInit {
   private rolesService = inject(RolesService);
 
   empresas = signal<Empresa[]>([]);
+  empresasFiltradas = signal<Empresa[]>([]);
+  busquedaEmpresa = signal<string>('');
+  mostrarSugerenciasEmpresa = signal<boolean>(false);
   roles = signal<Rol[]>([]);
   mensajeError = signal<string | null>(null);
   usuario!: Usuario;
@@ -71,10 +75,16 @@ export class EditarUsuario implements OnInit {
                 this.empresas.set(empresas);
 
                 if (this.usuario.empresa) {
+                  const nombreEmpresa = this.usuario.empresa.toString();
+
                   this.editarUsuarioForm.patchValue({
-                    empresa: this.obtenerEmpresa(usuario.empresa?.toString()!),
+                    empresa: this.obtenerEmpresa(nombreEmpresa),
                   });
+                  this.busquedaEmpresa.set(nombreEmpresa);
                 }
+
+                this.empresasFiltradas.set([]);
+                this.mostrarSugerenciasEmpresa.set(false);
               },
               error: (error) => {
                 console.error('Ocurrió un error:', error);
@@ -128,6 +138,34 @@ export class EditarUsuario implements OnInit {
 
     return requiereEmpresa && empresaNoSeleccionada ? { empresaObligatoria: true } : null;
   };
+
+  manejarBusquedaEmpresa(event: Event): void {
+    const textoBusqueda = (event.target as HTMLInputElement).value;
+
+    this.busquedaEmpresa.set(textoBusqueda);
+    this.editarUsuarioForm.controls.empresa.setValue('');
+    this.mostrarSugerenciasEmpresa.set(textoBusqueda.length > 0);
+    this.actualizarEmpresasFiltradas(textoBusqueda);
+  }
+
+  seleccionarEmpresa(empresa: Empresa): void {
+    this.editarUsuarioForm.controls.empresa.setValue(empresa.id!);
+    this.busquedaEmpresa.set(empresa.nombre);
+    this.empresasFiltradas.set([]);
+    this.mostrarSugerenciasEmpresa.set(false);
+  }
+
+  private actualizarEmpresasFiltradas(textoBusqueda: string): void {
+    const textoNormalizado = normalizarTextoBusqueda(textoBusqueda);
+
+    this.empresasFiltradas.set(
+      textoNormalizado.length === 0
+        ? []
+        : this.empresas().filter((empresa) =>
+          empresa.activo && empresa.id !== undefined && normalizarTextoBusqueda(empresa.nombre).includes(textoNormalizado),
+        ),
+    );
+  }
 
   editarUsuarioForm = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
