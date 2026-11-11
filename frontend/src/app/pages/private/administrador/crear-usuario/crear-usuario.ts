@@ -12,6 +12,8 @@ import { Router, RouterLink } from '@angular/router';
 import {toast, NgxSonnerToaster } from 'ngx-sonner';
 import { obtenerMensajeErrorAutenticacion } from '../../../../utils/auth-error-message';
 import { resetearErroresAlModificarFormulario } from '../../../../utils/form-error-reset';
+import { normalizarTextoBusqueda } from '../../../../utils/text-search-normalizer';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -27,8 +29,12 @@ export class CrearUsuario implements OnInit {
   private usuariosService = inject(UsuariosService);
   private empresasService = inject(EmpresasService);
   private rolesService = inject(RolesService);
+  private location = inject(Location);
 
   empresas = signal<Empresa[]>([]);
+  empresasFiltradas = signal<Empresa[]>([]);
+  busquedaEmpresa = signal<string>('');
+  mostrarSugerenciasEmpresa = signal<boolean>(false);
   roles = signal<Rol[]>([]);
   mensajeError = signal<string | null>(null);
 
@@ -39,6 +45,7 @@ export class CrearUsuario implements OnInit {
       .subscribe({
         next: (empresas) => {
           this.empresas.set(empresas);
+          this.actualizarEmpresasFiltradas(this.busquedaEmpresa());
         },
         error: (error) => {
           console.error('Ocurrió un error:', error);
@@ -85,6 +92,34 @@ export class CrearUsuario implements OnInit {
     return requiereEmpresa && empresaNoSeleccionada ? { empresaObligatoria: true } : null;
   };
 
+  manejarBusquedaEmpresa(event: Event): void {
+    const textoBusqueda = (event.target as HTMLInputElement).value;
+
+    this.busquedaEmpresa.set(textoBusqueda);
+    this.crearUsuarioForm.controls.empresa.setValue('');
+    this.mostrarSugerenciasEmpresa.set(textoBusqueda.length > 0);
+    this.actualizarEmpresasFiltradas(textoBusqueda);
+  }
+
+  seleccionarEmpresa(empresa: Empresa): void {
+    this.crearUsuarioForm.controls.empresa.setValue(empresa.id!);
+    this.busquedaEmpresa.set(empresa.nombre);
+    this.empresasFiltradas.set([]);
+    this.mostrarSugerenciasEmpresa.set(false);
+  }
+
+  private actualizarEmpresasFiltradas(textoBusqueda: string): void {
+    const textoNormalizado = normalizarTextoBusqueda(textoBusqueda);
+
+    this.empresasFiltradas.set(
+      textoNormalizado.length === 0
+        ? []
+        : this.empresas().filter((empresa) =>
+          empresa.activo && empresa.id !== undefined && normalizarTextoBusqueda(empresa.nombre).includes(textoNormalizado),
+        ),
+    );
+  }
+
   crearUsuarioForm = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     rol: ['', [Validators.required]],
@@ -93,7 +128,7 @@ export class CrearUsuario implements OnInit {
     apellidos: ['', [Validators.required, this.noSoloEspacios]],
     telefono: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
     fechaNacimiento: ['', [Validators.required, this.fechaNacimientoPasada]],
-    empresa: [''],
+    empresa: this.formBuilder.nonNullable.control<number | ''>(''),
   }, { validators: this.empresaObligatoriaSegunRol });
 
   submit(): void {
@@ -119,7 +154,7 @@ export class CrearUsuario implements OnInit {
           next: (respuesta) => {
             toast.success("Usuario añadido correctamente");
             setTimeout(() => {
-              this.router.navigate(["/private/usuarios"]);
+              this.location.back();
             }, 1000);
           },
           error: (error: HttpErrorResponse) => {

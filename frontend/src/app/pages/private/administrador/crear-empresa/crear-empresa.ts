@@ -9,6 +9,7 @@ import { EmpresasService } from '../../../../services/empresas.service';
 import { toast, NgxSonnerToaster } from 'ngx-sonner';
 import { obtenerMensajeErrorAutenticacion } from '../../../../utils/auth-error-message';
 import { resetearErroresAlModificarFormulario } from '../../../../utils/form-error-reset';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-crear-empresa',
@@ -22,6 +23,7 @@ export class CrearEmpresa implements OnInit {
   private empresasService = inject(EmpresasService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  private location = inject(Location);
 
 
   localidades = signal<Localidad[]>([]);
@@ -106,7 +108,7 @@ export class CrearEmpresa implements OnInit {
           next: (respuesta) => {
             toast.success("Empresa añadida correctamente");
             setTimeout(() => {
-              this.router.navigate(["/private/empresas"]);
+              this.location.back();
             }, 1000);
           },
           error: (error: HttpErrorResponse) => {

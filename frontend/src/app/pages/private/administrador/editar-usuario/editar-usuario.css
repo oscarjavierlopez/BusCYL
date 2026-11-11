@@ -1,3 +1,5 @@
+@import '../crear-usuario/crear-usuario.css';
+
 .crear-usuario-page {
     box-sizing: border-box;
     width: min(100%, 76rem);
@@ -161,3 +163,4 @@ select:focus {
         width: 100%;
     }
 }
+

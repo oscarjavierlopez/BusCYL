@@ -35,14 +35,28 @@
 
                 <div class="form-field">
                     <label for="empresa">Empresa <span class="optional-field">(opcional)</span></label>
-                    <select id="empresa" formControlName="empresa">
-                        <option value="">Seleccione una empresa</option>
-                        @for (empresa of empresas(); track empresa.id) {
-                        @if (empresa.activo) {
-                        <option [ngValue]="empresa.id">{{empresa.nombre}}</option>
+                    <div class="autocomplete-selector">
+                        <input id="empresa" type="search" [value]="busquedaEmpresa()" autocomplete="off"
+                            aria-autocomplete="list" [attr.aria-expanded]="mostrarSugerenciasEmpresa()"
+                            (input)="manejarBusquedaEmpresa($event)"
+                            (blur)="editarUsuarioForm.controls.empresa.markAsTouched()" />
+                        @if (mostrarSugerenciasEmpresa()) {
+                            @if (empresasFiltradas().length > 0) {
+                            <ul class="autocomplete-suggestions" role="listbox" aria-label="Coincidencias de empresas">
+                                @for (empresa of empresasFiltradas(); track empresa.id) {
+                                <li>
+                                    <button type="button" role="option" (mousedown)="$event.preventDefault()"
+                                        (click)="seleccionarEmpresa(empresa)">
+                                        {{ empresa.nombre }}
+                                    </button>
+                                </li>
+                                }
+                            </ul>
+                            } @else {
+                            <p class="autocomplete-empty">No se han encontrado empresas.</p>
+                            }
                         }
-                        }
-                    </select>
+                    </div>
                     @if (editarUsuarioForm.controls.empresa.touched && editarUsuarioForm.errors?.['empresaObligatoria']) {
                     <p class="field-error" role="alert">Debe seleccionar una empresa</p>
                     }

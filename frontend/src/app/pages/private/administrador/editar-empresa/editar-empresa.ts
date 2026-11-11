@@ -9,6 +9,7 @@ import { resetearErroresAlModificarFormulario } from '../../../../utils/form-err
 import { Empresa } from '../../../../models/empresa';
 import { HttpErrorResponse } from '@angular/common/http';
 import { obtenerMensajeErrorAutenticacion } from '../../../../utils/auth-error-message';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-editar-empresa',
@@ -23,6 +24,7 @@ export class EditarEmpresa implements OnInit {
   private empresasService = inject(EmpresasService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  private location = inject(Location);
 
 
   localidades = signal<Localidad[]>([]);
@@ -144,7 +146,7 @@ export class EditarEmpresa implements OnInit {
             next: (respuesta) => {
               toast.success("Empresa editada correctamente");
               setTimeout(() => {
-                this.router.navigate(["/private/empresas"]);
+                this.location.back();
               }, 1000);
             },
             error: (error: HttpErrorResponse) => {
