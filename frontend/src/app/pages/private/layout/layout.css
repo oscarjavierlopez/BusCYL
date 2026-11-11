@@ -12,19 +12,33 @@
 }
 
 .private-nav {
+  padding: 0;
+  background: #bd1934;
+}
+
+.nav-shell {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-sizing: border-box;
+  width: min(100%, 76rem);
   min-height: 4rem;
+  margin: 0 auto;
   padding: 0 2rem;
-  background: #bd1934;
 }
 
 .nav-main-links,
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+}
+
+.nav-main-links {
+  gap: 0.35rem;
+}
+
+.nav-actions {
+  gap: 0.75rem;
 }
 
 .home-button,
@@ -49,19 +63,26 @@
   background: #941126;
 }
 
-.usuarios-link {
-  padding: 0.5rem 0;
+.usuarios-link,
+.empresas-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.7rem;
+  padding: 0.5rem 0.75rem;
   color: #ffffff;
   font-weight: 700;
   text-decoration: none;
   border-bottom: 0.15rem solid transparent;
 }
 
-.usuarios-link:hover {
+.usuarios-link:hover,
+.empresas-link:hover {
+  background: #941126;
   border-bottom-color: #ffffff;
 }
 
-.usuarios-link-active {
+.usuarios-link-active,
+.empresas-link-active {
   background: #941126;
   border-bottom-color: #ffffff;
 }
@@ -100,6 +121,7 @@
 
 .home-button:focus-visible,
 .usuarios-link:focus-visible,
+.empresas-link:focus-visible,
 .user-button:focus-visible,
 .logout-button:focus-visible {
   outline: 0.2rem solid #ffffff;
@@ -133,7 +155,7 @@
 }
 
 @media (max-width: 40rem) {
-  .private-nav {
+  .nav-shell {
     padding: 0 1rem;
   }
 

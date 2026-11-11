@@ -50,10 +50,10 @@
           <td>{{ empresa.localidad }} ({{empresa.provincia}})</td>
           <td>
             <div class="acciones" aria-label="Acciones para {{ empresa.nombre }}">
-              <button type="button" class="action-button edit-button" aria-label="Editar empresa"
+              <a [routerLink]="['/private/empresas/editar', empresa.id]" class="action-button edit-button" aria-label="Editar empresa"
                 title="Editar empresa">
                 <i class="bi bi-pencil-fill" aria-hidden="true"></i>
-              </button>
+            </a>
               @if (empresa.activo) {
               <button type="button" class="action-button deactivate-button" aria-label="Desactivar empresa"
                 title="Desactivar empresa" (click)="desactivarEmpresa(empresa.id!, empresa.nombre)">

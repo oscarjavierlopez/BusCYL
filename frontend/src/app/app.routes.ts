@@ -36,6 +36,9 @@ export const routes: Routes = [
             {
                 path: 'empresas/crear', loadComponent: () => import('./pages/private/administrador/crear-empresa/crear-empresa').then(m => m.CrearEmpresa),
             },
+            {
+                path: 'empresas/editar/:id', loadComponent: () => import('./pages/private/administrador/editar-empresa/editar-empresa').then(m => m.EditarEmpresa),
+            },
         ],
     },
 ];

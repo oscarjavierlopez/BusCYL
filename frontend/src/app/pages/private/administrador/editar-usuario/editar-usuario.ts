@@ -165,13 +165,13 @@ export class EditarUsuario implements OnInit {
       this.usuariosService.actualizarUsuario(Number(this.id), usuario)
         .subscribe({
           next: (respuesta) => {
-            toast.success("Usuario añadido correctamente");
+            toast.success("Usuario editado correctamente");
             setTimeout(() => {
               this.router.navigate(["/private/usuarios"]);
             }, 1000);
           },
           error: (error: HttpErrorResponse) => {
-            this.mensajeError.set(obtenerMensajeErrorAutenticacion(error, 'No se ha podido crear el usuario.'));
+            this.mensajeError.set(obtenerMensajeErrorAutenticacion(error, 'No se ha podido edtar el usuario.'));
           }
         });
     }
