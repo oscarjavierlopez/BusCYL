@@ -85,9 +85,20 @@ export class Registro implements OnInit {
       this.authService.register(registroRequest)
         .subscribe({
           next: (authResponse) => {
+            let paginaInicio = "";
+            switch (authResponse.rol) {
+              case "administrador":
+                paginaInicio = "/private/usuarios"
+                break;
+            
+              default:
+                paginaInicio = "/private"
+                break;
+            }
+
             toast.success(`Ha iniciado sesión como ${authResponse.email}`);
             setTimeout(() => {
-              this.router.navigate(["/private"]);
+              this.router.navigate([paginaInicio]);
             }, 1000);
           },
           error: (err: HttpErrorResponse) => {
