@@ -20,6 +20,7 @@ import com.buscyl.api.exception.PasswordMatchException;
 import com.buscyl.api.repository.InvitacionRepository;
 import com.buscyl.api.repository.RolRepository;
 import com.buscyl.api.repository.UsuarioRepository;
+import com.buscyl.api.service.EmailService;
 import com.buscyl.api.service.InvitacionService;
 
 @Service
@@ -34,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
         @Autowired
         private InvitacionRepository invitacionRepository;
 
-        @Autowired 
+        @Autowired
         private InvitacionService invitacionService;
 
         @Autowired
@@ -46,6 +47,9 @@ public class AuthServiceImpl implements AuthService {
         @Autowired
         private AuthenticationManager authenticationManager;
 
+        @Autowired
+        private EmailService emailService;
+
         @Value("${buscyl.jwt.expiration-seconds}")
         private Long expiration;
 
@@ -54,7 +58,8 @@ public class AuthServiceImpl implements AuthService {
                 authenticationManager
                                 .authenticate(new UsernamePasswordAuthenticationToken(request.email(),
                                                 request.contrasena()));
-                UserDetails usuario = usuarioRepository.findByEmail(request.email()).orElseThrow(() -> new NotFoundException("Usuario no válido"));
+                UserDetails usuario = usuarioRepository.findByEmail(request.email())
+                                .orElseThrow(() -> new NotFoundException("Usuario no válido"));
                 Usuario usuarioRegistrado = usuarioRepository.findByEmailAndActivo(request.email(), true)
                                 .orElseThrow(() -> new NotFoundException("Usuario no válido"));
                 String token = jwtService.getToken(
@@ -91,6 +96,18 @@ public class AuthServiceImpl implements AuthService {
                                 .build();
 
                 Usuario nuevoUsuario = usuarioRepository.save(usuario);
+
+                String destinatario = usuario.getEmail();
+                String asunto = "¡Bienvenido a Buscyl! Tu próximo viaje comienza aquí";
+                String mensaje = "Estimado " + usuario.getNombre()+ " " + usuario.getApellidos() + "\n\n"
+                                + "Nos alegra tenerte aquí.\n\n"
+                                + "Descubre una forma más fácil, rápida y cómoda de desplazarte por Castilla y León.\n\n"
+                                + "Explora las opciones disponibles, planifica tus desplazamientos "
+                                + "y aprovecha al máximo cada trayecto.\n\n"
+                                + "¡Tu próximo viaje comienza aquí!\n\n"
+                                + "¡Gracias por confiar en Buscyl!";
+
+                emailService.enviarEmail(destinatario,asunto, mensaje);
 
                 return new AuthResponse(
                                 jwtService.getToken(
