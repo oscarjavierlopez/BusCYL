@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/localidades", "/localidades/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/invitaciones", "/invitaciones/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/roles").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/autobuses", "/autobuses/**").hasRole("COORDINADOR_EMPRESA")
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((request, response, exception) -> {
