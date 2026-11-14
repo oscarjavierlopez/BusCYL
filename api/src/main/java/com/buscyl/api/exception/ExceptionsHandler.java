@@ -71,4 +71,12 @@ public class ExceptionsHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", exception.getMessage()));
     }
+
+    @ExceptionHandler(AutobusNoPerteneceEmpresaException.class)
+    public ResponseEntity<Map<String, String>> AutobusNoPerteneceEmpresaException(
+            AutobusNoPerteneceEmpresaException exception) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("error", exception.getMessage()));
+    }
 }

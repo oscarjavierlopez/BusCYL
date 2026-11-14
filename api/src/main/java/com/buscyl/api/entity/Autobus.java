@@ -49,4 +49,16 @@ public class Autobus {
 
     @OneToMany(mappedBy = "autobus")
     private List<Asiento> asientos;
+
+    public void setAsiento(int indice, Asiento asiento){
+        this.asientos.set(indice, asiento);
+    }
+
+    public int getIndiceAsiento(Asiento asiento){
+        return this.asientos.indexOf(asiento);
+    }
+
+    public void addAsiento(Asiento asiento){
+        this.asientos.add(asiento);
+    }
 }

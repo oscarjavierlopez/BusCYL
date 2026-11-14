@@ -1,9 +1,15 @@
 package com.buscyl.api.mapper;
 
+import java.util.List;
+
+import com.buscyl.api.dto.AsientoResponse;
+import com.buscyl.api.dto.AutobusResponse;
 import com.buscyl.api.dto.EmpresaResponse;
 import com.buscyl.api.dto.LocalidadResponse;
 import com.buscyl.api.dto.RolResponse;
 import com.buscyl.api.dto.UsuarioResponse;
+import com.buscyl.api.entity.Asiento;
+import com.buscyl.api.entity.Autobus;
 import com.buscyl.api.entity.Empresa;
 import com.buscyl.api.entity.Localidad;
 import com.buscyl.api.entity.Rol;
@@ -51,5 +57,32 @@ public class Mapper {
         .nombre(localidad.getNombre())
         .provincia(localidad.getProvincia().getNombre())
         .build();
+    }
+
+    public static AsientoResponse toDto(Asiento asiento){
+        return AsientoResponse.builder()
+        .id(asiento.getId())
+        .numero(asiento.getNumero())
+        .tipo(asiento.getTipo())
+        .activo(asiento.getActivo())
+        .build();
+    }
+
+    public static AutobusResponse toDto(Autobus autobus, boolean incluirAsientos, Long numeroAsientos, Long numeroAsientosAdaptados, Long numeroAsientosAveriados){
+        List<AsientoResponse> asientos = incluirAsientos
+            ? autobus.getAsientos().stream().map(Mapper::toDto).toList()
+            : null;
+
+    return AutobusResponse.builder()
+            .id(autobus.getId())
+            .matricula(autobus.getMatricula())
+            .numeroBastidor(autobus.getNumeroBastidor())
+            .numeroFlota(autobus.getNumeroFlota())
+            .activo(autobus.getActivo())
+            .numeroAsientos(numeroAsientos)
+            .numeroAsientosAdaptados(numeroAsientosAdaptados)
+            .numeroAsientosAveriados(numeroAsientosAveriados)
+            .asientos(asientos)
+            .build();
     }
 }
