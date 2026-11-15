@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 @RestControllerAdvice
 public class ExceptionsHandler {
@@ -22,6 +23,14 @@ public class ExceptionsHandler {
                 .forEach(error -> errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException exception) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", "El cuerpo de la petición contiene un formato no válido. Las fechas deben usar yyyy-MM-dd y las horas HH:mm:ss"));
     }
 
     @ExceptionHandler(IllegalStateException.class)
@@ -77,6 +86,14 @@ public class ExceptionsHandler {
             NoPerteneceEmpresaException exception) {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("error", exception.getMessage()));
+    }
+
+    @ExceptionHandler(NoValidException.class)
+    public ResponseEntity<Map<String, String>> NoValidException(
+            NoValidException exception) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", exception.getMessage()));
     }
 }

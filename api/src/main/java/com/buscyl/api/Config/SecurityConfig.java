@@ -47,7 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/usuarios", "/usuarios/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/empresas", "/empresas/**").hasRole("ADMINISTRADOR")
-                        .requestMatchers("/localidades", "/localidades/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/localidades", "/localidades/**").permitAll()
                         .requestMatchers("/invitaciones", "/invitaciones/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/roles").hasRole("ADMINISTRADOR")
                         .requestMatchers("/autobuses", "/autobuses/**").hasRole("COORDINADOR_EMPRESA")

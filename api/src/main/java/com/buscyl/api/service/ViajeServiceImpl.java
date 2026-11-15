@@ -1,23 +1,37 @@
 package com.buscyl.api.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.buscyl.api.Jwt.JwtPrincipal;
+import com.buscyl.api.dto.ParadaRequest;
+import com.buscyl.api.dto.ViajeCreateRequest;
 import com.buscyl.api.dto.ViajeResponse;
 import com.buscyl.api.dto.ViajesResponse;
+import com.buscyl.api.entity.Autobus;
+import com.buscyl.api.entity.Localidad;
+import com.buscyl.api.entity.Parada;
 import com.buscyl.api.entity.Usuario;
 import com.buscyl.api.entity.Viaje;
 import com.buscyl.api.exception.NoPerteneceEmpresaException;
+import com.buscyl.api.exception.NoValidException;
 import com.buscyl.api.exception.NotFoundException;
 import com.buscyl.api.exception.PaginaNoValidaException;
 import com.buscyl.api.mapper.Mapper;
+import com.buscyl.api.repository.AutobusRepository;
+import com.buscyl.api.repository.LocalidadRepository;
+import com.buscyl.api.repository.ParadaRepository;
 import com.buscyl.api.repository.UsuarioRepository;
 import com.buscyl.api.repository.ViajeRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ViajeServiceImpl implements ViajeService {
@@ -27,6 +41,15 @@ public class ViajeServiceImpl implements ViajeService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private LocalidadRepository localidadRepository;
+
+    @Autowired
+    private ParadaRepository paradaRepository;
+
+    @Autowired
+    private AutobusRepository autobusRepository;
 
     @Override
     public ViajesResponse obtenerViajesCoordinador(int pagina, Long idOrigen, Long idDestino, LocalDate fecha) {
@@ -92,6 +115,118 @@ public class ViajeServiceImpl implements ViajeService {
         }
 
         return Mapper.toDto(viaje, false);
+    }
+
+    @Override
+    @Transactional
+    public List<ViajeResponse> crearViaje(ViajeCreateRequest request) {
+        // Validaciones
+        if (request.idOrigen() == request.idDestino()) {
+            throw new NoValidException("El origen no puede ser el mismo que el destino");
+        }
+
+        Localidad origen = localidadRepository.findById(request.idOrigen())
+                .orElseThrow(() -> new NotFoundException("Localidad de origen no válida"));
+        ;
+
+        Localidad destino = localidadRepository.findById(request.idDestino())
+                .orElseThrow(() -> new NotFoundException("Localidad de destino no válida"));
+        ;
+
+        Autobus autobus = autobusRepository.findById(request.idAutobus())
+                .orElseThrow(() -> new NotFoundException("Autobus no válido"));
+
+        Usuario conductor = usuarioRepository.findById(request.idConductor())
+                .orElseThrow(() -> new NotFoundException("Conductor no válido"));
+
+        JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Long idUsuario = principal.userId();
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        Long idEmpresa = usuario.getEmpresa().getId();
+
+        if (autobus.getEmpresa().getId() != idEmpresa) {
+            throw new NoPerteneceEmpresaException("El autobus no pertenece a la empresa del coordinador");
+        }
+
+        if (conductor.getEmpresa() == null || conductor.getEmpresa().getId() != idEmpresa
+                || !conductor.getRol().getNombre().toLowerCase().equals("conductor")) {
+            throw new NoValidException("Conductor no válido");
+        }
+
+        if (!request.horaSalida().isAfter(request.horaLlegada())) {
+            throw new NoValidException("La hora de llegada debe ser más tardía que la fecha de salida");
+        }
+
+        Set<ParadaRequest> paradasSinDuplicados = new HashSet<>(request.paradas());
+        if (paradasSinDuplicados.size() != request.paradas().size()) {
+            throw new NoValidException("El viaje contiene paradas duplicadas");
+        }
+
+        for (ParadaRequest parada : request.paradas()) {
+            Localidad localidad = localidadRepository.findById(parada.idLocalidad())
+                    .orElseThrow(() -> new NotFoundException("Localidad de parada no válida"));
+
+            if (!parada.horaSalida().isAfter(parada.horaLlegada())) {
+                throw new NoValidException(
+                        "La hora de llegada de una parada debe ser más tardía que la fecha de salida");
+            }
+
+            int paradasConMismoOrden = request.paradas()
+                    .stream()
+                    .filter(p -> p.orden() == parada.orden())
+                    .toList()
+                    .size();
+            if (paradasConMismoOrden > 1) {
+                throw new NoValidException("No puede haber dos paradas con el mismo orden");
+            }
+        }
+
+        // Transacción de inserción de viaje
+        List<Viaje> viajesCreados = new ArrayList<>();
+        for (LocalDate fecha : request.fechas()) {
+            Viaje nuevoViaje = Viaje.builder()
+                    .origen(origen)
+                    .destino(destino)
+                    .autobus(autobus)
+                    .conductor(conductor)
+                    .fechaViaje(fecha)
+                    .horaSalida(request.horaSalida())
+                    .horaLlegada(request.horaLlegada())
+                    .activo(true)
+                    .build();
+            viajeRepository.save(nuevoViaje);
+
+            List<Parada> paradas = new ArrayList<>();
+            for (ParadaRequest parada : request.paradas()) {
+                Localidad localidad = localidadRepository.findById(parada.idLocalidad())
+                        .orElseThrow(() -> new NotFoundException("Localidad de parada no válida"));
+
+                Parada nuevaParada = Parada.builder()
+                        .viaje(nuevoViaje)
+                        .localidad(localidad)
+                        .horaLlegada(parada.horaLlegada())
+                        .horaSalida(parada.horaSalida())
+                        .direccion(parada.direccion())
+                        .orden(parada.orden())
+                        .build();
+                paradaRepository.save(nuevaParada);
+                paradas.add(nuevaParada);
+            }
+
+            nuevoViaje.setParadas(paradas);
+            viajesCreados.add(nuevoViaje);
+        }
+
+        return viajesCreados.stream()
+                .map(v -> Mapper.toDto(v, false))
+                .toList();
+
     }
 
 }

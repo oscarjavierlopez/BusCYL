@@ -185,6 +185,7 @@ public class AutobusServiceImpl implements AutobusService {
     }
 
     @Override
+    @Transactional 
     public AutobusResponse actualizarAutobus(Long id, AutobusUpdateRequest request) {
         JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
                 .getContext()
