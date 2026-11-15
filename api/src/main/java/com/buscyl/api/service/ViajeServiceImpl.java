@@ -11,13 +11,15 @@ import com.buscyl.api.Jwt.JwtPrincipal;
 import com.buscyl.api.dto.ViajeResponse;
 import com.buscyl.api.dto.ViajesResponse;
 import com.buscyl.api.entity.Usuario;
+import com.buscyl.api.entity.Viaje;
+import com.buscyl.api.exception.NoPerteneceEmpresaException;
 import com.buscyl.api.exception.NotFoundException;
 import com.buscyl.api.exception.PaginaNoValidaException;
 import com.buscyl.api.mapper.Mapper;
 import com.buscyl.api.repository.UsuarioRepository;
 import com.buscyl.api.repository.ViajeRepository;
 
-@Service 
+@Service
 public class ViajeServiceImpl implements ViajeService {
 
     @Autowired
@@ -69,9 +71,27 @@ public class ViajeServiceImpl implements ViajeService {
     }
 
     @Override
-    public ViajeResponse obtenerViaje(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'obtenerViaje'");
+    public ViajeResponse obtenerViajeCoordinador(Long id) {
+        JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Long idUsuario = principal.userId();
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        Long idEmpresa = usuario.getEmpresa().getId();
+
+        Viaje viaje = viajeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Viaje no encontrado"));
+        ;
+
+        if (viaje.getAutobus().getEmpresa().getId() != idEmpresa) {
+            throw new NoPerteneceEmpresaException("El viaje no pertenece a la empresa del usuario");
+        }
+
+        return Mapper.toDto(viaje, false);
     }
 
 }

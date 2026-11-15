@@ -9,5 +9,5 @@ public interface ViajeService {
 
     ViajesResponse obtenerViajesCoordinador(int pagina, Long idOrigen, Long idDestino, LocalDate fecha);
 
-    ViajeResponse obtenerViaje(Long id);
+    ViajeResponse obtenerViajeCoordinador(Long id);
 }

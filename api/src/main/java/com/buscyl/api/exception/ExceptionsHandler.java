@@ -72,9 +72,9 @@ public class ExceptionsHandler {
                 .body(Map.of("error", exception.getMessage()));
     }
 
-    @ExceptionHandler(AutobusNoPerteneceEmpresaException.class)
+    @ExceptionHandler(NoPerteneceEmpresaException.class)
     public ResponseEntity<Map<String, String>> AutobusNoPerteneceEmpresaException(
-            AutobusNoPerteneceEmpresaException exception) {
+            NoPerteneceEmpresaException exception) {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(Map.of("error", exception.getMessage()));
