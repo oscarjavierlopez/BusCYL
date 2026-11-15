@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.buscyl.api.dto.AsientoResponse;
 import com.buscyl.api.dto.AutobusResponse;
+import com.buscyl.api.dto.ConductorResponse;
 import com.buscyl.api.dto.EmpresaResponse;
 import com.buscyl.api.dto.LocalidadResponse;
 import com.buscyl.api.dto.RolResponse;
@@ -84,5 +85,15 @@ public class Mapper {
             .numeroAsientosAveriados(numeroAsientosAveriados)
             .asientos(asientos)
             .build();
+    }
+
+    public static ConductorResponse toConductorDto(Usuario conductor){
+        return ConductorResponse.builder()
+        .id(conductor.getId())
+        .email(conductor.getEmail())
+        .nombre(conductor.getNombre())
+        .apellidos(conductor.getApellidos())
+        .empresa(conductor.getEmpresa().getNombre())
+        .build();
     }
 }

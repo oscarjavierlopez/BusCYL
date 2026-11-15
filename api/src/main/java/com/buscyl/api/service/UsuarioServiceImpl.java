@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.buscyl.api.Jwt.JwtPrincipal;
+import com.buscyl.api.dto.ConductorResponse;
 import com.buscyl.api.dto.UsuarioCreateRequest;
 import com.buscyl.api.dto.UsuarioResponse;
 import com.buscyl.api.dto.UsuarioUpdateRequest;
@@ -172,6 +175,26 @@ public class UsuarioServiceImpl implements UsuarioService {
         String cuerpo = "Estimado " + usuarioActivar.getNombre() + " " + usuarioActivar.getApellidos() + ":\n\n"
                 + "Le informamos de que su usuario ha sido activado.";
         emailService.enviarEmail(destinatario, asunto, cuerpo);
+    }
+
+    @Override
+    public List<ConductorResponse> obtenerConductoresEmpresa() {
+        JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Long idUsuario = principal.userId();
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        Long idEmpresa = usuario.getEmpresa().getId();
+
+        List<Usuario> conductores = usuarioRepository.obtenerConductoresEmpresa(idEmpresa);
+
+        return conductores.stream()
+        .map(Mapper::toConductorDto)
+        .toList();
     }
 
 }
