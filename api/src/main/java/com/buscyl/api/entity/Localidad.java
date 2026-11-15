@@ -42,4 +42,7 @@ public class Localidad {
 
     @OneToMany(mappedBy = "destino")
     private List<Viaje> viajesDestino;
+
+    @OneToMany(mappedBy = "localidad")
+    private List<Parada> paradas;
 }
