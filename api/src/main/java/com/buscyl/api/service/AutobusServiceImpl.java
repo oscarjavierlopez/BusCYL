@@ -79,6 +79,7 @@ public class AutobusServiceImpl implements AutobusService {
                 .totalAutobuses(totalAutobuses)
                 .totalPaginas(totalPaginas)
                 .paginaPrevia(paginaPrevia)
+                .pagina(pagina)
                 .paginaSiguiente(paginaSiguiente)
                 .autobuses(autobuses)
                 .build();
