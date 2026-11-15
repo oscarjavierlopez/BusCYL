@@ -229,4 +229,34 @@ public class ViajeServiceImpl implements ViajeService {
 
     }
 
+    @Override
+    public void desactivarViaje(Long id) {
+        JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Long idUsuario = principal.userId();
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        Long idEmpresa = usuario.getEmpresa().getId();
+
+        Viaje viaje = viajeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Viaje no encontrado"));
+
+        if (viaje.getAutobus().getEmpresa().getId() != idEmpresa) {
+            throw new NoPerteneceEmpresaException("El autobus no pertenece a la empresa del usuario");
+        }
+
+        viaje.setActivo(false);
+        viajeRepository.save(viaje);
+    }
+
+    @Override
+    public void activarViaje(Long id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'activarViaje'");
+    }
+
 }

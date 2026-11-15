@@ -14,4 +14,8 @@ public interface ViajeService {
     ViajeResponse obtenerViajeCoordinador(Long id);
 
     List<ViajeResponse> crearViaje( ViajeCreateRequest request);
+
+    void desactivarViaje(Long id);
+
+    void activarViaje(Long id);
 }
