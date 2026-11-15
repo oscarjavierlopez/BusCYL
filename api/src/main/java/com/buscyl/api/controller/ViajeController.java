@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.buscyl.api.dto.ViajeCreateRequest;
 import com.buscyl.api.dto.ViajeResponse;
+import com.buscyl.api.dto.ViajeUpdateRequest;
 import com.buscyl.api.dto.ViajesResponse;
 import com.buscyl.api.service.ViajeService;
 
@@ -50,6 +52,11 @@ public class ViajeController {
     public ResponseEntity<List<ViajeResponse>> crearViaje(@Valid @RequestBody ViajeCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(viajeService.crearViaje(request));
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<ViajeResponse> actualizarViaje(@PathVariable Long id, @Valid @RequestBody ViajeUpdateRequest request){
+        return ResponseEntity.ok(viajeService.actualizarViaje(id, request));
     }
 
     @PatchMapping("{id}/desactivar")

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.buscyl.api.Jwt.JwtPrincipal;
 import com.buscyl.api.dto.ParadaRequest;
 import com.buscyl.api.dto.ViajeCreateRequest;
 import com.buscyl.api.dto.ViajeResponse;
+import com.buscyl.api.dto.ViajeUpdateRequest;
 import com.buscyl.api.dto.ViajesResponse;
 import com.buscyl.api.entity.Autobus;
 import com.buscyl.api.entity.Localidad;
@@ -110,7 +112,8 @@ public class ViajeServiceImpl implements ViajeService {
                 .orElseThrow(() -> new NotFoundException("Viaje no encontrado"));
         ;
 
-        if (viaje.getAutobus().getEmpresa().getId() != idEmpresa) {
+        if (viaje.getAutobus().getEmpresa().getId() != idEmpresa
+                || viaje.getConductor().getEmpresa().getId() != idEmpresa) {
             throw new NoPerteneceEmpresaException("El viaje no pertenece a la empresa del usuario");
         }
 
@@ -245,7 +248,8 @@ public class ViajeServiceImpl implements ViajeService {
         Viaje viaje = viajeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Viaje no encontrado"));
 
-        if (viaje.getAutobus().getEmpresa().getId() != idEmpresa) {
+        if (viaje.getAutobus().getEmpresa().getId() != idEmpresa
+                || viaje.getConductor().getEmpresa().getId() != idEmpresa) {
             throw new NoPerteneceEmpresaException("El viaje no pertenece a la empresa del usuario");
         }
 
@@ -269,12 +273,136 @@ public class ViajeServiceImpl implements ViajeService {
         Viaje viaje = viajeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Viaje no encontrado"));
 
-        if (viaje.getAutobus().getEmpresa().getId() != idEmpresa) {
+        if (viaje.getAutobus().getEmpresa().getId() != idEmpresa
+                || viaje.getConductor().getEmpresa().getId() != idEmpresa) {
             throw new NoPerteneceEmpresaException("El viaje no pertenece a la empresa del usuario");
         }
 
         viaje.setActivo(true);
         viajeRepository.save(viaje);
+    }
+
+    @Override
+    @Transactional
+    public ViajeResponse actualizarViaje(Long id, ViajeUpdateRequest request) {
+        // Validaciones
+
+        if (request.idOrigen() == request.idDestino()) {
+            throw new NoValidException("El origen no puede ser el mismo que el destino");
+        }
+
+        Localidad origen = localidadRepository.findById(request.idOrigen())
+                .orElseThrow(() -> new NotFoundException("Localidad de origen no válida"));
+        ;
+
+        Localidad destino = localidadRepository.findById(request.idDestino())
+                .orElseThrow(() -> new NotFoundException("Localidad de destino no válida"));
+        ;
+
+        Autobus autobus = autobusRepository.findById(request.idAutobus())
+                .orElseThrow(() -> new NotFoundException("Autobus no válido"));
+
+        Usuario conductor = usuarioRepository.findById(request.idConductor())
+                .orElseThrow(() -> new NotFoundException("Conductor no válido"));
+
+        JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Long idUsuario = principal.userId();
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        Long idEmpresa = usuario.getEmpresa().getId();
+
+        Viaje viaje = viajeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Viaje no encontrado"));
+
+        if (viaje.getAutobus().getEmpresa().getId() != idEmpresa
+                || viaje.getConductor().getEmpresa().getId() != idEmpresa) {
+            throw new NoPerteneceEmpresaException("El viaje no pertenece a la empresa del usuario");
+        }
+
+        if (autobus.getEmpresa().getId() != idEmpresa) {
+            throw new NoPerteneceEmpresaException("El autobus no pertenece a la empresa del coordinador");
+        }
+
+        if (conductor.getEmpresa() == null || conductor.getEmpresa().getId() != idEmpresa
+                || !conductor.getRol().getNombre().toLowerCase().equals("conductor")) {
+            throw new NoValidException("Conductor no válido");
+        }
+
+        if (!request.horaSalida().isAfter(request.horaLlegada())) {
+            throw new NoValidException("La hora de llegada debe ser más tardía que la fecha de salida");
+        }
+
+        Set<ParadaRequest> paradasSinDuplicados = new HashSet<>(request.paradas());
+        if (paradasSinDuplicados.size() != request.paradas().size()) {
+            throw new NoValidException("El viaje contiene paradas duplicadas");
+        }
+
+        for (ParadaRequest parada : request.paradas()) {
+            Localidad localidad = localidadRepository.findById(parada.idLocalidad())
+                    .orElseThrow(() -> new NotFoundException("Localidad de parada no válida"));
+
+            if (!parada.horaSalida().isAfter(parada.horaLlegada())) {
+                throw new NoValidException(
+                        "La hora de llegada de una parada debe ser más tardía que la fecha de salida");
+            }
+
+            int paradasConMismoOrden = request.paradas()
+                    .stream()
+                    .filter(p -> p.orden() == parada.orden())
+                    .toList()
+                    .size();
+            if (paradasConMismoOrden > 1) {
+                throw new NoValidException("No puede haber dos paradas con el mismo orden");
+            }
+        }
+
+        // Edición del Viaje
+        viaje.setOrigen(origen);
+        viaje.setDestino(destino);
+        viaje.setAutobus(autobus);
+        viaje.setConductor(conductor);
+        viaje.setFechaViaje(request.fecha());
+        viaje.setHoraLlegada(request.horaLlegada());
+        viaje.setHoraSalida(request.horaSalida());
+
+        for (ParadaRequest p : request.paradas()) {
+            Optional<Parada> parada = viaje.getParadas()
+                    .stream()
+                    .filter(pa -> pa.getOrden() == p.orden())
+                    .findFirst();
+
+            Localidad localidad = localidadRepository.findById(p.idLocalidad())
+                    .orElseThrow(() -> new NotFoundException("Localidad de parada no válida"));
+
+            if (parada.isPresent()) {
+                Parada paradaEditar = parada.get();
+                int indiceParada = viaje.getIndiceParada(p.orden());
+                paradaEditar.setLocalidad(localidad);
+                paradaEditar.setHoraLlegada(p.horaLlegada());
+                paradaEditar.setHoraSalida(p.horaSalida());
+                paradaEditar.setDireccion(p.direccion());
+                paradaRepository.save(paradaEditar);
+                viaje.setParada(indiceParada, paradaEditar);
+            } else {
+                Parada nuevaParada = Parada.builder()
+                        .viaje(viaje)
+                        .localidad(localidad)
+                        .horaLlegada(p.horaLlegada())
+                        .horaSalida(p.horaSalida())
+                        .direccion(p.direccion())
+                        .orden(p.orden())
+                        .build();
+                paradaRepository.save(nuevaParada);
+                viaje.addParada(nuevaParada);
+            }
+        }
+
+        return Mapper.toDto(viaje, false);
     }
 
 }

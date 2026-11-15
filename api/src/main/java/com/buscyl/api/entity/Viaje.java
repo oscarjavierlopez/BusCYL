@@ -63,4 +63,21 @@ public class Viaje {
 
     @OneToMany(mappedBy = "viaje")
     private List<Parada> paradas;
+
+    public void setParada(int indice, Parada parada){
+        this.paradas.set(indice, parada);
+    }
+
+    public int getIndiceParada(int orden){
+        for (int i = 0; i < this.paradas.size(); i++) {
+            if (this.paradas.get(i).getOrden() == orden) {
+                return i;
+            }   
+        }
+        return -1;
+    }
+
+    public void addParada(Parada parada){
+        this.paradas.add(parada);
+    }
 }
