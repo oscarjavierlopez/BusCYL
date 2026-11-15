@@ -19,7 +19,7 @@ import com.buscyl.api.entity.Asiento;
 import com.buscyl.api.entity.Autobus;
 import com.buscyl.api.entity.Empresa;
 import com.buscyl.api.entity.Usuario;
-import com.buscyl.api.exception.AutobusNoPerteneceEmpresaException;
+import com.buscyl.api.exception.NoPerteneceEmpresaException;
 import com.buscyl.api.exception.NotFoundException;
 import com.buscyl.api.exception.PaginaNoValidaException;
 import com.buscyl.api.mapper.Mapper;
@@ -79,6 +79,7 @@ public class AutobusServiceImpl implements AutobusService {
                 .totalAutobuses(totalAutobuses)
                 .totalPaginas(totalPaginas)
                 .paginaPrevia(paginaPrevia)
+                .pagina(pagina)
                 .paginaSiguiente(paginaSiguiente)
                 .autobuses(autobuses)
                 .build();
@@ -125,7 +126,7 @@ public class AutobusServiceImpl implements AutobusService {
                 .orElseThrow(() -> new NotFoundException("Autobus no encontrado"));
 
         if (autobus.getEmpresa().getId() != idEmpresa) {
-            throw new AutobusNoPerteneceEmpresaException("El autobus no pertenece a la empresa del usuario");
+            throw new NoPerteneceEmpresaException("El autobus no pertenece a la empresa del usuario");
         }
 
         return Mapper.toDto(autobus, true,
@@ -184,6 +185,7 @@ public class AutobusServiceImpl implements AutobusService {
     }
 
     @Override
+    @Transactional 
     public AutobusResponse actualizarAutobus(Long id, AutobusUpdateRequest request) {
         JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
                 .getContext()
@@ -200,7 +202,7 @@ public class AutobusServiceImpl implements AutobusService {
                 .orElseThrow(() -> new NotFoundException("Autobus no encontrado"));
 
         if (autobusEditar.getEmpresa().getId() != idEmpresa) {
-            throw new AutobusNoPerteneceEmpresaException("El autobus no pertenece a la empresa del usuario");
+            throw new NoPerteneceEmpresaException("El autobus no pertenece a la empresa del usuario");
         }
 
         if (request.matricula() != null) {
@@ -266,7 +268,7 @@ public class AutobusServiceImpl implements AutobusService {
                 .orElseThrow(() -> new NotFoundException("Autobus no encontrado"));
 
         if (autobusEditar.getEmpresa().getId() != idEmpresa) {
-            throw new AutobusNoPerteneceEmpresaException("El autobus no pertenece a la empresa del usuario");
+            throw new NoPerteneceEmpresaException("El autobus no pertenece a la empresa del usuario");
         }
 
         autobusEditar.setActivo(false);
@@ -290,7 +292,7 @@ public class AutobusServiceImpl implements AutobusService {
                 .orElseThrow(() -> new NotFoundException("Autobus no encontrado"));
 
         if (autobusEditar.getEmpresa().getId() != idEmpresa) {
-            throw new AutobusNoPerteneceEmpresaException("El autobus no pertenece a la empresa del usuario");
+            throw new NoPerteneceEmpresaException("El autobus no pertenece a la empresa del usuario");
         }
 
         autobusEditar.setActivo(true);

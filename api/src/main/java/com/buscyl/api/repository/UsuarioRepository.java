@@ -31,4 +31,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
         @Query(value = "SELECT COUNT(*) FROM buscyl.usuarios", nativeQuery = true)
         long obtenerTotalUsuarios();
+
+        @Query(value = "SELECT * FROM buscyl.usuarios\r\n" + //
+                "WHERE id_rol = (SELECT id FROM buscyl.roles WHERE nombre = 'conductor')\r\n" + //
+                "AND activo = true AND id_empresa = :idEmpresa", nativeQuery = true
+        )
+        List<Usuario> obtenerConductoresEmpresa(@Param("idEmpresa") Long idEmpresa);
 }

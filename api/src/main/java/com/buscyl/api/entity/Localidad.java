@@ -36,4 +36,13 @@ public class Localidad {
 
     @OneToMany(mappedBy = "localidad")
     private List<Empresa> empresas;
+
+    @OneToMany(mappedBy = "origen")
+    private List<Viaje> viajesOrigen;
+
+    @OneToMany(mappedBy = "destino")
+    private List<Viaje> viajesDestino;
+
+    @OneToMany(mappedBy = "localidad")
+    private List<Parada> paradas;
 }

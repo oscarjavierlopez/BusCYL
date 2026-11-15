@@ -50,6 +50,9 @@ public class Autobus {
     @OneToMany(mappedBy = "autobus")
     private List<Asiento> asientos;
 
+    @OneToMany(mappedBy = "autobus")
+    private List<Viaje> viajes;
+
     public void setAsiento(int indice, Asiento asiento){
         this.asientos.set(indice, asiento);
     }
