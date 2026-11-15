@@ -74,6 +74,9 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario")
     private List<Invitacion> invitaciones;
 
+    @OneToMany(mappedBy = "conductor")
+    private List<Viaje> viajesConducidos;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(rol.getAuthority()));
