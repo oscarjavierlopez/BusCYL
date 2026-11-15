@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,5 +50,17 @@ public class ViajeController {
     public ResponseEntity<List<ViajeResponse>> crearViaje(@Valid @RequestBody ViajeCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(viajeService.crearViaje(request));
+    }
+
+    @PatchMapping("{id}/desactivar")
+    public ResponseEntity<Void> desactivarViaje(@PathVariable Long id){
+        viajeService.desactivarViaje(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("{id}/activar")
+    public ResponseEntity<Void> activarViaje(@PathVariable Long id){
+        viajeService.activarViaje(id);
+        return ResponseEntity.noContent().build();
     }
 }
