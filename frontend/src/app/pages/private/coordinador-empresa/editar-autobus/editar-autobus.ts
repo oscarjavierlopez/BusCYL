@@ -9,6 +9,7 @@ import { resetearErroresAlModificarFormulario } from '../../../../utils/form-err
 import { HttpErrorResponse } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { obtenerMensajeErrorAutenticacion } from '../../../../utils/auth-error-message';
 
 type Estado = "No averiado" | "averiado";
 type Tipo = "normal" | "adaptado";
@@ -63,7 +64,7 @@ export class EditarAutobus implements OnInit {
             numeroBastidor: this.autobus.numeroBastidor,
             numeroFlota: this.autobus.numeroFlota,
             numeroAsientos: autobus.asientos.length
-          })
+          }, { emitEvent: false });
 
           this.editarAutobusForm.controls.numeroAsientos.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -101,17 +102,22 @@ export class EditarAutobus implements OnInit {
 
   private generarAsientos(numeroAsientos: number | null): void {
     if (!Number.isInteger(numeroAsientos) || numeroAsientos === null || numeroAsientos < 1 || numeroAsientos > 250) {
-      this.asientos.set([]);
       return;
     }
 
-    this.asientos.set(
-      Array.from({ length: numeroAsientos }, (_, indice) => ({
-        numero: indice + 1,
+    this.asientos.update((asientos) => {
+      if (numeroAsientos <= asientos.length) {
+        return asientos.slice(0, numeroAsientos);
+      }
+
+      const nuevosAsientos = Array.from({ length: numeroAsientos - asientos.length }, (_, indice) => ({
+        numero: asientos.length + indice + 1,
         tipo: 'normal',
         activo: true,
-      })),
-    );
+      }));
+
+      return [...asientos, ...nuevosAsientos];
+    });
   }
 
   private organizarAsientosEnFilas(asientos: Asiento[]): FilaAsientos[] {
@@ -138,6 +144,25 @@ export class EditarAutobus implements OnInit {
 
   submit(): void {
     if (this.editarAutobusForm.valid) {
+      let autobus: Autobus = {
+        matricula: this.editarAutobusForm.value.matricula!,
+        numeroBastidor: this.editarAutobusForm.value.numeroBastidor!,
+        numeroFlota: this.editarAutobusForm.value.numeroFlota!,
+        asientos: this.asientos().map(a => ({ numero: a.numero, tipo: a.tipo, activo: a.activo }))
+      }
+
+      this.autobusesService.actualizarAutobus(Number(this.id), autobus)
+        .subscribe({
+          next: (respuesta) => {
+            toast.success("Autobus modificado correctamente");
+            setTimeout(() => {
+              this.location.back();
+            }, 1000);
+          },
+          error: (error: HttpErrorResponse) => {
+            this.mensajeError.set(obtenerMensajeErrorAutenticacion(error, 'No se ha podido crear la empresa.'));
+          }
+        });
 
     } else {
       this.editarAutobusForm.markAllAsTouched();

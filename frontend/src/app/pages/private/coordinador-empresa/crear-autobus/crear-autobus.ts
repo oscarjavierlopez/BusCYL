@@ -77,17 +77,22 @@ export class CrearAutobus implements OnInit {
 
   private generarAsientos(numeroAsientos: number | null): void {
     if (!Number.isInteger(numeroAsientos) || numeroAsientos === null || numeroAsientos < 1 || numeroAsientos > 250) {
-      this.asientos.set([]);
       return;
     }
 
-    this.asientos.set(
-      Array.from({ length: numeroAsientos }, (_, indice) => ({
-        numero: indice + 1,
+    this.asientos.update((asientos) => {
+      if (numeroAsientos <= asientos.length) {
+        return asientos.slice(0, numeroAsientos);
+      }
+
+      const nuevosAsientos = Array.from({ length: numeroAsientos - asientos.length }, (_, indice) => ({
+        numero: asientos.length + indice + 1,
         tipo: 'normal',
         activo: true,
-      })),
-    );
+      }));
+
+      return [...asientos, ...nuevosAsientos];
+    });
   }
 
   private organizarAsientosEnFilas(asientos: Asiento[]): FilaAsientos[] {
