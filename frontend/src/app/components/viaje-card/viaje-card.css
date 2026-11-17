@@ -1,0 +1,255 @@
+:host {
+  display: block;
+}
+
+.viaje-card {
+  overflow: hidden;
+  color: #292929;
+  background: #ffffff;
+  border: 0.1rem solid #b6b6b6;
+  border-radius: 0.5rem;
+}
+
+.viaje-card--desplegado {
+  border-color: #767676;
+}
+
+.viaje-card__resumen {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1.35rem 4.25rem 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: #ffffff;
+  border: 0;
+}
+
+.viaje-card__resumen:hover {
+  background: #fafafa;
+}
+
+.viaje-card__resumen:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: -0.2rem;
+}
+
+.viaje-card__trayecto {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(8rem, 0.85fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+}
+
+.viaje-card__localidad {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.viaje-card__localidad > i {
+  flex: 0 0 auto;
+  margin-top: 0.15rem;
+  color: #bd1934;
+  font-size: 1.35rem;
+}
+
+.viaje-card__localidad > span {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.viaje-card__localidad strong {
+  overflow: hidden;
+  font-size: 1.2rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.viaje-card__localidad small {
+  color: #4a4a4a;
+  font-size: 0.95rem;
+}
+
+.viaje-card__localidad--destino {
+  justify-self: end;
+}
+
+.viaje-card__recorrido {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  justify-content: center;
+  color: #bd1934;
+}
+
+.viaje-card__recorrido span {
+  flex: 1;
+  height: 0.15rem;
+  background: #bd1934;
+}
+
+.viaje-card__recorrido i {
+  font-size: 1.75rem;
+}
+
+.viaje-card__empresa {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  margin: 1.25rem -4.25rem 0;
+  padding: 0.75rem 4.25rem;
+  color: #292929;
+  background: #f0f0f0;
+}
+
+.viaje-card__empresa i {
+  color: #4a4a4a;
+}
+
+.viaje-card__toggle {
+  position: absolute;
+  top: 50%;
+  right: 1.4rem;
+  display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
+  place-items: center;
+  color: #bd1934;
+  font-size: 1.4rem;
+  transform: translateY(-50%);
+}
+
+.viaje-card__detalle {
+  padding: 1.5rem 2rem 1.75rem;
+  border-top: 0.1rem solid #d8d8d8;
+}
+
+.viaje-card__detalle h2 {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  margin: 0 0 1.2rem;
+  color: #bd1934;
+  font-size: 1.15rem;
+}
+
+.viaje-card__paradas {
+  margin: 0;
+  padding: 0 0 0 2.2rem;
+  list-style: none;
+}
+
+.viaje-card__parada {
+  position: relative;
+  min-height: 5.3rem;
+  padding: 0 0 1.25rem 1.8rem;
+}
+
+.viaje-card__parada:not(:last-child)::before {
+  position: absolute;
+  top: 1.15rem;
+  bottom: -0.2rem;
+  left: -0.05rem;
+  width: 0.15rem;
+  content: '';
+  background: #bd1934;
+}
+
+.viaje-card__punto {
+  position: absolute;
+  top: 0.25rem;
+  left: -0.5rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 0.16rem solid #bd1934;
+  border-radius: 50%;
+}
+
+.viaje-card__parada--inicio .viaje-card__punto,
+.viaje-card__parada--fin .viaje-card__punto {
+  background: #bd1934;
+}
+
+.viaje-card__parada-contenido {
+  padding-bottom: 1rem;
+  border-bottom: 0.1rem solid #d8d8d8;
+}
+
+.viaje-card__parada:last-child .viaje-card__parada-contenido {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.viaje-card__parada h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1.1rem;
+}
+
+.viaje-card__horas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1.5rem;
+  color: #4a4a4a;
+}
+
+.viaje-card__horas span,
+.viaje-card__parada p {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.viaje-card__parada p {
+  margin: 0.55rem 0 0;
+  color: #4a4a4a;
+}
+
+.viaje-card__parada p i {
+  color: #bd1934;
+}
+
+@media (max-width: 40rem) {
+  .viaje-card__resumen {
+    padding: 1.15rem 3.6rem 0 1rem;
+  }
+
+  .viaje-card__trayecto {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
+  .viaje-card__localidad--destino {
+    justify-self: start;
+  }
+
+  .viaje-card__recorrido {
+    justify-content: flex-start;
+    width: 9rem;
+    margin-left: 0.2rem;
+  }
+
+  .viaje-card__empresa {
+    margin: 1.1rem -3.6rem 0 -1rem;
+    padding: 0.75rem 3.6rem 0.75rem 1rem;
+  }
+
+  .viaje-card__detalle {
+    padding: 1.25rem 1rem;
+  }
+
+  .viaje-card__paradas {
+    padding-left: 1.3rem;
+  }
+
+  .viaje-card__parada {
+    padding-left: 1.4rem;
+  }
+}
