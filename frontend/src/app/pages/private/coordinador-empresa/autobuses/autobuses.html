@@ -45,6 +45,10 @@
           <td>{{ autobus.numeroAsientosAveriados ?? '-' }}</td>
           <td>
             <div class="acciones" aria-label="Acciones para el autobús {{ autobus.matricula }}">
+              <a [routerLink]="['/private/autobuses/editar', autobus.id]" class="action-button edit-button" aria-label="Editar autobus"
+                title="Editar autobus">
+                <i class="bi bi-pencil-fill" aria-hidden="true"></i>
+            </a>
               @if (autobus.activo === false) {
               <button type="button" class="action-button activate-button" aria-label="Habilitar autobús"
                 title="Habilitar autobús" (click)="activarAutobus(autobus.id!, autobus.matricula)">
