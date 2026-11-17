@@ -1,0 +1,9 @@
+@import '../../administrador/empresas/empresas.css';
+
+.autobus-inactivo {
+  opacity: 0.55;
+}
+
+.empresas-page table {
+  min-width: 72rem;
+}
