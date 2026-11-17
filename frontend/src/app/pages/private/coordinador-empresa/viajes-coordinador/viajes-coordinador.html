@@ -77,7 +77,17 @@
 
     <div class="viajes-buscador__campo">
       <label for="fecha">Fecha del viaje</label>
-      <input id="fecha" type="date" [value]="fecha() ?? ''" [attr.aria-invalid]="errorFecha()" (change)="changeFecha($event)" />
+      <input
+        id="fecha"
+        type="text"
+        inputmode="numeric"
+        maxlength="10"
+        placeholder="dd/mm/aaaa"
+        autocomplete="off"
+        [value]="fechaVisible()"
+        [attr.aria-invalid]="errorFecha()"
+        (change)="changeFecha($event)"
+      />
       @if (errorFecha()) {
         <p class="field-error" role="alert">Debe seleccionar una fecha de viaje.</p>
       }
@@ -86,6 +96,9 @@
     <button type="submit" class="buscar-button" aria-label="Buscar viajes" title="Buscar viajes">
       <i class="bi bi-search" aria-hidden="true"></i>
       <span>Buscar</span>
+    </button>
+    <button type="button" class="reset-button" (click)="resetearBusqueda()">
+      Restablecer
     </button>
   </form>
 

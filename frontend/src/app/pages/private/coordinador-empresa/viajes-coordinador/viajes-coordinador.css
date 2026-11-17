@@ -28,7 +28,7 @@
 
 .viajes-buscador {
   display: grid;
-  grid-template-columns: minmax(11rem, 1fr) minmax(11rem, 1fr) minmax(10rem, 0.65fr) auto;
+  grid-template-columns: minmax(11rem, 1fr) minmax(11rem, 1fr) minmax(10rem, 0.65fr) auto auto;
   gap: 1rem;
   align-items: start;
   margin: 2rem 0;
@@ -146,9 +146,27 @@
 }
 
 .buscar-button:focus-visible,
+.reset-button:focus-visible,
 .pagination-button:focus-visible {
   outline: 0.2rem solid #1a73a8;
   outline-offset: 0.15rem;
+}
+
+.reset-button {
+  align-self: start;
+  min-height: 2.75rem;
+  margin-top: 1.65rem;
+  padding: 0.6rem 1rem;
+  color: #292929;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  background: #ffffff;
+  border: 0.1rem solid #767676;
+}
+
+.reset-button:hover {
+  background: #f0f0f0;
 }
 
 .viajes-bienvenida {
@@ -249,7 +267,8 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .buscar-button {
+  .buscar-button,
+  .reset-button {
     justify-self: start;
   }
 }
@@ -268,7 +287,8 @@
     padding: 1rem;
   }
 
-  .buscar-button {
+  .buscar-button,
+  .reset-button {
     width: 100%;
     margin-top: 0;
   }
