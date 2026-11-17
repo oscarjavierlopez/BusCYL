@@ -162,7 +162,7 @@ public class ViajeServiceImpl implements ViajeService {
             throw new NoValidException("Conductor no válido");
         }
 
-        if (!request.horaSalida().isAfter(request.horaLlegada())) {
+        if (!request.horaLlegada().isAfter(request.horaSalida())) {
             throw new NoValidException("La hora de llegada debe ser más tardía que la fecha de salida");
         }
 
@@ -333,7 +333,7 @@ public class ViajeServiceImpl implements ViajeService {
             throw new NoValidException("Conductor no válido");
         }
 
-        if (!request.horaSalida().isAfter(request.horaLlegada())) {
+        if (!request.horaLlegada().isAfter(request.horaSalida())) {
             throw new NoValidException("La hora de llegada debe ser más tardía que la fecha de salida");
         }
 
