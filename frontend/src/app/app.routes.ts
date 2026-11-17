@@ -42,6 +42,9 @@ export const routes: Routes = [
             {
                 path: 'autobuses', loadComponent: () => import('./pages/private/coordinador-empresa/autobuses/autobuses').then(m => m.Autobuses),
             },
+            {
+                path: 'autobuses/crear', loadComponent: () => import('./pages/private/coordinador-empresa/crear-autobus/crear-autobus').then(m => m.CrearAutobus),
+            },
         ],
     },
 ];

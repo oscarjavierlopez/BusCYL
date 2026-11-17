@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toast, NgxSonnerToaster } from 'ngx-sonner';
 import { AutobusService } from '../../../../services/autobus.service';
 import { AutobusesPaginados } from '../../../../models/autobuses-paginados';
@@ -17,7 +17,7 @@ declare const Swal: {
 
 @Component({
   selector: 'app-autobuses',
-  imports: [NgxSonnerToaster],
+  imports: [RouterLink, NgxSonnerToaster],
   templateUrl: './autobuses.html',
   styleUrl: './autobuses.css',
 })

@@ -7,3 +7,29 @@
 .empresas-page table {
   min-width: 72rem;
 }
+
+.add-bus-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.65rem;
+  padding: 0.6rem 1rem;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  background: #bd1934;
+  border: 0.1rem solid #bd1934;
+}
+
+.add-bus-button:hover {
+  background: #941126;
+  border-color: #941126;
+}
+
+.add-bus-button:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.15rem;
+}
