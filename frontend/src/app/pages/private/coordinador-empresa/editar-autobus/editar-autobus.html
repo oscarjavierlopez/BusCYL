@@ -1,0 +1,147 @@
+<section class="crear-usuario-page" aria-labelledby="crear-autobus-title">
+  <div class="crear-usuario-card">
+    <header class="crear-usuario-header">
+      <h1 id="crear-autobus-title">Editar autobús</h1>
+      <p>Introduzca los datos necesarios para modificar la información de un autobús.</p>
+    </header>
+
+    <form [formGroup]="editarAutobusForm" (ngSubmit)="submit()" novalidate>
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="matricula">Matrícula</label>
+          <input id="matricula" type="text" formControlName="matricula" autocomplete="off" />
+          @if (editarAutobusForm.controls.matricula.touched && editarAutobusForm.controls.matricula.invalid) {
+          <p class="field-error" role="alert">
+            @if (editarAutobusForm.controls.matricula.errors?.['required']) { La matrícula es obligatoria. }
+            @if (editarAutobusForm.controls.matricula.errors?.['pattern']) { La matrícula no tiene un formato válido. }
+          </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="numeroBastidor">Número de bastidor</label>
+          <input id="numeroBastidor" type="text" formControlName="numeroBastidor" autocomplete="off" />
+          @if (editarAutobusForm.controls.numeroBastidor.touched && editarAutobusForm.controls.numeroBastidor.invalid) {
+          <p class="field-error" role="alert">
+            @if (editarAutobusForm.controls.numeroBastidor.errors?.['required']) { El número de bastidor es obligatorio.
+            }
+            @if (editarAutobusForm.controls.numeroBastidor.errors?.['pattern']) { El número de bastidor no tiene un
+            formato válido. }
+          </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="numeroFlota">Número de flota</label>
+          <input id="numeroFlota" type="text" formControlName="numeroFlota" autocomplete="off" />
+          @if (editarAutobusForm.controls.numeroFlota.touched && editarAutobusForm.controls.numeroFlota.invalid) {
+          <p class="field-error" role="alert">
+            @if (editarAutobusForm.controls.numeroFlota.errors?.['required']) { El número de flota es obligatorio. }
+            @if (editarAutobusForm.controls.numeroFlota.errors?.['pattern']) { El número de flota no tiene un formato
+            válido. }
+          </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="numeroAsientos">Número de asientos</label>
+          <input id="numeroAsientos" type="number" formControlName="numeroAsientos" min="1" max="250" step="1" />
+          @if (editarAutobusForm.controls.numeroAsientos.touched && editarAutobusForm.controls.numeroAsientos.invalid) {
+          <p class="field-error" role="alert">
+            @if (editarAutobusForm.controls.numeroAsientos.errors?.['required']) { El número de asientos es obligatorio.
+            }
+            @if (editarAutobusForm.controls.numeroAsientos.errors?.['min'] ||
+            editarAutobusForm.controls.numeroAsientos.errors?.['max']) { El número de asientos debe estar entre 1 y 250.
+            }
+          </p>
+          }
+        </div>
+      </div>
+
+      <section class="seat-configuration" aria-labelledby="seat-configuration-title">
+        <header class="seat-configuration-header">
+          <h2 id="seat-configuration-title">Configurar asientos</h2>
+          <p>Seleccione un tipo y un estado, y pulse sobre los asientos para aplicar la configuración.</p>
+        </header>
+
+        <div class="seat-tools">
+          <fieldset class="seat-tool-group">
+            <legend>Tipo de asiento</legend>
+            <div class="seat-tool-options">
+              <button type="button" class="seat-tool-button normal-tool"
+                [class.seat-tool-button-selected]="tipo() === 'normal'" [attr.aria-pressed]="tipo() === 'normal'"
+                (click)="seleccionarTipo('normal')">
+                <i class="bi bi-person-fill" aria-hidden="true"></i>
+                Normal
+              </button>
+              <button type="button" class="seat-tool-button adapted-tool"
+                [class.seat-tool-button-selected]="tipo() === 'adaptado'" [attr.aria-pressed]="tipo() === 'adaptado'"
+                (click)="seleccionarTipo('adaptado')">
+                <i class="bi bi-person-wheelchair" aria-hidden="true"></i>
+                Adaptado
+              </button>
+            </div>
+          </fieldset>
+
+          <fieldset class="seat-tool-group">
+            <legend>Estado</legend>
+            <div class="seat-tool-options">
+              <button type="button" class="seat-tool-button available-tool"
+                [class.seat-tool-button-selected]="estado() === 'No averiado'"
+                [attr.aria-pressed]="estado() === 'No averiado'" (click)="seleccionarEstado('No averiado')">
+                <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                No averiado
+              </button>
+              <button type="button" class="seat-tool-button damaged-tool"
+                [class.seat-tool-button-selected]="estado() === 'averiado'"
+                [attr.aria-pressed]="estado() === 'averiado'" (click)="seleccionarEstado('averiado')">
+                <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+                Averiado
+              </button>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="bus-plan" aria-label="Plano de asientos del autobús">
+          <p class="bus-plan-front">Parte delantera</p>
+          <div class="bus-floor">
+            @for (fila of filasAsientos(); track $index) {
+            <div class="seat-row" [class.seat-row-last]="fila.ultima">
+              @for (asiento of fila.asientos; track asiento.numero; let indice = $index) {
+              @if (!fila.ultima && indice === 2) {
+              <span class="seat-aisle" aria-hidden="true"></span>
+              }
+              <button type="button" class="seat" [class.seat-adapted]="asiento.tipo === 'adaptado'"
+                [class.seat-damaged]="!asiento.activo" (click)="modificarAsiento(asiento.numero)"
+                [attr.aria-label]="'Asiento ' + asiento.numero">
+                <span>{{ asiento.numero }}</span>
+                @if (asiento.tipo === 'adaptado') {
+                <i class="bi bi-person-wheelchair" aria-hidden="true"></i>
+                }
+                @if (!asiento.activo) {
+                <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+                }
+              </button>
+              }
+            </div>
+            } @empty {
+            <p class="bus-plan-empty">Indique un número de asientos válido para generar el plano.</p>
+            }
+          </div>
+        </div>
+
+        <div class="seat-summary" aria-label="Resumen de asientos">
+          <p><strong>{{ asientos().length }}</strong><span>Plazas totales</span></p>
+          <p><strong>{{ numeroAsientosAdaptados() }}</strong><span>Adaptados</span></p>
+          <p><strong>{{ numeroAsientosAveriados() }}</strong><span>Averiados</span></p>
+        </div>
+      </section>
+
+      <div class="form-actions">
+        <button type="submit" class="submit-button">Editar autobús</button>
+        <a class="cancel-button" routerLink="/private/autobuses">Cancelar</a>
+      </div>
+    </form>
+  </div>
+  <ngx-sonner-toaster position="bottom-right" />
+</section>

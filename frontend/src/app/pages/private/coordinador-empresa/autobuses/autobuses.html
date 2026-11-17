@@ -1,0 +1,102 @@
+<section class="empresas-page" aria-labelledby="autobuses-title">
+  <header class="empresas-header">
+    <div>
+      <h1 id="autobuses-title">Gestión de autobuses</h1>
+      <p>Consulte, busque y gestione los autobuses de la empresa.</p>
+    </div>
+    <a class="add-bus-button" routerLink="/private/autobuses/crear">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      Añadir autobús
+    </a>
+  </header>
+
+  <div class="empresas-filtros">
+    <label for="buscar-autobus">Buscar autobús</label>
+    <div class="search-input">
+      <i class="bi bi-search" aria-hidden="true"></i>
+      <input id="buscar-autobus" type="search" placeholder="Busque por matrícula..." autocomplete="off"
+        [value]="matricula()" (input)="manejarBusqueda($event)" />
+    </div>
+  </div>
+
+  @if (autobusesPaginados(); as paginaAutobuses) {
+  <div class="tabla-contenedor" tabindex="0">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Matrícula</th>
+          <th scope="col">Número de bastidor</th>
+          <th scope="col">Número de flota</th>
+          <th scope="col">Número de asientos</th>
+          <th scope="col">Asientos adaptados</th>
+          <th scope="col">Asientos averiados</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (autobus of paginaAutobuses.autobuses; track autobus.id) {
+        <tr [class.autobus-activo]="autobus.activo !== false"
+          [class.autobus-inactivo]="autobus.activo === false">
+          <td>{{ autobus.matricula }}</td>
+          <td>{{ autobus.numeroBastidor }}</td>
+          <td>{{ autobus.numeroFlota }}</td>
+          <td>{{ autobus.numeroAsientos ?? '-' }}</td>
+          <td>{{ autobus.numeroAsientosAdaptados ?? '-' }}</td>
+          <td>{{ autobus.numeroAsientosAveriados ?? '-' }}</td>
+          <td>
+            <div class="acciones" aria-label="Acciones para el autobús {{ autobus.matricula }}">
+              <a [routerLink]="['/private/autobuses/editar', autobus.id]" class="action-button edit-button" aria-label="Editar autobus"
+                title="Editar autobus">
+                <i class="bi bi-pencil-fill" aria-hidden="true"></i>
+            </a>
+              @if (autobus.activo === false) {
+              <button type="button" class="action-button activate-button" aria-label="Habilitar autobús"
+                title="Habilitar autobús" (click)="activarAutobus(autobus.id!, autobus.matricula)">
+                <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+              </button>
+              } @else {
+              <button type="button" class="action-button deactivate-button" aria-label="Deshabilitar autobús"
+                title="Deshabilitar autobús" (click)="desactivarAutobus(autobus.id!, autobus.matricula)">
+                <i class="bi bi-slash-circle-fill" aria-hidden="true"></i>
+              </button>
+              }
+            </div>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td class="empty-state" colspan="7">No hay autobuses disponibles.</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="paginacion" aria-label="Paginación de autobuses">
+    <p>Mostrando {{ paginaAutobuses.autobuses.length }} de {{ paginaAutobuses.totalAutobuses }} autobuses</p>
+    <div class="pagination-controls">
+      @if (paginaAutobuses.pagina != 1) {
+      <button type="button" class="pagination-button" aria-label="Ir a la primera página" title="Primera página"
+        (click)="cambiarPagina(1)">1</button>
+      }
+      <button [disabled]="paginaAutobuses.paginaPrevia == null" type="button" class="pagination-button"
+        aria-label="Ir a la página anterior" title="Página anterior"
+        (click)="cambiarPagina(paginaAutobuses.paginaPrevia!)">
+        <i class="bi bi-chevron-left" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="pagination-button pagination-button-current" aria-current="page"
+        title="Página actual">{{ paginaAutobuses.pagina }}</button>
+      <button [disabled]="paginaAutobuses.paginaSiguiente == null" type="button" class="pagination-button"
+        aria-label="Ir a la página siguiente" title="Página siguiente"
+        (click)="cambiarPagina(paginaAutobuses.paginaSiguiente!)">
+        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      </button>
+      @if (paginaAutobuses.pagina != paginaAutobuses.totalPaginas) {
+      <button type="button" class="pagination-button" aria-label="Ir a la última página" title="Última página"
+        (click)="cambiarPagina(paginaAutobuses.totalPaginas)">{{ paginaAutobuses.totalPaginas }}</button>
+      }
+    </div>
+  </footer>
+  }
+  <ngx-sonner-toaster position="bottom-right" />
+</section>

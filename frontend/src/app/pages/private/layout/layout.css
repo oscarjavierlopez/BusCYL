@@ -64,7 +64,8 @@
 }
 
 .usuarios-link,
-.empresas-link {
+.empresas-link,
+.autobuses-link {
   display: inline-flex;
   align-items: center;
   min-height: 2.7rem;
@@ -76,13 +77,15 @@
 }
 
 .usuarios-link:hover,
-.empresas-link:hover {
+.empresas-link:hover,
+.autobuses-link:hover {
   background: #941126;
   border-bottom-color: #ffffff;
 }
 
 .usuarios-link-active,
-.empresas-link-active {
+.empresas-link-active,
+.autobuses-link-active {
   background: #941126;
   border-bottom-color: #ffffff;
 }
@@ -122,6 +125,7 @@
 .home-button:focus-visible,
 .usuarios-link:focus-visible,
 .empresas-link:focus-visible,
+.autobuses-link:focus-visible,
 .user-button:focus-visible,
 .logout-button:focus-visible {
   outline: 0.2rem solid #ffffff;

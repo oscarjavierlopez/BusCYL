@@ -1,0 +1,206 @@
+@import '../../administrador/crear-usuario/crear-usuario.css';
+
+.seat-configuration {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 0.1rem solid #d8d8d8;
+}
+
+.seat-configuration-header h2 {
+  margin: 0;
+  color: #292929;
+  font-size: 1.25rem;
+}
+
+.seat-configuration-header p {
+  margin: 0.5rem 0 1.25rem;
+  color: #4a4a4a;
+}
+
+.seat-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.seat-tool-group {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.seat-tool-group legend {
+  margin-bottom: 0.45rem;
+  color: #292929;
+  font-weight: 700;
+}
+
+.seat-tool-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.seat-tool-button {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 4.75rem;
+  padding: 0.6rem;
+  color: #292929;
+  font: inherit;
+  cursor: pointer;
+  background: #ffffff;
+  border: 0.1rem solid #b6b6b6;
+}
+
+.seat-tool-button i {
+  font-size: 1.15rem;
+}
+
+.normal-tool i,
+.available-tool i {
+  color: #1a73a8;
+}
+
+.adapted-tool i {
+  color: #2f6b45;
+}
+
+.damaged-tool i {
+  color: #a6001c;
+}
+
+.seat-tool-button-selected {
+  font-weight: 700;
+  border: 0.2rem solid #bd1934;
+}
+
+.seat-tool-button:focus-visible,
+.seat:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.15rem;
+}
+
+.bus-plan {
+  margin-top: 1.75rem;
+}
+
+.bus-plan-front {
+  margin: 0 0 0.55rem;
+  color: #4a4a4a;
+  font-size: 0.875rem;
+}
+
+.bus-floor {
+  box-sizing: border-box;
+  width: min(100%, 28rem);
+  max-height: 36rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background: #f8f8f8;
+  border: 0.1rem solid #d8d8d8;
+  border-top: 0.3rem solid #bd1934;
+}
+
+.seat-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.55rem;
+  margin-bottom: 0.5rem;
+}
+
+.seat-row-last {
+  margin-bottom: 0;
+}
+
+.seat-aisle {
+  width: 2rem;
+}
+
+.seat {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  width: 2.55rem;
+  height: 2.55rem;
+  padding: 0.2rem;
+  color: #124e78;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: #e7f2fb;
+  border: 0.1rem solid #1a73a8;
+  border-radius: 0.3rem;
+}
+
+.seat i {
+  font-size: 0.7rem;
+}
+
+.seat:hover {
+  background: #cfe6f7;
+}
+
+.seat-adapted:not(.seat-damaged) {
+  color: #1e5a38;
+  background: #e4f3e9;
+  border-color: #2f6b45;
+}
+
+.seat-damaged {
+  color: #8a0018;
+  background: #fbeaec;
+  border-color: #a6001c;
+}
+
+.bus-plan-empty {
+  margin: 0;
+  color: #4a4a4a;
+  text-align: center;
+}
+
+.seat-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.seat-summary p {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
+  text-align: center;
+}
+
+.seat-summary strong {
+  color: #292929;
+  font-size: 1.25rem;
+}
+
+.seat-summary span {
+  color: #4a4a4a;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 40rem) {
+  .seat-tools {
+    grid-template-columns: 1fr;
+  }
+
+  .bus-floor {
+    padding: 1rem;
+  }
+
+  .seat-summary {
+    gap: 0.5rem;
+  }
+}
