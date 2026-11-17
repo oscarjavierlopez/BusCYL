@@ -79,12 +79,9 @@
       <label for="fecha">Fecha del viaje</label>
       <input
         id="fecha"
-        type="text"
-        inputmode="numeric"
-        maxlength="10"
-        placeholder="dd/mm/aaaa"
+        type="date"
         autocomplete="off"
-        [value]="fechaVisible()"
+        [value]="fecha() ?? ''"
         [attr.aria-invalid]="errorFecha()"
         (change)="changeFecha($event)"
       />

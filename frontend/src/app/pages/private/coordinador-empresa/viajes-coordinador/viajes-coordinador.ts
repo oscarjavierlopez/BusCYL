@@ -27,7 +27,6 @@ export class ViajesCoordinador implements OnInit {
   origen = signal<number | null>(null);
   destino = signal<number | null>(null);
   fecha = signal<string | null>(null);
-  fechaVisible = signal<string>('');
   pagina = signal<number>(1);
   busquedaOrigen = signal<string>('');
   busquedaDestino = signal<string>('');
@@ -69,11 +68,8 @@ export class ViajesCoordinador implements OnInit {
   }
 
   changeFecha(event: Event): void {
-    const textoFecha = (event.target as HTMLInputElement).value.trim();
-
     this.limpiarErrores();
-    this.fechaVisible.set(textoFecha);
-    this.fecha.set(this.convertirFechaAISO(textoFecha));
+    this.fecha.set((event.target as HTMLInputElement).value || null);
   }
 
   manejarBusquedaOrigen(event: Event): void {
@@ -121,7 +117,6 @@ export class ViajesCoordinador implements OnInit {
     this.fecha.set(null);
     this.busquedaOrigen.set('');
     this.busquedaDestino.set('');
-    this.fechaVisible.set('');
     this.localidadesOrigenFiltradas.set([]);
     this.localidadesDestinoFiltradas.set([]);
     this.mostrarSugerenciasOrigen.set(false);
@@ -162,31 +157,6 @@ export class ViajesCoordinador implements OnInit {
 
   private normalizarTexto(texto: string): string {
     return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es-ES');
-  }
-
-  private convertirFechaAISO(textoFecha: string): string | null {
-    const coincidencias = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(textoFecha);
-
-    if (!coincidencias) {
-      return null;
-    }
-
-    const dia = Number(coincidencias[1]);
-    const mes = Number(coincidencias[2]);
-    const anio = Number(coincidencias[3]);
-    const fecha = new Date(anio, mes - 1, dia);
-
-    if (fecha.getFullYear() !== anio || fecha.getMonth() !== mes - 1 || fecha.getDate() !== dia) {
-      return null;
-    }
-
-    return `${anio}-${coincidencias[2]}-${coincidencias[1]}`;
-  }
-
-  private formatearFechaVisible(fechaISO: string): string {
-    const coincidencias = /^(\d{4})-(\d{2})-(\d{2})$/.exec(fechaISO);
-
-    return coincidencias ? `${coincidencias[3]}/${coincidencias[2]}/${coincidencias[1]}` : '';
   }
 
   private obtenerNombreLocalidad(id: number): string {
@@ -238,7 +208,6 @@ export class ViajesCoordinador implements OnInit {
         const fecha = params["fecha"];
 
         this.fecha.set(fecha);
-        this.fechaVisible.set(this.formatearFechaVisible(fecha));
       }
     });
   }
