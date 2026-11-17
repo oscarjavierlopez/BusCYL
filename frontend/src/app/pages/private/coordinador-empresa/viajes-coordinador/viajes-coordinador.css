@@ -1,0 +1,280 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.viajes-coordinador-page {
+  box-sizing: border-box;
+  width: min(100%, 76rem);
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  color: #292929;
+}
+
+.viajes-coordinador-header {
+  padding-bottom: 1.1rem;
+  border-bottom: 0.1rem solid #bd1934;
+}
+
+.viajes-coordinador-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.viajes-coordinador-header p {
+  margin: 0.65rem 0 0;
+  color: #4a4a4a;
+}
+
+.viajes-buscador {
+  display: grid;
+  grid-template-columns: minmax(11rem, 1fr) minmax(11rem, 1fr) minmax(10rem, 0.65fr) auto;
+  gap: 1rem;
+  align-items: start;
+  margin: 2rem 0;
+  padding: 1.35rem;
+  background: #f7f7f7;
+  border-top: 0.25rem solid #bd1934;
+}
+
+.viajes-buscador__campo {
+  min-width: 0;
+}
+
+.viajes-buscador label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-weight: 700;
+}
+
+.viajes-buscador input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.6rem 0.75rem;
+  color: #292929;
+  font: inherit;
+  background: #ffffff;
+  border: 0.1rem solid #767676;
+}
+
+.viajes-buscador input:focus {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.1rem;
+  border-color: #1a73a8;
+}
+
+.viajes-buscador input[aria-invalid='true'] {
+  border-color: #a6001c;
+}
+
+.localidad-selector {
+  position: relative;
+}
+
+.localidades-sugerencias,
+.localidades-sin-resultados {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 13rem;
+  margin: 0.2rem 0 0;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 0.1rem solid #767676;
+}
+
+.localidades-sugerencias {
+  padding: 0;
+  list-style: none;
+}
+
+.localidades-sugerencias button {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  color: #292929;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: #ffffff;
+  border: 0;
+}
+
+.localidades-sugerencias button:hover,
+.localidades-sugerencias button:focus-visible {
+  color: #292929;
+  background: #f0f0f0;
+}
+
+.localidades-sugerencias button:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: -0.2rem;
+}
+
+.localidades-sin-resultados {
+  padding: 0.65rem 0.75rem;
+  color: #4a4a4a;
+}
+
+.field-error {
+  margin: 0.45rem 0 0;
+  color: #a6001c;
+  font-size: 0.9rem;
+}
+
+.buscar-button {
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  min-height: 2.75rem;
+  margin-top: 1.65rem;
+  padding: 0.6rem 1rem;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  background: #bd1934;
+  border: 0.1rem solid #bd1934;
+}
+
+.buscar-button:hover {
+  background: #941126;
+  border-color: #941126;
+}
+
+.buscar-button:focus-visible,
+.pagination-button:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.15rem;
+}
+
+.viajes-bienvenida {
+  display: grid;
+  min-height: 16rem;
+  place-content: center;
+  gap: 0.75rem;
+  color: #4a4a4a;
+  text-align: center;
+  background: #fafafa;
+  border: 0.1rem solid #d8d8d8;
+  border-radius: 0.5rem;
+}
+
+.viajes-bienvenida i {
+  color: #bd1934;
+  font-size: 2.5rem;
+}
+
+.viajes-bienvenida p {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.viajes-resultados {
+  display: grid;
+  gap: 1rem;
+}
+
+.viajes-sin-resultados {
+  margin: 0;
+  padding: 2rem;
+  color: #4a4a4a;
+  text-align: center;
+  background: #fafafa;
+  border: 0.1rem solid #d8d8d8;
+}
+
+.paginacion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.paginacion p {
+  margin: 0;
+  color: #000000;
+  font-weight: 700;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pagination-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.55rem;
+  color: #292929;
+  font: inherit;
+  cursor: pointer;
+  background: #ffffff;
+  border: 0.1rem solid #767676;
+}
+
+.pagination-button:hover {
+  color: #ffffff;
+  background: #4a4a4a;
+  border-color: #4a4a4a;
+}
+
+.pagination-button:disabled,
+.pagination-button:disabled:hover {
+  color: #767676;
+  cursor: not-allowed;
+  background: #e8e8e8;
+  border-color: #b6b6b6;
+}
+
+.pagination-button-current,
+.pagination-button-current:hover {
+  color: #ffffff;
+  cursor: default;
+  background: #bd1934;
+  border-color: #bd1934;
+}
+
+@media (max-width: 52rem) {
+  .viajes-buscador {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .buscar-button {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 40rem) {
+  .viajes-coordinador-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .viajes-coordinador-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .viajes-buscador {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .buscar-button {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .paginacion {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
