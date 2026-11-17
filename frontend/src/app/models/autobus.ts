@@ -1,3 +1,5 @@
+import { Asiento } from "./asiento";
+
 export interface Autobus {
   id?: number;
   matricula: string;
@@ -7,5 +9,5 @@ export interface Autobus {
   numeroAsientos?: number;
   numeroAsientosAdaptados?: number;
   numeroAsientosAveriados?: number;
-  asientos: unknown[];
+  asientos: Asiento[];
 }
