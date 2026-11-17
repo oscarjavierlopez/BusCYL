@@ -132,6 +132,7 @@ public class Mapper {
                                 .horaLLegada(viaje.getHoraLlegada())
                                 .paradas(viaje.getParadas()
                                                 .stream()
+                                                .sorted(Comparator.comparingInt(Parada::getOrden))
                                                 .map(p -> toDto(p))
                                                 .toList())
                                 .activo(viaje.getActivo())

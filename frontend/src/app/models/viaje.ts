@@ -1,4 +1,5 @@
 import { Autobus } from './autobus';
+import { Parada } from './parada';
 
 export interface Viaje {
   id?: number;
@@ -10,7 +11,7 @@ export interface Viaje {
   fecha?: string;
   horaSalida: string;
   horaLLegada?: string;
-  paradas: unknown[];
+  paradas: Parada[];
   activo?: boolean;
   idOrigen?: number;
   idDestino?: number;
