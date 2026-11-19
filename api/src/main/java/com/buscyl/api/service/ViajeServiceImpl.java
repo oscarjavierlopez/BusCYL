@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -200,13 +201,24 @@ public class ViajeServiceImpl implements ViajeService {
                 throw new NoValidException("El orden de las paradas no puede ser menor que 1");
             }
 
-            if (parada.horaSalida().isBefore(parada.horaLlegada())) {
-                throw new NoValidException(
-                        "La hora de salida de una parada debe ser más tardía que la hora de llegada");
+            if (!Objects.equals(parada, ultimaParada)) {
+                if (parada.horaSalida().isBefore(parada.horaLlegada())) {
+                    throw new NoValidException(
+                            "La hora de salida de una parada debe ser más tardía que la hora de llegada");
+                }
+
+                if (request.horaLlegada().isBefore(parada.horaSalida())) {
+                    throw new NoValidException("El horario de la parada número " + parada.orden()
+                            + " no se encuentra dentro del horario del trayecto");
+                }
+            } else {
+                if (parada.horaLlegada().isAfter(request.horaLlegada())) {
+                    throw new NoValidException("El horario de la parada número " + parada.orden()
+                            + " no se encuentra dentro del horario del trayecto");
+                }
             }
 
-            if (parada.horaLlegada().isBefore(request.horaSalida())
-                    || request.horaLlegada().isBefore(parada.horaSalida())) {
+            if (parada.horaLlegada().isBefore(request.horaSalida())) {
                 throw new NoValidException("El horario de la parada número " + parada.orden()
                         + " no se encuentra dentro del horario del trayecto");
             }
@@ -413,13 +425,24 @@ public class ViajeServiceImpl implements ViajeService {
                 throw new NoValidException("El orden de las paradas no puede ser menor que 1");
             }
 
-            if (parada.horaSalida().isBefore(parada.horaLlegada())) {
-                throw new NoValidException(
-                        "La hora de salida de una parada debe ser más tardía que la hora de llegada");
+            if (!Objects.equals(parada, ultimaParada)) {
+                if (parada.horaSalida().isBefore(parada.horaLlegada())) {
+                    throw new NoValidException(
+                            "La hora de salida de una parada debe ser más tardía que la hora de llegada");
+                }
+
+                if (request.horaLlegada().isBefore(parada.horaSalida())) {
+                    throw new NoValidException("El horario de la parada número " + parada.orden()
+                            + " no se encuentra dentro del horario del trayecto");
+                }
+            } else {
+                if (parada.horaLlegada().isAfter(request.horaLlegada())) {
+                    throw new NoValidException("El horario de la parada número " + parada.orden()
+                            + " no se encuentra dentro del horario del trayecto");
+                }
             }
 
-            if (parada.horaLlegada().isBefore(request.horaSalida())
-                    || request.horaLlegada().isBefore(parada.horaSalida())) {
+            if (parada.horaLlegada().isBefore(request.horaSalida())) {
                 throw new NoValidException("El horario de la parada número " + parada.orden()
                         + " no se encuentra dentro del horario del trayecto");
             }
@@ -444,9 +467,7 @@ public class ViajeServiceImpl implements ViajeService {
             if (paradasConMismoOrden > 1) {
                 throw new NoValidException("No puede haber dos paradas con el mismo orden");
             }
-        }
-
-        // Edición del Viaje
+        } // Edición del Viaje
         viaje.setOrigen(origen);
         viaje.setDestino(destino);
         viaje.setAutobus(autobus);
