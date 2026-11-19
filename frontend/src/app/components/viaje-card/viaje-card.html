@@ -1,4 +1,4 @@
-<article class="viaje-card" [class.viaje-card--desplegado]="desplegado()">
+<article class="viaje-card" [class.viaje-card--desplegado]="desplegado()" [class.viaje-card--no-disponible]="viajeNoDisponible">
   <button type="button" class="viaje-card__resumen" [attr.aria-expanded]="desplegado()" (click)="alternarParadas()">
     <span class="viaje-card__trayecto">
       <span class="viaje-card__localidad viaje-card__localidad--origen">

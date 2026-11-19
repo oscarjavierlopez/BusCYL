@@ -49,7 +49,10 @@ export const routes: Routes = [
                 path: 'autobuses/editar/:id', loadComponent: () => import('./pages/private/coordinador-empresa/editar-autobus/editar-autobus').then(m => m.EditarAutobus),
             },
             {
-                path: 'viajes', loadComponent: () => import('./pages/private/coordinador-empresa/viajes-coordinador/viajes-coordinador').then(m => m.ViajesCoordinador),
+                path: 'viajes/coordinador', loadComponent: () => import('./pages/private/coordinador-empresa/viajes-coordinador/viajes-coordinador').then(m => m.ViajesCoordinador),
+            },
+            {
+                path: 'viajes/coordinador/crear', loadComponent: () => import('./pages/private/coordinador-empresa/crear-viaje/crear-viaje').then(m => m.CrearViaje),
             },
         ],
     },

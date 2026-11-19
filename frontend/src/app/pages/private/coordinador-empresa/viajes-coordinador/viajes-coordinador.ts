@@ -4,11 +4,11 @@ import { LocalidadesService } from '../../../../services/localidades.service';
 import { Localidad } from '../../../../models/localidad';
 import { ViajeCard } from '../../../../components/viaje-card/viaje-card';
 import { ViajesPaginados } from '../../../../models/viajes-paginados';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-viajes-coordinador',
-  imports: [ViajeCard],
+  imports: [RouterLink, ViajeCard],
   templateUrl: './viajes-coordinador.html',
   styleUrl: './viajes-coordinador.css',
 })

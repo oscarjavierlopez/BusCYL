@@ -14,6 +14,10 @@
   border-color: #767676;
 }
 
+.viaje-card--no-disponible {
+  opacity: 0.55;
+}
+
 .viaje-card__resumen {
   position: relative;
   display: block;

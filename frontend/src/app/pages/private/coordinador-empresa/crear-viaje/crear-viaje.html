@@ -1,0 +1,271 @@
+<section class="crear-viaje-page" aria-labelledby="crear-viaje-title">
+  <div class="crear-viaje-card">
+    <header class="crear-viaje-header">
+      <h1 id="crear-viaje-title">Crear viaje</h1>
+      <p>Seleccione el trayecto, los recursos asignados y el horario de circulación.</p>
+    </header>
+
+    <form [formGroup]="crearViajeForm" (ngSubmit)="submit()" novalidate>
+      <div class="form-grid">
+        <div class="form-field localidad-field">
+          <label for="origen">Origen</label>
+          <div class="selector">
+            <input id="origen" type="search" [value]="busquedaOrigen()" placeholder="Busque una localidad"
+              autocomplete="off" aria-autocomplete="list" [attr.aria-expanded]="mostrarSugerenciasOrigen()"
+              [attr.aria-invalid]="crearViajeForm.controls.idOrigen.touched && crearViajeForm.controls.idOrigen.invalid"
+              (input)="manejarBusquedaOrigen($event)" (blur)="crearViajeForm.controls.idOrigen.markAsTouched()" />
+            @if (mostrarSugerenciasOrigen()) {
+            @if (localidadesOrigenFiltradas().length > 0) {
+            <ul class="sugerencias" role="listbox" aria-label="Coincidencias de localidades para origen">
+              @for (localidad of localidadesOrigenFiltradas(); track localidad.id) {
+              <li><button type="button" role="option" (mousedown)="$event.preventDefault()"
+                  (click)="seleccionarOrigen(localidad)">{{ localidad.nombre }} ({{ localidad.provincia }})</button>
+              </li>
+              }
+            </ul>
+            } @else {
+            <p class="sin-resultados">No se han encontrado localidades.</p>
+            }
+            }
+          </div>
+          @if (crearViajeForm.controls.idOrigen.touched && crearViajeForm.controls.idOrigen.invalid) {
+          <p class="field-error" role="alert">Debe seleccionar una localidad de origen.</p>
+          }
+        </div>
+
+        <div class="form-field localidad-field">
+          <label for="destino">Destino</label>
+          <div class="selector">
+            <input id="destino" type="search" [value]="busquedaDestino()" placeholder="Busque una localidad"
+              autocomplete="off" aria-autocomplete="list" [attr.aria-expanded]="mostrarSugerenciasDestino()"
+              [attr.aria-invalid]="crearViajeForm.controls.idDestino.touched && crearViajeForm.controls.idDestino.invalid"
+              (input)="manejarBusquedaDestino($event)" (blur)="crearViajeForm.controls.idDestino.markAsTouched()" />
+            @if (mostrarSugerenciasDestino()) {
+            @if (localidadesDestinoFiltradas().length > 0) {
+            <ul class="sugerencias" role="listbox" aria-label="Coincidencias de localidades para destino">
+              @for (localidad of localidadesDestinoFiltradas(); track localidad.id) {
+              <li><button type="button" role="option" (mousedown)="$event.preventDefault()"
+                  (click)="seleccionarDestino(localidad)">{{ localidad.nombre }} ({{ localidad.provincia }})</button>
+              </li>
+              }
+            </ul>
+            } @else {
+            <p class="sin-resultados">No se han encontrado localidades.</p>
+            }
+            }
+          </div>
+          @if (crearViajeForm.controls.idDestino.touched && crearViajeForm.controls.idDestino.invalid) {
+          <p class="field-error" role="alert">Debe seleccionar una localidad de destino.</p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="autobus">Autobús</label>
+          <div class="selector">
+            <input id="autobus" type="search" [value]="busquedaAutobus()" placeholder="Busque por matrícula"
+              autocomplete="off" aria-autocomplete="list" [attr.aria-expanded]="mostrarSugerenciasAutobus()"
+              [attr.aria-invalid]="crearViajeForm.controls.idAutobus.touched && crearViajeForm.controls.idAutobus.invalid"
+              (input)="manejarBusquedaAutobus($event)" (blur)="crearViajeForm.controls.idAutobus.markAsTouched()" />
+            @if (mostrarSugerenciasAutobus()) {
+            @if (autobusesFiltrados().length > 0) {
+            <ul class="sugerencias" role="listbox" aria-label="Coincidencias de autobuses">
+              @for (autobus of autobusesFiltrados(); track autobus.id) {
+              <li><button type="button" role="option" (mousedown)="$event.preventDefault()"
+                  (click)="seleccionarAutobus(autobus)">{{ autobus.matricula }} · Flota {{ autobus.numeroFlota
+                  }}</button></li>
+              }
+            </ul>
+            } @else {
+            <p class="sin-resultados">No se han encontrado autobuses.</p>
+            }
+            }
+          </div>
+          @if (crearViajeForm.controls.idAutobus.touched && crearViajeForm.controls.idAutobus.invalid) {
+          <p class="field-error" role="alert">Debe seleccionar un autobús.</p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="conductor">Conductor</label>
+          <div class="selector">
+            <input id="conductor" type="search" [value]="busquedaConductor()"
+              placeholder="Busque por nombre y apellidos" autocomplete="off" aria-autocomplete="list"
+              [attr.aria-expanded]="mostrarSugerenciasConductor()"
+              [attr.aria-invalid]="crearViajeForm.controls.idConductor.touched && crearViajeForm.controls.idConductor.invalid"
+              (input)="manejarBusquedaConductor($event)" (blur)="crearViajeForm.controls.idConductor.markAsTouched()" />
+            @if (mostrarSugerenciasConductor()) {
+            @if (conductoresFiltrados().length > 0) {
+            <ul class="sugerencias" role="listbox" aria-label="Coincidencias de conductores">
+              @for (conductor of conductoresFiltrados(); track conductor.id) {
+              <li><button type="button" role="option" (mousedown)="$event.preventDefault()"
+                  (click)="seleccionarConductor(conductor)">{{ conductor.nombre }} {{ conductor.apellidos }}</button>
+              </li>
+              }
+            </ul>
+            } @else {
+            <p class="sin-resultados">No se han encontrado conductores.</p>
+            }
+            }
+          </div>
+          @if (crearViajeForm.controls.idConductor.touched && crearViajeForm.controls.idConductor.invalid) {
+          <p class="field-error" role="alert">Debe seleccionar un conductor.</p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="fechaInicio">Fecha de inicio</label>
+          <input id="fechaInicio" type="date" formControlName="fechaInicio" />
+          @if (crearViajeForm.controls.fechaInicio.touched && crearViajeForm.controls.fechaInicio.invalid) {
+          <p class="field-error" role="alert">
+            @if (crearViajeForm.controls.fechaInicio.errors?.['required']) { La fecha de inicio es obligatoria. }
+            @if (crearViajeForm.controls.fechaInicio.errors?.['fechaNoFutura'] ||
+            crearViajeForm.controls.fechaInicio.errors?.['fechaInvalida']) { La fecha de inicio debe ser futura. }
+          </p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="fechaFin">Fecha de fin</label>
+          <input id="fechaFin" type="date" formControlName="fechaFin" />
+          @if (crearViajeForm.controls.fechaFin.touched && crearViajeForm.controls.fechaFin.invalid) {
+          <p class="field-error" role="alert">
+            @if (crearViajeForm.controls.fechaFin.errors?.['required']) { La fecha de fin es obligatoria. }
+            @if (crearViajeForm.controls.fechaFin.errors?.['fechaNoFutura'] ||
+            crearViajeForm.controls.fechaFin.errors?.['fechaInvalida']) { La fecha de fin debe ser futura. }
+          </p>
+          }
+        </div>
+
+        <fieldset class="form-field dias-field">
+          <legend>Días de circulación</legend>
+          <div class="dias-circulacion">
+            @for (dia of diasSemana; track dia.numero) {
+            <button type="button" class="dia-button"
+              [class.dia-button-selected]="diasSeleccionados().includes(dia.numero)"
+              [attr.aria-pressed]="diasSeleccionados().includes(dia.numero)" [attr.aria-label]="dia.etiqueta"
+              (click)="alternarDia(dia.numero)">
+              {{ dia.abreviatura }}
+            </button>
+            }
+          </div>
+          @if (crearViajeForm.controls.dias.touched && crearViajeForm.controls.dias.invalid) {
+          <p class="field-error" role="alert">Debe seleccionar al menos un día de circulación.</p>
+          }
+        </fieldset>
+
+        <div class="form-field">
+          <label for="horaSalida">Hora de salida</label>
+          <input id="horaSalida" type="time" formControlName="horaSalida" (change)="actualizarValidacionesParadas()" />
+          @if (crearViajeForm.controls.horaSalida.touched && crearViajeForm.controls.horaSalida.invalid) {
+          <p class="field-error" role="alert">La hora de salida es obligatoria.</p>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="horaLlegada">Hora de llegada</label>
+          <input id="horaLlegada" type="time" formControlName="horaLlegada" (change)="actualizarValidacionesParadas()" />
+          @if (crearViajeForm.controls.horaLlegada.touched && crearViajeForm.controls.horaLlegada.invalid) {
+          <p class="field-error" role="alert">La hora de llegada es obligatoria.</p>
+          }
+          @if (crearViajeForm.hasError('horaLlegadaNoPosterior') && (crearViajeForm.controls.horaSalida.touched ||
+          crearViajeForm.controls.horaLlegada.touched)) {
+          <p class="field-error" role="alert">La hora de llegada debe ser posterior a la hora de salida.</p>
+          }
+        </div>
+
+        <section class="paradas-section" formArrayName="paradas" aria-labelledby="paradas-title">
+          <header class="paradas-header">
+            <h2 id="paradas-title">Paradas</h2>
+          </header>
+
+          <div class="paradas-lista">
+            @for (parada of paradas.controls; track parada; let indice = $index) {
+              <fieldset class="parada-item" [formGroupName]="indice">
+                <legend>Parada {{ parada.controls.orden.value }}</legend>
+                <div class="parada-grid">
+                  <div class="parada-field parada-localidad">
+                    <label for="parada-localidad-{{ indice }}">Localidad</label>
+                    <div class="selector">
+                      <input id="parada-localidad-{{ indice }}" type="search" [value]="estadosBusquedaParadas()[indice].texto"
+                        placeholder="Busque una localidad" autocomplete="off" aria-autocomplete="list"
+                        [attr.aria-expanded]="estadosBusquedaParadas()[indice].mostrar"
+                        [attr.aria-invalid]="parada.controls.idLocalidad.touched && parada.controls.idLocalidad.invalid"
+                        (input)="manejarBusquedaParada($event, indice)" (blur)="parada.controls.idLocalidad.markAsTouched()" />
+                      @if (estadosBusquedaParadas()[indice].mostrar) {
+                        @if (estadosBusquedaParadas()[indice].localidades.length > 0) {
+                          <ul class="sugerencias" role="listbox" aria-label="Coincidencias de localidades para parada">
+                            @for (localidad of estadosBusquedaParadas()[indice].localidades; track localidad.id) {
+                              <li><button type="button" role="option" (mousedown)="$event.preventDefault()" (click)="seleccionarLocalidadParada(localidad, indice)">{{ localidad.nombre }} ({{ localidad.provincia }})</button></li>
+                            }
+                          </ul>
+                        } @else {
+                          <p class="sin-resultados">No se han encontrado localidades.</p>
+                        }
+                      }
+                    </div>
+                    @if (parada.controls.idLocalidad.touched && parada.controls.idLocalidad.invalid) {
+                      <p class="field-error" role="alert">Debe seleccionar una localidad.</p>
+                    }
+                  </div>
+
+                  <div class="parada-field">
+                    <label for="parada-direccion-{{ indice }}">Dirección</label>
+                    <input id="parada-direccion-{{ indice }}" type="text" formControlName="direccion" />
+                    @if (parada.controls.direccion.touched && parada.controls.direccion.invalid) {
+                      <p class="field-error" role="alert">La dirección es obligatoria.</p>
+                    }
+                  </div>
+
+                  <div class="parada-field">
+                    <label for="parada-llegada-{{ indice }}">Hora de llegada</label>
+                    <input id="parada-llegada-{{ indice }}" type="time" formControlName="horaLlegada" />
+                    @if (parada.controls.horaLlegada.touched && parada.controls.horaLlegada.invalid) {
+                      <p class="field-error" role="alert">La hora de llegada es obligatoria.</p>
+                    }
+                    @if (parada.hasError('horaLlegadaFueraDeHorario') && parada.controls.horaLlegada.touched) {
+                      <p class="field-error" role="alert">La hora de llegada debe estar dentro del horario del viaje.</p>
+                    }
+                  </div>
+
+                  <div class="parada-field">
+                    <label for="parada-salida-{{ indice }}">Hora de salida</label>
+                    <input id="parada-salida-{{ indice }}" type="time" formControlName="horaSalida" />
+                    @if (parada.hasError('horaSalidaNoPosterior') && parada.controls.horaSalida.touched) {
+                      <p class="field-error" role="alert">La hora de salida debe ser posterior a la hora de llegada.</p>
+                    }
+                    @if (parada.hasError('horaSalidaFueraDeHorario') && parada.controls.horaSalida.touched) {
+                      <p class="field-error" role="alert">La hora de salida debe estar dentro del horario del viaje.</p>
+                    }
+                  </div>
+
+                  @if (indice < paradas.length - 1) {
+                    <div class="stop-actions">
+                      <button type="button" class="add-stop-button" aria-label="Añadir parada después de la parada {{ parada.controls.orden.value }}" title="Añadir parada" (click)="agregarParada(indice)">
+                        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                      </button>
+                      @if (indice > 0) {
+                        <button type="button" class="remove-stop-button" aria-label="Eliminar parada {{ parada.controls.orden.value }}" title="Eliminar parada" (click)="eliminarParada(indice)">
+                          <i class="bi bi-dash-lg" aria-hidden="true"></i>
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              </fieldset>
+            }
+          </div>
+        </section>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="submit-button">Crear viaje</button>
+        <a class="cancel-button" routerLink="/private/viajes/coordinador">Cancelar</a>
+      </div>
+
+      @if (mensajeError()) {
+        <p class="form-error" role="alert">{{ mensajeError() }}</p>
+      }
+    </form>
+  </div>
+  <ngx-sonner-toaster position="bottom-right" />
+</section>
