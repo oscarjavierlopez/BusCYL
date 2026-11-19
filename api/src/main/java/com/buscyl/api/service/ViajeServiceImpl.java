@@ -2,6 +2,7 @@ package com.buscyl.api.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -166,6 +167,26 @@ public class ViajeServiceImpl implements ViajeService {
             throw new NoValidException("La hora de llegada debe ser más tardía que la fecha de salida");
         }
 
+        ParadaRequest primeraParada = request.paradas()
+                .stream()
+                .sorted((a, b) -> Integer.compare(a.orden(), b.orden()))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Parada no encontrada"));
+        ;
+        if (primeraParada.idLocalidad() != request.idOrigen()) {
+            throw new NoValidException("La primera parada no coincide con el lugar de origen");
+        }
+
+        ParadaRequest ultimaParada = request.paradas()
+                .stream()
+                .sorted((a, b) -> Integer.compare(b.orden(), a.orden()))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Parada no encontrada"));
+
+        if (ultimaParada.idLocalidad() != request.idDestino()) {
+            throw new NoValidException("La última parada no coincide con el lugar de destino");
+        }
+
         Set<ParadaRequest> paradasSinDuplicados = new HashSet<>(request.paradas());
         if (paradasSinDuplicados.size() != request.paradas().size()) {
             throw new NoValidException("El viaje contiene paradas duplicadas");
@@ -175,9 +196,31 @@ public class ViajeServiceImpl implements ViajeService {
             Localidad localidad = localidadRepository.findById(parada.idLocalidad())
                     .orElseThrow(() -> new NotFoundException("Localidad de parada no válida"));
 
-            if (!parada.horaSalida().isAfter(parada.horaLlegada())) {
+            if (parada.orden() < 1) {
+                throw new NoValidException("El orden de las paradas no puede ser menor que 1");
+            }
+
+            if (parada.horaSalida().isBefore(parada.horaLlegada())) {
                 throw new NoValidException(
-                        "La hora de llegada de una parada debe ser más tardía que la fecha de salida");
+                        "La hora de salida de una parada debe ser más tardía que la hora de llegada");
+            }
+
+            if (parada.horaLlegada().isBefore(request.horaSalida())
+                    || request.horaLlegada().isBefore(parada.horaSalida())) {
+                throw new NoValidException("El horario de la parada número " + parada.orden()
+                        + " no se encuentra dentro del horario del trayecto");
+            }
+
+            if (parada.orden() > 1) {
+                ParadaRequest paradaAnterior = request.paradas()
+                        .stream()
+                        .filter(p -> p.orden() == (parada.orden() - 1))
+                        .findFirst()
+                        .orElseThrow(() -> new NotFoundException("Parada no encontrada"));
+                if (!parada.horaLlegada().isAfter(paradaAnterior.horaSalida())) {
+                    throw new NoValidException("La hora de llegada de la parada número " + parada.orden()
+                            + " debe ser posterior a la hora de salida de la parada anterior");
+                }
             }
 
             int paradasConMismoOrden = request.paradas()
@@ -337,6 +380,26 @@ public class ViajeServiceImpl implements ViajeService {
             throw new NoValidException("La hora de llegada debe ser más tardía que la fecha de salida");
         }
 
+        ParadaRequest primeraParada = request.paradas()
+                .stream()
+                .sorted((a, b) -> Integer.compare(a.orden(), b.orden()))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Parada no encontrada"));
+        ;
+        if (primeraParada.idLocalidad() != request.idOrigen()) {
+            throw new NoValidException("La primera parada no coincide con el lugar de origen");
+        }
+
+        ParadaRequest ultimaParada = request.paradas()
+                .stream()
+                .sorted((a, b) -> Integer.compare(b.orden(), a.orden()))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Parada no encontrada"));
+
+        if (ultimaParada.idLocalidad() != request.idDestino()) {
+            throw new NoValidException("La última parada no coincide con el lugar de destino");
+        }
+
         Set<ParadaRequest> paradasSinDuplicados = new HashSet<>(request.paradas());
         if (paradasSinDuplicados.size() != request.paradas().size()) {
             throw new NoValidException("El viaje contiene paradas duplicadas");
@@ -346,9 +409,31 @@ public class ViajeServiceImpl implements ViajeService {
             Localidad localidad = localidadRepository.findById(parada.idLocalidad())
                     .orElseThrow(() -> new NotFoundException("Localidad de parada no válida"));
 
-            if (!parada.horaSalida().isAfter(parada.horaLlegada())) {
+            if (parada.orden() < 1) {
+                throw new NoValidException("El orden de las paradas no puede ser menor que 1");
+            }
+
+            if (parada.horaSalida().isBefore(parada.horaLlegada())) {
                 throw new NoValidException(
-                        "La hora de llegada de una parada debe ser más tardía que la fecha de salida");
+                        "La hora de salida de una parada debe ser más tardía que la hora de llegada");
+            }
+
+            if (parada.horaLlegada().isBefore(request.horaSalida())
+                    || request.horaLlegada().isBefore(parada.horaSalida())) {
+                throw new NoValidException("El horario de la parada número " + parada.orden()
+                        + " no se encuentra dentro del horario del trayecto");
+            }
+
+            if (parada.orden() > 1) {
+                ParadaRequest paradaAnterior = request.paradas()
+                        .stream()
+                        .filter(p -> p.orden() == (parada.orden() - 1))
+                        .findFirst()
+                        .orElseThrow(() -> new NotFoundException("Parada no encontrada"));
+                if (!parada.horaLlegada().isAfter(paradaAnterior.horaSalida())) {
+                    throw new NoValidException("La hora de llegada de la parada número " + parada.orden()
+                            + " debe ser posterior a la hora de salida de la parada anterior");
+                }
             }
 
             int paradasConMismoOrden = request.paradas()
