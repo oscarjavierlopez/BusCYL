@@ -202,6 +202,11 @@ public class ViajeServiceImpl implements ViajeService {
             }
 
             if (!Objects.equals(parada, ultimaParada)) {
+                if (parada.horaSalida() == null) {
+                    throw new NoValidException(
+                            "La parada número " + parada.orden() + " no tiene horaSalida");
+                }
+
                 if (parada.horaSalida().isBefore(parada.horaLlegada())) {
                     throw new NoValidException(
                             "La hora de salida de una parada debe ser más tardía que la hora de llegada");
@@ -426,6 +431,11 @@ public class ViajeServiceImpl implements ViajeService {
             }
 
             if (!Objects.equals(parada, ultimaParada)) {
+                if (parada.horaSalida() == null) {
+                    throw new NoValidException(
+                            "La parada número " + parada.orden() + " no tiene horaSalida");
+                }
+                
                 if (parada.horaSalida().isBefore(parada.horaLlegada())) {
                     throw new NoValidException(
                             "La hora de salida de una parada debe ser más tardía que la hora de llegada");
