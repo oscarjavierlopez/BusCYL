@@ -5,10 +5,22 @@ import { Localidad } from '../../../../models/localidad';
 import { ViajeCard } from '../../../../components/viaje-card/viaje-card';
 import { ViajesPaginados } from '../../../../models/viajes-paginados';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { NgxSonnerToaster, toast } from 'ngx-sonner';
+
+declare const Swal: {
+  fire: (options: {
+    title: string;
+    icon: 'question';
+    showCancelButton: boolean;
+    confirmButtonText: string;
+    cancelButtonText: string;
+    confirmButtonColor: string;
+  }) => Promise<{ isConfirmed: boolean }>;
+};
 
 @Component({
   selector: 'app-viajes-coordinador',
-  imports: [RouterLink, ViajeCard],
+  imports: [RouterLink, ViajeCard, NgxSonnerToaster],
   templateUrl: './viajes-coordinador.html',
   styleUrl: './viajes-coordinador.css',
 })
@@ -184,7 +196,7 @@ export class ViajesCoordinador implements OnInit {
 
   }
 
-  private leerQueryParams(): void{
+  private leerQueryParams(): void {
     this.route.queryParams.subscribe(params => {
       if (params["pagina"]) {
         this.pagina.set(Number(params["pagina"]));
@@ -211,4 +223,61 @@ export class ViajesCoordinador implements OnInit {
       }
     });
   }
+
+  private confirmarCambioEstado(mensaje: string, colorConfirmacion: string, accion: () => void): void {
+    Swal.fire({
+      title: mensaje,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: colorConfirmacion,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        accion();
+      }
+    });
+  }
+
+  private toggleActivo(id: number): void {
+    this.viajesPaginados.update((actual) => {
+      if (actual === null) {
+        return null;
+      }
+
+      return {
+        ...actual,
+        viajes: actual.viajes.map((viaje) =>
+          viaje.id === id ? { ...viaje, activo: !viaje.activo } : viaje,
+        ),
+      };
+    });
+  }
+
+  desactivarViaje(id: number): void {
+    this.confirmarCambioEstado(`¿Desea desactivar el viaje seleccionado?`, '#a6001c', () => {
+      this.viajesService.desactivarViaje(id).subscribe(
+        {
+          next: () => {
+            this.toggleActivo(id);
+            toast.info("Viaje desactivado");
+          }
+        }
+      );
+    })
+  }
+
+  activarViaje(id: number): void {
+    this.confirmarCambioEstado(`¿Desea activar el viaje seleccionado?`, '#2f6b45', () => {
+      this.viajesService.activarViaje(id).subscribe(
+        {
+          next: () => {
+            this.toggleActivo(id);
+            toast.info("Viaje activado");
+          }
+        }
+      );
+    })
+  }
+
 }

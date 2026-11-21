@@ -19,6 +19,7 @@ public interface ViajeRepository extends JpaRepository<Viaje, Long> {
             "WHERE a.id_empresa = :idEmpresa\r\n" + //
             "AND v.id_origen = :idOrigen AND v.id_destino = :idDestino\r\n" + //
             "AND v.fecha_viaje = :fecha\r\n" + //
+            "ORDER BY v.hora_salida\r\n" + //
             "LIMIT 10 OFFSET (:pagina - 1) * 10", nativeQuery = true)
     List<Viaje> obtenerViajesPaginadosCoordinador(@Param("pagina") int pagina,
             @Param("idEmpresa") Long idEmpresa,

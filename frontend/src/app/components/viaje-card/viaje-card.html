@@ -1,4 +1,5 @@
-<article class="viaje-card" [class.viaje-card--desplegado]="desplegado()" [class.viaje-card--no-disponible]="viajeNoDisponible">
+<article class="viaje-card" [class.viaje-card--desplegado]="desplegado()"
+  [class.viaje-card--no-disponible]="viajeNoDisponible">
   <button type="button" class="viaje-card__resumen" [attr.aria-expanded]="desplegado()" (click)="alternarParadas()">
     <span class="viaje-card__trayecto">
       <span class="viaje-card__localidad viaje-card__localidad--origen">
@@ -36,6 +37,26 @@
     </span>
   </button>
 
+  @if (usuario.rol == "coordinador empresa") {
+  <div class="viaje-card__acciones" aria-label="Acciones del viaje">
+    <button type="button" class="viaje-card__accion" aria-label="Editar viaje" title="Editar viaje">
+      <i class="bi bi-pencil-square" aria-hidden="true"></i>
+    </button>
+
+    @if (viaje.activo === true) {
+    <button type="button" class="viaje-card__accion viaje-card__accion--desactivar" aria-label="Desactivar viaje"
+      title="Desactivar viaje" (click)="desactivarViaje(viaje.id!)">
+      <i class="bi bi-slash-circle" aria-hidden="true"></i>
+    </button>
+    } @else if (viaje.activo === false) {
+    <button type="button" class="viaje-card__accion viaje-card__accion--activar" aria-label="Activar viaje"
+      title="Activar viaje" (click)="activarViaje(viaje.id!)">
+      <i class="bi bi-check-circle" aria-hidden="true"></i>
+    </button>
+    }
+  </div>
+  }
+
   @if (desplegado()) {
   <section class="viaje-card__detalle" aria-label="Paradas del trayecto">
     <h2><i class="bi bi-signpost-split-fill" aria-hidden="true"></i> Paradas del trayecto</h2>
@@ -49,7 +70,7 @@
           <h3>{{ parada.localidad }}</h3>
           <div class="viaje-card__horas">
             <span><i class="bi bi-clock" aria-hidden="true"></i> Llegada: {{ formatearHora(parada.horaLlegada) }}</span>
-            @if (!ultima || parada.horaSalida !== parada.horaLlegada) {
+            @if (!ultima && parada.horaSalida) {
             <span><i class="bi bi-clock" aria-hidden="true"></i> Salida: {{ formatearHora(parada.horaSalida) }}</span>
             }
           </div>

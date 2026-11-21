@@ -129,6 +129,53 @@
   transform: translateY(-50%);
 }
 
+.viaje-card__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  border-top: 0.1rem solid #d8d8d8;
+}
+
+.viaje-card__accion {
+  display: inline-grid;
+  width: 2.4rem;
+  height: 2.4rem;
+  place-items: center;
+  color: #1a4f8a;
+  font: inherit;
+  font-size: 1.15rem;
+  cursor: pointer;
+  background: #ffffff;
+  border: 0.1rem solid currentcolor;
+}
+
+.viaje-card__accion:hover {
+  color: #ffffff;
+  background: #1a4f8a;
+}
+
+.viaje-card__accion--desactivar {
+  color: #a6001c;
+}
+
+.viaje-card__accion--desactivar:hover {
+  background: #a6001c;
+}
+
+.viaje-card__accion--activar {
+  color: #217a43;
+}
+
+.viaje-card__accion--activar:hover {
+  background: #217a43;
+}
+
+.viaje-card__accion:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.15rem;
+}
+
 .viaje-card__detalle {
   padding: 1.5rem 2rem 2.25rem;
   border-top: 0.1rem solid #d8d8d8;

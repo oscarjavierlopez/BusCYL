@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { Viaje } from '../../models/viaje';
 import { Parada } from '../../models/parada';
 import { AuthResponse } from '../../models/auth-response';
@@ -12,6 +12,8 @@ import { AuthResponse } from '../../models/auth-response';
 export class ViajeCard implements OnInit{
   @Input() viaje!: Viaje;
   usuario!: AuthResponse;
+  @Output() viajeDesactivado = new EventEmitter<number>();
+  @Output() viajeActivado = new EventEmitter<number>();
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem("usuario")!);
@@ -69,5 +71,13 @@ export class ViajeCard implements OnInit{
     }
 
     return fechaHoraSalida;
+  }
+
+  desactivarViaje(id:number):void{
+    this.viajeDesactivado.emit(id);
+  }
+
+  activarViaje(id:number):void{
+    this.viajeActivado.emit(id);
   }
 }
