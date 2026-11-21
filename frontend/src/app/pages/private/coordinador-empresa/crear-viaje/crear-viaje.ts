@@ -6,7 +6,7 @@ import { Localidad } from '../../../../models/localidad';
 import { AutobusService } from '../../../../services/autobus.service';
 import { ConductoresService } from '../../../../services/conductores.service';
 import { LocalidadesService } from '../../../../services/localidades.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { toast, NgxSonnerToaster } from 'ngx-sonner';
 import { Viaje } from '../../../../models/viaje';
 import { Parada } from '../../../../models/parada';
@@ -99,6 +99,7 @@ export class CrearViaje implements OnInit {
   private autobusService = inject(AutobusService);
   private conductoresService = inject(ConductoresService);
   private viajeService = inject(ViajesService);
+  private router = inject(Router);
   mensajeError = signal<string | null>(null);
 
   localidades = signal<Localidad[]>([]);
@@ -323,7 +324,7 @@ export class CrearViaje implements OnInit {
           direccion: p.direccion!,
           orden: p.orden!,
           horaLlegada: `${p.horaLlegada!}:00`,
-          horaSalida: p.horaSalida! ?  `${p.horaSalida!}:00` : null
+          horaSalida: p.horaSalida! ? `${p.horaSalida!}:00` : null
         }
         paradas.push(parada);
       }
@@ -338,15 +339,17 @@ export class CrearViaje implements OnInit {
         horaLlegada: `${this.crearViajeForm.value.horaLlegada!}:00`,
         paradas: paradas
       }
-      
+
       this.viajeService.crearViaje(viaje).subscribe(
         {
           next: (respuesta) => {
             toast.success(`Se añadieron ${respuesta.length} viajes`);
-            this.crearViajeForm.reset();
-          },error: (error: HttpErrorResponse) => {
-          this.mensajeError.set(obtenerMensajeErrorAutenticacion(error, 'No se ha podido crear la empresa.'));
-        }
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }, error: (error: HttpErrorResponse) => {
+            this.mensajeError.set(obtenerMensajeErrorAutenticacion(error, 'No se ha podido crear la empresa.'));
+          }
         }
       );
     } else {
