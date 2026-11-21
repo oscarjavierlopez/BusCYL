@@ -39,9 +39,9 @@
 
   @if (usuario.rol == "coordinador empresa") {
   <div class="viaje-card__acciones" aria-label="Acciones del viaje">
-    <button type="button" class="viaje-card__accion" aria-label="Editar viaje" title="Editar viaje">
+    <a [routerLink]="['/private/viajes/coordinador/editar', viaje.id]" class="viaje-card__accion" aria-label="Editar viaje" title="Editar viaje">
       <i class="bi bi-pencil-square" aria-hidden="true"></i>
-    </button>
+    </a>
 
     @if (viaje.activo === true) {
     <button type="button" class="viaje-card__accion viaje-card__accion--desactivar" aria-label="Desactivar viaje"

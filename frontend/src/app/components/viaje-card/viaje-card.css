@@ -139,8 +139,10 @@
 
 .viaje-card__accion {
   display: inline-grid;
+  box-sizing: border-box;
   width: 2.4rem;
   height: 2.4rem;
+  padding: 0;
   place-items: center;
   color: #1a4f8a;
   font: inherit;
@@ -148,6 +150,7 @@
   cursor: pointer;
   background: #ffffff;
   border: 0.1rem solid currentcolor;
+  text-decoration: none;
 }
 
 .viaje-card__accion:hover {

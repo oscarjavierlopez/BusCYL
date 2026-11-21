@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -435,7 +436,7 @@ public class ViajeServiceImpl implements ViajeService {
                     throw new NoValidException(
                             "La parada número " + parada.orden() + " no tiene horaSalida");
                 }
-                
+
                 if (parada.horaSalida().isBefore(parada.horaLlegada())) {
                     throw new NoValidException(
                             "La hora de salida de una parada debe ser más tardía que la hora de llegada");
@@ -486,10 +487,21 @@ public class ViajeServiceImpl implements ViajeService {
         viaje.setHoraLlegada(request.horaLlegada());
         viaje.setHoraSalida(request.horaSalida());
 
+        // Eliminación de paradas que ya no existan
+        Set<Integer> ordenesRequest = request.paradas().stream()
+                .map(ParadaRequest::orden)
+                .collect(Collectors.toSet());
+
+        List<Parada> paradasEliminar = viaje.getParadas().stream()
+                .filter(parada -> !ordenesRequest.contains(parada.getOrden()))
+                .toList();
+        paradaRepository.deleteAll(paradasEliminar);
+        viaje.getParadas().removeAll(paradasEliminar);
+
         for (ParadaRequest p : request.paradas()) {
             Optional<Parada> parada = viaje.getParadas()
                     .stream()
-                    .filter(pa -> pa.getOrden() == p.orden())
+                    .filter(pa -> Objects.equals(pa.getOrden(), p.orden()))
                     .findFirst();
 
             Localidad localidad = localidadRepository.findById(p.idLocalidad())

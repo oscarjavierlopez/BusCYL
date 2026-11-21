@@ -2,10 +2,11 @@ import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular
 import { Viaje } from '../../models/viaje';
 import { Parada } from '../../models/parada';
 import { AuthResponse } from '../../models/auth-response';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-viaje-card',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './viaje-card.html',
   styleUrl: './viaje-card.css',
 })

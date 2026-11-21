@@ -54,6 +54,9 @@ export const routes: Routes = [
             {
                 path: 'viajes/coordinador/crear', loadComponent: () => import('./pages/private/coordinador-empresa/crear-viaje/crear-viaje').then(m => m.CrearViaje),
             },
+            {
+                path: 'viajes/coordinador/editar/:id', loadComponent: () => import('./pages/private/coordinador-empresa/editar-viaje/editar-viaje').then(m => m.EditarViaje),
+            },
         ],
     },
 ];

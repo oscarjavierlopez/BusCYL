@@ -338,10 +338,7 @@ export class CrearViaje implements OnInit {
         horaLlegada: `${this.crearViajeForm.value.horaLlegada!}:00`,
         paradas: paradas
       }
-
-      console.log(viaje);
       
-
       this.viajeService.crearViaje(viaje).subscribe(
         {
           next: (respuesta) => {
