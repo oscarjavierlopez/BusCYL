@@ -56,7 +56,9 @@ export class InicioSesion implements OnInit {
               case "administrador":
                 paginaInicio = "/private/usuarios"
                 break;
-
+              case "coordinador empresa":
+                paginaInicio = "/private/viajes/coordinador";
+                break;
               default:
                 paginaInicio = "/private"
                 break;

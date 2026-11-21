@@ -88,9 +88,11 @@ export class Registro implements OnInit {
             let paginaInicio = "";
             switch (authResponse.rol) {
               case "administrador":
-                paginaInicio = "/private/usuarios"
+                paginaInicio = "/private/usuarios";
                 break;
-            
+              case "coordinador empresa":
+                paginaInicio = "/private/viajes/coordinador";
+                break;
               default:
                 paginaInicio = "/private"
                 break;

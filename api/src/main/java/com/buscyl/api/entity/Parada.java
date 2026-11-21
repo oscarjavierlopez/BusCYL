@@ -40,7 +40,7 @@ public class Parada {
     @Column(name = "hora_llegada", nullable = false)
     private LocalTime horaLlegada;
 
-    @Column(name = "hora_salida", nullable = false)
+    @Column(name = "hora_salida", nullable = true)
     private LocalTime horaSalida;
 
     @Column(name = "direccion", nullable = false, length = 255)

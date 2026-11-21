@@ -1,0 +1,84 @@
+<article class="viaje-card" [class.viaje-card--desplegado]="desplegado()"
+  [class.viaje-card--no-disponible]="viajeNoDisponible">
+  <button type="button" class="viaje-card__resumen" [attr.aria-expanded]="desplegado()" (click)="alternarParadas()">
+    <span class="viaje-card__trayecto">
+      <span class="viaje-card__localidad viaje-card__localidad--origen">
+        <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+        <span>
+          <strong>{{ viaje.origen }}</strong>
+          <small>Salida {{ formatearHora(viaje.horaSalida) }}</small>
+        </span>
+      </span>
+
+      <span class="viaje-card__recorrido" aria-hidden="true">
+        <span></span>
+        <i class="bi bi-bus-front-fill"></i>
+        <span></span>
+      </span>
+
+      <span class="viaje-card__localidad viaje-card__localidad--destino">
+        <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+        <span>
+          <strong>{{ viaje.destino }}</strong>
+          <small>Llegada {{ formatearHora(viaje.horaLLegada ?? viaje.horaLlegada) }}</small>
+        </span>
+      </span>
+    </span>
+
+    @if (usuario.rol == "pasajero") {
+    <span class="viaje-card__empresa">
+      <i class="bi bi-buildings-fill" aria-hidden="true"></i>
+      <span><strong>Empresa:</strong> {{ viaje.empresa ?? '-' }}</span>
+    </span>
+    }
+
+    <span class="viaje-card__toggle" [attr.aria-label]="desplegado() ? 'Ocultar paradas' : 'Ver paradas'">
+      <i class="bi" [class.bi-chevron-up]="desplegado()" [class.bi-chevron-down]="!desplegado()" aria-hidden="true"></i>
+    </span>
+  </button>
+
+  @if (usuario.rol == "coordinador empresa") {
+  <div class="viaje-card__acciones" aria-label="Acciones del viaje">
+    <a [routerLink]="['/private/viajes/coordinador/editar', viaje.id]" class="viaje-card__accion" aria-label="Editar viaje" title="Editar viaje">
+      <i class="bi bi-pencil-square" aria-hidden="true"></i>
+    </a>
+
+    @if (viaje.activo === true) {
+    <button type="button" class="viaje-card__accion viaje-card__accion--desactivar" aria-label="Desactivar viaje"
+      title="Desactivar viaje" (click)="desactivarViaje(viaje.id!)">
+      <i class="bi bi-slash-circle" aria-hidden="true"></i>
+    </button>
+    } @else if (viaje.activo === false) {
+    <button type="button" class="viaje-card__accion viaje-card__accion--activar" aria-label="Activar viaje"
+      title="Activar viaje" (click)="activarViaje(viaje.id!)">
+      <i class="bi bi-check-circle" aria-hidden="true"></i>
+    </button>
+    }
+  </div>
+  }
+
+  @if (desplegado()) {
+  <section class="viaje-card__detalle" aria-label="Paradas del trayecto">
+    <h2><i class="bi bi-signpost-split-fill" aria-hidden="true"></i> Paradas del trayecto</h2>
+
+    <ol class="viaje-card__paradas">
+      @for (parada of paradasOrdenadas; track parada.id ?? parada.orden; let primera = $first; let ultima = $last) {
+      <li class="viaje-card__parada" [class.viaje-card__parada--inicio]="primera"
+        [class.viaje-card__parada--fin]="ultima">
+        <span class="viaje-card__punto" aria-hidden="true"></span>
+        <div class="viaje-card__parada-contenido">
+          <h3>{{ parada.localidad }}</h3>
+          <div class="viaje-card__horas">
+            <span><i class="bi bi-clock" aria-hidden="true"></i> Llegada: {{ formatearHora(parada.horaLlegada) }}</span>
+            @if (!ultima && parada.horaSalida) {
+            <span><i class="bi bi-clock" aria-hidden="true"></i> Salida: {{ formatearHora(parada.horaSalida) }}</span>
+            }
+          </div>
+          <p><i class="bi bi-geo-alt" aria-hidden="true"></i> {{ parada.direccion }}</p>
+        </div>
+      </li>
+      }
+    </ol>
+  </section>
+  }
+</article>

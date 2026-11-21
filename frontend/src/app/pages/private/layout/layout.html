@@ -11,6 +11,7 @@
         }
 
         @if (usuario()?.rol == "coordinador empresa") {
+        <a class="autobuses-link" routerLink="/private/viajes/coordinador" routerLinkActive="viajes-link-active" [routerLinkActiveOptions]="{ exact: false }">Viajes</a>
         <a class="autobuses-link" routerLink="/private/autobuses" routerLinkActive="autobuses-link-active" [routerLinkActiveOptions]="{ exact: false }">Autobuses</a>
         }
       </div>

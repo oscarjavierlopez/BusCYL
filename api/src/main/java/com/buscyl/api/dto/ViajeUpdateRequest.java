@@ -20,9 +20,9 @@ public record ViajeUpdateRequest(
 
         @NotNull(message = "El conductor es obligatorio") Long idConductor,
 
-        @JsonFormat(pattern = "yyyy-MM-dd") @NotNull(message = "La fecha es obligatoria") @Future(message = "La fecha debe ser futura") LocalDate fecha,
+        @JsonFormat(pattern = "yyyy-MM-dd") @NotNull(message = "La fecha es obligatoria") LocalDate fecha,
 
-        @JsonFormat(pattern = "HH:mm:ss") @NotNull(message = "La hora de salida es obligatoria") LocalTime horaSalida,
+        @JsonFormat(pattern = "HH:mm:ss") LocalTime horaSalida,
 
         @JsonFormat(pattern = "HH:mm:ss") @NotNull(message = "La hora de llegada es obligatoria") LocalTime horaLlegada,
 

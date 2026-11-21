@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS buscyl.paradas (
     id_viaje      BIGINT       NOT NULL,
     id_localidad  BIGINT       NOT NULL,
     hora_llegada  TIME         NOT NULL,
-    hora_salida   TIME         NOT NULL,
+    hora_salida   TIME         NULL,
     direccion     VARCHAR(255) NOT NULL,
     orden         INTEGER      NOT NULL,
     CONSTRAINT pk_paradas           PRIMARY KEY (id),

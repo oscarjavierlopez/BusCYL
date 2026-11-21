@@ -1,0 +1,369 @@
+@import '../../administrador/crear-usuario/crear-usuario.css';
+
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.crear-viaje-page {
+  box-sizing: border-box;
+  width: min(100%, 76rem);
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  color: #292929;
+}
+
+.crear-viaje-card {
+  background: #ffffff;
+  border-top: 0.3rem solid #bd1934;
+}
+
+.crear-viaje-header {
+  padding: 1.6rem 2rem 1.2rem;
+  border-bottom: 0.1rem solid #bd1934;
+}
+
+.crear-viaje-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.crear-viaje-header p {
+  margin: 0.65rem 0 0;
+  color: #4a4a4a;
+}
+
+form {
+  padding: 2rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.35rem 1.5rem;
+}
+
+.form-field,
+.dias-field {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.form-field label,
+.dias-field legend {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-weight: 700;
+}
+
+.form-field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.6rem 0.75rem;
+  color: #292929;
+  font: inherit;
+  background: #ffffff;
+  border: 0.1rem solid #767676;
+}
+
+.form-field input:focus {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.1rem;
+  border-color: #1a73a8;
+}
+
+.form-field input[aria-invalid='true'],
+.form-field input.ng-touched.ng-invalid {
+  border-color: #a6001c;
+}
+
+.selector {
+  position: relative;
+}
+
+.sugerencias,
+.sin-resultados {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 13rem;
+  margin: 0.2rem 0 0;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 0.1rem solid #767676;
+}
+
+.sugerencias {
+  padding: 0;
+  list-style: none;
+}
+
+.sugerencias button {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  color: #292929;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: #ffffff;
+  border: 0;
+}
+
+.sugerencias button:hover,
+.sugerencias button:focus-visible {
+  background: #f0f0f0;
+}
+
+.sugerencias button:focus-visible,
+.dia-button:focus-visible,
+.submit-button:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: -0.2rem;
+}
+
+.sin-resultados {
+  padding: 0.65rem 0.75rem;
+  color: #4a4a4a;
+}
+
+.dias-field {
+  grid-column: 1 / -1;
+}
+
+.dias-circulacion {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.dia-button {
+  min-height: 4.75rem;
+  color: #292929;
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: #ffffff;
+  border: 0.1rem solid #d8d8d8;
+  border-radius: 0.75rem;
+}
+
+.dia-button-selected {
+  color: #1a4f8a;
+  background: #dfe8f8;
+  border-color: #2878ed;
+}
+
+.dia-button:hover {
+  border-color: #2878ed;
+}
+
+.field-error {
+  margin: 0.45rem 0 0;
+  color: #a6001c;
+  font-size: 0.9rem;
+}
+
+.form-error {
+  margin: 1rem 0 0;
+  padding: 0.8rem 1rem;
+  color: #a6001c;
+  background: #fff1f2;
+  border-left: 0.25rem solid #a6001c;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 0.1rem solid #d8d8d8;
+}
+
+.submit-button {
+  min-height: 2.75rem;
+  padding: 0.6rem 1.25rem;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  background: #bd1934;
+  border: 0.1rem solid #bd1934;
+}
+
+.submit-button:hover {
+  background: #941126;
+  border-color: #941126;
+}
+
+.paradas-section {
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+  padding-top: 1.5rem;
+  border-top: 0.1rem solid #d8d8d8;
+}
+
+.paradas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.paradas-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.add-stop-button,
+.remove-stop-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.55rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.stop-actions {
+  display: flex;
+  align-self: end;
+  gap: 0.5rem;
+}
+
+.add-stop-button {
+  color: #ffffff;
+  background: #bd1934;
+  border: 0.1rem solid #bd1934;
+}
+
+.add-stop-button:hover {
+  background: #941126;
+  border-color: #941126;
+}
+
+.paradas-lista {
+  display: grid;
+  gap: 1rem;
+}
+
+.parada-item {
+  min-width: 0;
+  margin: 0;
+  padding: 1.15rem;
+  border: 0.1rem solid #d8d8d8;
+}
+
+.parada-item legend {
+  padding: 0 0.35rem;
+  color: #292929;
+  font-weight: 700;
+}
+
+.parada-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.parada-field {
+  min-width: 0;
+}
+
+.parada-field label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-weight: 700;
+}
+
+.parada-field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.6rem 0.75rem;
+  color: #292929;
+  font: inherit;
+  background: #ffffff;
+  border: 0.1rem solid #767676;
+}
+
+.parada-field input:focus {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.1rem;
+  border-color: #1a73a8;
+}
+
+.parada-field input[aria-invalid='true'],
+.parada-field input.ng-touched.ng-invalid {
+  border-color: #a6001c;
+}
+
+.remove-stop-button {
+  align-self: end;
+  color: #a6001c;
+  background: #ffffff;
+  border: 0.1rem solid currentcolor;
+}
+
+.remove-stop-button:hover {
+  color: #ffffff;
+  background: #a6001c;
+}
+
+.add-stop-button:focus-visible,
+.remove-stop-button:focus-visible {
+  outline: 0.2rem solid #1a73a8;
+  outline-offset: 0.15rem;
+}
+
+@media (max-width: 40rem) {
+  .crear-viaje-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .crear-viaje-header,
+  form {
+    padding: 1.25rem 1rem;
+  }
+
+  .crear-viaje-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dias-circulacion {
+    grid-template-columns: repeat(7, minmax(2.5rem, 1fr));
+    overflow-x: auto;
+  }
+
+  .dia-button {
+    min-height: 3.75rem;
+  }
+
+  .parada-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .remove-stop-button {
+    justify-self: start;
+  }
+
+  .stop-actions {
+    justify-self: start;
+  }
+
+  .submit-button {
+    width: 100%;
+  }
+}
