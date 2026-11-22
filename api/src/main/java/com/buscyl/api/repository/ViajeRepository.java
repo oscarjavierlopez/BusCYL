@@ -55,7 +55,7 @@ public interface ViajeRepository extends JpaRepository<Viaje, Long> {
                         "\r\n" + //
                         "SELECT *\r\n" + //
                         "FROM buscyl.viajes\r\n" + //
-                        "WHERE id IN (SELECT ID FROM ids_viajes_cte)\r\n" + //
+                        "WHERE id IN (SELECT ID FROM ids_viajes_cte) AND activo = true\r\n" + //
                         "ORDER BY hora_salida\r\n" + //
                         "LIMIT 10 OFFSET (:pagina - 1) * 10", nativeQuery = true)
         List<Viaje> obtenerViajesPaginadosPasajero(@Param("pagina") int pagina,
@@ -79,7 +79,7 @@ public interface ViajeRepository extends JpaRepository<Viaje, Long> {
                         "\r\n" + //
                         "SELECT COUNT(*)\r\n" + //
                         "FROM buscyl.viajes\r\n" + //
-                        "WHERE id IN (SELECT ID FROM ids_viajes_cte)\r\n", nativeQuery = true)
+                        "WHERE id IN (SELECT ID FROM ids_viajes_cte) AND activo = true\r\n", nativeQuery = true)
         long obtenerTotalViajesPasajero(@Param("idOrigen") Long idOrigen,
                         @Param("idDestino") Long idDestino,
                         @Param("fecha") LocalDate fecha);
