@@ -64,6 +64,9 @@ public class Viaje {
     @OneToMany(mappedBy = "viaje")
     private List<Parada> paradas;
 
+    @OneToMany(mappedBy = "viaje")
+    private List<Reserva> reservas;
+
     public void setParada(int indice, Parada parada){
         this.paradas.set(indice, parada);
     }
