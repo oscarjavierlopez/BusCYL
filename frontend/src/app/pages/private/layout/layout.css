@@ -66,7 +66,8 @@
 .usuarios-link,
 .empresas-link,
 .autobuses-link,
-.viajes-link {
+.viajes-link,
+.buscar-link{
   display: inline-flex;
   align-items: center;
   min-height: 2.7rem;
@@ -80,7 +81,8 @@
 .usuarios-link:hover,
 .empresas-link:hover,
 .autobuses-link:hover,
-.viajes-link:hover {
+.viajes-link:hover,
+.buscar-link:hover {
   background: #941126;
   border-bottom-color: #ffffff;
 }
@@ -88,7 +90,8 @@
 .usuarios-link-active,
 .empresas-link-active,
 .autobuses-link-active,
-.viajes-link-active {
+.viajes-link-active ,
+.buscar-link-active{
   background: #941126;
   border-bottom-color: #ffffff;
 }
@@ -130,6 +133,7 @@
 .empresas-link:focus-visible,
 .autobuses-link:focus-visible,
 .viajes-link:focus-visible,
+.buscar-link:focus-visible,
 .user-button:focus-visible,
 .logout-button:focus-visible {
   outline: 0.2rem solid #ffffff;

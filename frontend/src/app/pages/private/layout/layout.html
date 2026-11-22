@@ -11,8 +11,12 @@
         }
 
         @if (usuario()?.rol == "coordinador empresa") {
-        <a class="autobuses-link" routerLink="/private/viajes/coordinador" routerLinkActive="viajes-link-active" [routerLinkActiveOptions]="{ exact: false }">Viajes</a>
+        <a class="viajes-link" routerLink="/private/viajes/coordinador" routerLinkActive="viajes-link-active" [routerLinkActiveOptions]="{ exact: false }">Viajes</a>
         <a class="autobuses-link" routerLink="/private/autobuses" routerLinkActive="autobuses-link-active" [routerLinkActiveOptions]="{ exact: false }">Autobuses</a>
+        }
+
+        @if (usuario()?.rol == "pasajero") {
+        <a class="buscar-link" routerLink="/private/viajes/pasajero/buscar" routerLinkActive="buscar-link-active" [routerLinkActiveOptions]="{ exact: false }">Buscar</a>
         }
       </div>
 

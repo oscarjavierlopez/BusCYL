@@ -57,6 +57,9 @@ export const routes: Routes = [
             {
                 path: 'viajes/coordinador/editar/:id', loadComponent: () => import('./pages/private/coordinador-empresa/editar-viaje/editar-viaje').then(m => m.EditarViaje),
             },
+            {
+                path: 'viajes/pasajero/buscar', loadComponent: () => import('./pages/private/pasajero/buscar-viajes/buscar-viajes').then(m => m.BuscarViajes),
+            },
         ],
     },
 ];
