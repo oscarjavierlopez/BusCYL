@@ -1,6 +1,7 @@
 package com.buscyl.api.service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -112,7 +113,24 @@ public class ViajeServiceImpl implements ViajeService {
                 .obtenerViajesPaginadosPasajero(pagina, idOrigen, idDestino, fecha);
 
         for (Viaje v : viajes) {
+            Localidad origen = localidadRepository.findById(idOrigen)
+                    .orElseThrow(() -> new NotFoundException("Localidad de origen no encontrada"));
+
+            Localidad destino = localidadRepository.findById(idDestino)
+                    .orElseThrow(() -> new NotFoundException("Localidad destino no encontrada"));
+            v.setOrigen(origen);
+            v.setDestino(destino);
             v.setParadas(paradaRepository.obtenerParadasViaje(idOrigen, idDestino, v.getId()));
+
+            List<Parada> paradas = v.getParadas();
+            Parada primeraParada = paradas.get(0);
+            Parada ultimaParada = paradas.get(paradas.size() - 1);
+
+            LocalTime horaSalida = primeraParada.getHoraLlegada();
+            LocalTime horaLlegada = ultimaParada.getHoraLlegada();
+
+            v.setHoraSalida(horaSalida);
+            v.setHoraLlegada(horaLlegada);
         }
 
         List<ViajeResponse> viajesResponse = viajes.stream()
@@ -171,8 +189,26 @@ public class ViajeServiceImpl implements ViajeService {
                 throw new NoValidException(
                         "El destino indicado no pertenece a las paradas del viaje");
             }
-            
+
+            Localidad origen = localidadRepository.findById(idOrigen)
+                    .orElseThrow(() -> new NotFoundException("Localidad de origen no encontrada"));
+
+            Localidad destino = localidadRepository.findById(idDestino)
+                    .orElseThrow(() -> new NotFoundException("Localidad destino no encontrada"));
+            viaje.setOrigen(origen);
+            viaje.setDestino(destino);
             viaje.setParadas(paradaRepository.obtenerParadasViaje(idOrigen, idDestino, viaje.getId()));
+
+            List<Parada> paradas = viaje.getParadas();
+            Parada primeraParada = paradas.get(0);
+            Parada ultimaParada = paradas.get(paradas.size() - 1);
+
+            LocalTime horaSalida = primeraParada.getHoraLlegada();
+            LocalTime horaLlegada = ultimaParada.getHoraLlegada();
+
+            viaje.setHoraSalida(horaSalida);
+            viaje.setHoraLlegada(horaLlegada);
+            return Mapper.toDto(viaje, false);
         }
 
         return Mapper.toDto(viaje, false);

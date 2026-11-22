@@ -1,13 +1,9 @@
 <section class="viajes-coordinador-page" aria-labelledby="viajes-coordinador-title">
   <header class="viajes-coordinador-header">
     <div>
-      <h1 id="viajes-coordinador-title">Viajes</h1>
-      <p>Consulte los trayectos programados de su empresa.</p>
+      <h1 id="viajes-coordinador-title">Buscador de Viajes</h1>
+      <p>Comience a viajar con BusCyL</p>
     </div>
-    <a class="add-trip-button" routerLink="/private/viajes/coordinador/crear">
-      <i class="bi bi-plus-lg" aria-hidden="true"></i>
-      Añadir viaje
-    </a>
   </header>
 
   <form class="viajes-buscador" (submit)="$event.preventDefault(); buscar()" novalidate>
