@@ -146,7 +146,7 @@ export class ViajesCoordinador implements OnInit {
 
   private obtenerViajes(): void {
     this.busquedaRealizada.set(true);
-    this.viajesService.obtenerViajesCoordinador(this.pagina(), this.origen()!, this.destino()!, this.fecha()!)
+    this.viajesService.obtenerViajes(this.pagina(), this.origen()!, this.destino()!, this.fecha()!)
       .subscribe({
         next: (response) => {
           this.viajesPaginados.set(response);

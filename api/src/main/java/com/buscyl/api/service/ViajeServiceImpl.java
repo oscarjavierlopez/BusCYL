@@ -57,7 +57,7 @@ public class ViajeServiceImpl implements ViajeService {
     private AutobusRepository autobusRepository;
 
     @Override
-    public ViajesResponse obtenerViajesCoordinador(int pagina, Long idOrigen, Long idDestino, LocalDate fecha) {
+    public ViajesResponse obtenerViajes(int pagina, Long idOrigen, Long idDestino, LocalDate fecha) {
         JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -99,7 +99,7 @@ public class ViajeServiceImpl implements ViajeService {
     }
 
     @Override
-    public ViajeResponse obtenerViajeCoordinador(Long id) {
+    public ViajeResponse obtenerViaje(Long id) {
         JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
                 .getContext()
                 .getAuthentication()

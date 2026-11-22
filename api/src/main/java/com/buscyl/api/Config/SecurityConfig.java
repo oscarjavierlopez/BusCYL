@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -28,53 +29,59 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+        @Autowired
+        private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Autowired
-    private AuthRateLimitFilter authRateLimitFilter;
+        @Autowired
+        private AuthRateLimitFilter authRateLimitFilter;
 
-    @Autowired
-    private AuthenticationProvider authProvider;
+        @Autowired
+        private AuthenticationProvider authProvider;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        return http
-                .csrf(csrf -> csrf.disable())
-                .cors(withDefaults())
-                .authorizeHttpRequests(authRequest -> authRequest
-                        .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/usuarios", "/usuarios/**").hasRole("ADMINISTRADOR")
-                        .requestMatchers("/empresas", "/empresas/**").hasRole("ADMINISTRADOR")
-                        .requestMatchers("/localidades", "/localidades/**").permitAll()
-                        .requestMatchers("/invitaciones", "/invitaciones/**").hasRole("ADMINISTRADOR")
-                        .requestMatchers("/roles").hasRole("ADMINISTRADOR")
-                        .requestMatchers("/autobuses", "/autobuses/**").hasRole("COORDINADOR_EMPRESA")
-                        .requestMatchers("/conductores", "/conductores/**").hasRole("COORDINADOR_EMPRESA")
-                        .requestMatchers("/viajes", "/viajes/**").hasRole("COORDINADOR_EMPRESA")
-                        .anyRequest().authenticated())
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint((request, response, exception) -> {
-                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-                            response.getWriter().write(
-                                    "{\"error\":\"Se requiere un token de autenticación válido\"}");
-                        })
-                        .accessDeniedHandler((request, response, exception) -> {
-                            response.setStatus(HttpStatus.FORBIDDEN.value());
-                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-                            response.getWriter().write(
-                                    "{\"error\":\"No tienes permisos para acceder a este recurso\"}");
-                        }))
-                .sessionManagement(
-                        sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(authRateLimitFilter, JwtAuthenticationFilter.class)
-                .build();
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+                return http
+                                .csrf(csrf -> csrf.disable())
+                                .cors(withDefaults())
+                                .authorizeHttpRequests(authRequest -> authRequest
+                                                .dispatcherTypeMatchers(FORWARD, ERROR).permitAll()
+                                                .requestMatchers("/auth/**").permitAll()
+                                                .requestMatchers("/usuarios", "/usuarios/**").hasRole("ADMINISTRADOR")
+                                                .requestMatchers("/empresas", "/empresas/**").hasRole("ADMINISTRADOR")
+                                                .requestMatchers("/localidades", "/localidades/**").permitAll()
+                                                .requestMatchers("/invitaciones", "/invitaciones/**")
+                                                .hasRole("ADMINISTRADOR")
+                                                .requestMatchers("/roles").hasRole("ADMINISTRADOR")
+                                                .requestMatchers("/autobuses", "/autobuses/**")
+                                                .hasRole("COORDINADOR_EMPRESA")
+                                                .requestMatchers("/conductores", "/conductores/**")
+                                                .hasRole("COORDINADOR_EMPRESA")
+                                                .requestMatchers(HttpMethod.GET, "/viajes", "/viajes/**")
+                                                .hasAnyRole("COORDINADOR_EMPRESA", "PASAJERO")
+                                                .requestMatchers("/viajes", "/viajes/**").hasRole("COORDINADOR_EMPRESA")
+                                                .anyRequest().authenticated())
+                                .exceptionHandling(exceptionHandling -> exceptionHandling
+                                                .authenticationEntryPoint((request, response, exception) -> {
+                                                        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                                                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                                                        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+                                                        response.getWriter().write(
+                                                                        "{\"error\":\"Se requiere un token de autenticación válido\"}");
+                                                })
+                                                .accessDeniedHandler((request, response, exception) -> {
+                                                        response.setStatus(HttpStatus.FORBIDDEN.value());
+                                                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                                                        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+                                                        response.getWriter().write(
+                                                                        "{\"error\":\"No tienes permisos para acceder a este recurso\"}");
+                                                }))
+                                .sessionManagement(
+                                                sessionManager -> sessionManager
+                                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authenticationProvider(authProvider)
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                                .addFilterBefore(authRateLimitFilter, JwtAuthenticationFilter.class)
+                                .build();
 
-    }
+        }
 }
