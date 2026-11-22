@@ -12,7 +12,7 @@ export class ViajesService {
   private httpClient = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/viajes`;
 
-  obtenerViajesCoordinador(
+  obtenerViajes(
     pagina: number,
     idOrigen: number,
     idDestino: number,
@@ -27,7 +27,7 @@ export class ViajesService {
     return this.httpClient.get<ViajesPaginados>(this.baseUrl, { params });
   }
 
-  obtenerViajeCoordinador(id: number): Observable<Viaje> {
+  obtenerViaje(id: number): Observable<Viaje> {
     return this.httpClient.get<Viaje>(`${this.baseUrl}/${id}`);
   }
 

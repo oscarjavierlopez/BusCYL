@@ -1,6 +1,7 @@
 package com.buscyl.api.service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -57,7 +58,7 @@ public class ViajeServiceImpl implements ViajeService {
     private AutobusRepository autobusRepository;
 
     @Override
-    public ViajesResponse obtenerViajesCoordinador(int pagina, Long idOrigen, Long idDestino, LocalDate fecha) {
+    public ViajesResponse obtenerViajes(int pagina, Long idOrigen, Long idDestino, LocalDate fecha) {
         JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -67,9 +68,39 @@ public class ViajeServiceImpl implements ViajeService {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
-        Long idEmpresa = usuario.getEmpresa().getId();
+        if (usuario.getRol().getNombre().toLowerCase().equals("coordinador empresa")) {
 
-        long totalViajesFiltrados = viajeRepository.obtenerTotalViajesFiltradosCoordinador(idEmpresa, idOrigen,
+            Long idEmpresa = usuario.getEmpresa().getId();
+
+            long totalViajesFiltrados = viajeRepository.obtenerTotalViajesFiltradosCoordinador(idEmpresa, idOrigen,
+                    idDestino, fecha);
+
+            int totalPaginas = (int) Math.ceil(totalViajesFiltrados / 10.0);
+            totalPaginas = totalPaginas > 0 ? totalPaginas : 1;
+
+            if ((pagina > totalPaginas || pagina < 1))
+                throw new PaginaNoValidaException("Página no válida");
+
+            List<ViajeResponse> viajes = viajeRepository
+                    .obtenerViajesPaginadosCoordinador(pagina, idEmpresa, idOrigen, idDestino, fecha)
+                    .stream()
+                    .map(v -> Mapper.toDto(v, false))
+                    .toList();
+
+            Integer paginaPrevia = (pagina - 1) > 0 ? (pagina - 1) : null;
+            Integer paginaSiguiente = (pagina + 1) <= totalPaginas ? (pagina + 1) : null;
+
+            return ViajesResponse.builder()
+                    .totalViajes(totalViajesFiltrados)
+                    .totalPaginas(totalPaginas)
+                    .paginaPrevia(paginaPrevia)
+                    .pagina(pagina)
+                    .paginaSiguiente(paginaSiguiente)
+                    .viajes(viajes)
+                    .build();
+        }
+
+        long totalViajesFiltrados = viajeRepository.obtenerTotalViajesPasajero(idOrigen,
                 idDestino, fecha);
 
         int totalPaginas = (int) Math.ceil(totalViajesFiltrados / 10.0);
@@ -78,9 +109,31 @@ public class ViajeServiceImpl implements ViajeService {
         if ((pagina > totalPaginas || pagina < 1))
             throw new PaginaNoValidaException("Página no válida");
 
-        List<ViajeResponse> viajes = viajeRepository
-                .obtenerViajesPaginadosCoordinador(totalPaginas, idEmpresa, idOrigen, idDestino, fecha)
-                .stream()
+        List<Viaje> viajes = viajeRepository
+                .obtenerViajesPaginadosPasajero(pagina, idOrigen, idDestino, fecha);
+
+        for (Viaje v : viajes) {
+            Localidad origen = localidadRepository.findById(idOrigen)
+                    .orElseThrow(() -> new NotFoundException("Localidad de origen no encontrada"));
+
+            Localidad destino = localidadRepository.findById(idDestino)
+                    .orElseThrow(() -> new NotFoundException("Localidad destino no encontrada"));
+            v.setOrigen(origen);
+            v.setDestino(destino);
+            v.setParadas(paradaRepository.obtenerParadasViaje(idOrigen, idDestino, v.getId()));
+
+            List<Parada> paradas = v.getParadas();
+            Parada primeraParada = paradas.get(0);
+            Parada ultimaParada = paradas.get(paradas.size() - 1);
+
+            LocalTime horaSalida = primeraParada.getHoraLlegada();
+            LocalTime horaLlegada = ultimaParada.getHoraLlegada();
+
+            v.setHoraSalida(horaSalida);
+            v.setHoraLlegada(horaLlegada);
+        }
+
+        List<ViajeResponse> viajesResponse = viajes.stream()
                 .map(v -> Mapper.toDto(v, false))
                 .toList();
 
@@ -93,13 +146,13 @@ public class ViajeServiceImpl implements ViajeService {
                 .paginaPrevia(paginaPrevia)
                 .pagina(pagina)
                 .paginaSiguiente(paginaSiguiente)
-                .viajes(viajes)
+                .viajes(viajesResponse)
                 .build();
 
     }
 
     @Override
-    public ViajeResponse obtenerViajeCoordinador(Long id) {
+    public ViajeResponse obtenerViaje(Long id, Long idOrigen, Long idDestino) {
         JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -109,15 +162,53 @@ public class ViajeServiceImpl implements ViajeService {
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
-        Long idEmpresa = usuario.getEmpresa().getId();
-
         Viaje viaje = viajeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Viaje no encontrado"));
         ;
 
-        if (viaje.getAutobus().getEmpresa().getId() != idEmpresa
-                || viaje.getConductor().getEmpresa().getId() != idEmpresa) {
-            throw new NoPerteneceEmpresaException("El viaje no pertenece a la empresa del usuario");
+        if (usuario.getRol().getNombre().toLowerCase().equals("coordinador empresa")) {
+            Long idEmpresa = usuario.getEmpresa().getId();
+
+            if (viaje.getAutobus().getEmpresa().getId() != idEmpresa
+                    || viaje.getConductor().getEmpresa().getId() != idEmpresa) {
+                throw new NoPerteneceEmpresaException("El viaje no pertenece a la empresa del usuario");
+            }
+        }
+
+        if (idOrigen != null && idDestino != null) {
+            if (viaje.getParadas()
+                    .stream()
+                    .noneMatch(parada -> Objects.equals(parada.getLocalidad().getId(), idOrigen))) {
+                throw new NoValidException(
+                        "El origen indicado no pertenece a las paradas del viaje");
+            }
+
+            if (viaje.getParadas()
+                    .stream()
+                    .noneMatch(parada -> Objects.equals(parada.getLocalidad().getId(), idDestino))) {
+                throw new NoValidException(
+                        "El destino indicado no pertenece a las paradas del viaje");
+            }
+
+            Localidad origen = localidadRepository.findById(idOrigen)
+                    .orElseThrow(() -> new NotFoundException("Localidad de origen no encontrada"));
+
+            Localidad destino = localidadRepository.findById(idDestino)
+                    .orElseThrow(() -> new NotFoundException("Localidad destino no encontrada"));
+            viaje.setOrigen(origen);
+            viaje.setDestino(destino);
+            viaje.setParadas(paradaRepository.obtenerParadasViaje(idOrigen, idDestino, viaje.getId()));
+
+            List<Parada> paradas = viaje.getParadas();
+            Parada primeraParada = paradas.get(0);
+            Parada ultimaParada = paradas.get(paradas.size() - 1);
+
+            LocalTime horaSalida = primeraParada.getHoraLlegada();
+            LocalTime horaLlegada = ultimaParada.getHoraLlegada();
+
+            viaje.setHoraSalida(horaSalida);
+            viaje.setHoraLlegada(horaLlegada);
+            return Mapper.toDto(viaje, false);
         }
 
         return Mapper.toDto(viaje, false);

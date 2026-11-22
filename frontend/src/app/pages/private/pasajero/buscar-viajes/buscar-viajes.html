@@ -1,0 +1,157 @@
+<section class="viajes-coordinador-page" aria-labelledby="viajes-coordinador-title">
+  <header class="viajes-coordinador-header">
+    <div>
+      <h1 id="viajes-coordinador-title">Buscador de Viajes</h1>
+      <p>Comience a viajar con BusCyL</p>
+    </div>
+  </header>
+
+  <form class="viajes-buscador" (submit)="$event.preventDefault(); buscar()" novalidate>
+    <div class="viajes-buscador__campo localidad-field">
+      <label for="origen">Origen</label>
+      <div class="localidad-selector">
+        <input
+          id="origen"
+          type="search"
+          [value]="busquedaOrigen()"
+          placeholder="Seleccione una localidad"
+          autocomplete="off"
+          aria-autocomplete="list"
+          [attr.aria-expanded]="mostrarSugerenciasOrigen()"
+          [attr.aria-invalid]="errorOrigen()"
+          (input)="manejarBusquedaOrigen($event)"
+        />
+        @if (mostrarSugerenciasOrigen()) {
+          @if (localidadesOrigenFiltradas().length > 0) {
+            <ul class="localidades-sugerencias" role="listbox" aria-label="Coincidencias para origen">
+              @for (localidad of localidadesOrigenFiltradas(); track localidad.id) {
+                <li>
+                  <button type="button" role="option" (mousedown)="$event.preventDefault()" (click)="changeOrigen(localidad.id)">
+                    {{ localidad.nombre }} ({{ localidad.provincia }})
+                  </button>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="localidades-sin-resultados">No se han encontrado localidades.</p>
+          }
+        }
+      </div>
+      @if (errorOrigen()) {
+        <p class="field-error" role="alert">Debe seleccionar una localidad de origen.</p>
+      }
+    </div>
+
+    <div class="viajes-buscador__campo localidad-field">
+      <label for="destino">Destino</label>
+      <div class="localidad-selector">
+        <input
+          id="destino"
+          type="search"
+          [value]="busquedaDestino()"
+          placeholder="Seleccione una localidad"
+          autocomplete="off"
+          aria-autocomplete="list"
+          [attr.aria-expanded]="mostrarSugerenciasDestino()"
+          [attr.aria-invalid]="errorDestino()"
+          (input)="manejarBusquedaDestino($event)"
+        />
+        @if (mostrarSugerenciasDestino()) {
+          @if (localidadesDestinoFiltradas().length > 0) {
+            <ul class="localidades-sugerencias" role="listbox" aria-label="Coincidencias para destino">
+              @for (localidad of localidadesDestinoFiltradas(); track localidad.id) {
+                <li>
+                  <button type="button" role="option" (mousedown)="$event.preventDefault()" (click)="changeDestino(localidad.id)">
+                    {{ localidad.nombre }} ({{ localidad.provincia }})
+                  </button>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="localidades-sin-resultados">No se han encontrado localidades.</p>
+          }
+        }
+      </div>
+      @if (errorDestino()) {
+        <p class="field-error" role="alert">Debe seleccionar una localidad de destino.</p>
+      }
+    </div>
+
+    <div class="viajes-buscador__campo">
+      <label for="fecha">Fecha del viaje</label>
+      <input
+        id="fecha"
+        type="date"
+        autocomplete="off"
+        [value]="fecha() ?? ''"
+        [attr.aria-invalid]="errorFecha()"
+        (change)="changeFecha($event)"
+      />
+      @if (errorFecha()) {
+        <p class="field-error" role="alert">Debe seleccionar una fecha de viaje.</p>
+      }
+    </div>
+
+    <button type="submit" class="buscar-button" aria-label="Buscar viajes" title="Buscar viajes">
+      <i class="bi bi-search" aria-hidden="true"></i>
+      <span>Buscar</span>
+    </button>
+    <button type="button" class="reset-button" (click)="resetearBusqueda()">
+      Restablecer
+    </button>
+  </form>
+
+  @if (!busquedaRealizada()) {
+    <div class="viajes-bienvenida">
+      <i class="bi bi-bus-front-fill" aria-hidden="true"></i>
+      <p>Encuentra viajes en BusCyL</p>
+    </div>
+  } @else if (viajesPaginados(); as paginaViajes) {
+    <div class="viajes-resultados" aria-live="polite">
+      @for (viaje of paginaViajes.viajes; track viaje.id) {
+        <app-viaje-card [viaje]="viaje"></app-viaje-card>
+      } @empty {
+        <p class="viajes-sin-resultados">No hay viajes disponibles para los criterios seleccionados.</p>
+      }
+    </div>
+
+    @if (paginaViajes.totalViajes > 0) {
+      <footer class="paginacion" aria-label="Paginación de viajes">
+        <p>Mostrando {{ paginaViajes.viajes.length }} de {{ paginaViajes.totalViajes }} viajes</p>
+        <div class="pagination-controls">
+          @if (paginaViajes.pagina !== 1) {
+            <button type="button" class="pagination-button" aria-label="Ir a la primera página" title="Primera página" (click)="cambiarPagina(1)">1</button>
+          }
+          <button
+            [disabled]="paginaViajes.paginaPrevia === null"
+            type="button"
+            class="pagination-button"
+            aria-label="Ir a la página anterior"
+            title="Página anterior"
+            (click)="cambiarPagina(paginaViajes.paginaPrevia!)"
+          >
+            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="pagination-button pagination-button-current" aria-current="page" title="Página actual">
+            {{ paginaViajes.pagina }}
+          </button>
+          <button
+            [disabled]="paginaViajes.paginaSiguiente === null"
+            type="button"
+            class="pagination-button"
+            aria-label="Ir a la página siguiente"
+            title="Página siguiente"
+            (click)="cambiarPagina(paginaViajes.paginaSiguiente!)"
+          >
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+          </button>
+          @if (paginaViajes.pagina !== paginaViajes.totalPaginas) {
+            <button type="button" class="pagination-button" aria-label="Ir a la última página" title="Última página" (click)="cambiarPagina(paginaViajes.totalPaginas)">
+              {{ paginaViajes.totalPaginas }}
+            </button>
+          }
+        </div>
+      </footer>
+    }
+  }
+</section>

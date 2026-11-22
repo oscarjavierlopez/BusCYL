@@ -10,9 +10,9 @@ import com.buscyl.api.dto.ViajesResponse;
 
 public interface ViajeService {
 
-    ViajesResponse obtenerViajesCoordinador(int pagina, Long idOrigen, Long idDestino, LocalDate fecha);
+    ViajesResponse obtenerViajes(int pagina, Long idOrigen, Long idDestino, LocalDate fecha);
 
-    ViajeResponse obtenerViajeCoordinador(Long id);
+    ViajeResponse obtenerViaje(Long id, Long idOrigen, Long idDestino);
 
     List<ViajeResponse> crearViaje( ViajeCreateRequest request);
 

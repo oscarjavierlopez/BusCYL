@@ -35,17 +35,20 @@ public class ViajeController {
     private ViajeService viajeService;
 
     @GetMapping(params = { "pagina", "idOrigen", "idDestino", "fecha" })
-    public ResponseEntity<ViajesResponse> obtenerViajesCoordinador(
+    public ResponseEntity<ViajesResponse> obtenerViajes(
             @RequestParam int pagina,
             @RequestParam Long idOrigen,
             @RequestParam Long idDestino,
             @RequestParam LocalDate fecha) {
-        return ResponseEntity.ok(viajeService.obtenerViajesCoordinador(pagina, idOrigen, idDestino, fecha));
+        return ResponseEntity.ok(viajeService.obtenerViajes(pagina, idOrigen, idDestino, fecha));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ViajeResponse> obtenerViajeCoordinador(@PathVariable Long id) {
-        return ResponseEntity.ok(viajeService.obtenerViajeCoordinador(id));
+    public ResponseEntity<ViajeResponse> obtenerViaje(@PathVariable Long id,
+        @RequestParam(required = false) Long idOrigen,
+        @RequestParam(required = false) Long idDestino
+    ) {
+        return ResponseEntity.ok(viajeService.obtenerViaje(id,  idOrigen, idDestino));
     }
 
     @PostMapping

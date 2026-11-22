@@ -111,7 +111,7 @@ export class EditarViaje implements OnInit {
       this.mensajeError.set(null);
     });
 
-    this.viajeService.obtenerViajeCoordinador(Number(this.id))
+    this.viajeService.obtenerViaje(Number(this.id))
       .subscribe({
         next: (viaje: Viaje) => {
           this.viaje = viaje;
