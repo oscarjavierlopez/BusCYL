@@ -44,8 +44,11 @@ public class ViajeController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ViajeResponse> obtenerViaje(@PathVariable Long id) {
-        return ResponseEntity.ok(viajeService.obtenerViaje(id));
+    public ResponseEntity<ViajeResponse> obtenerViaje(@PathVariable Long id,
+        @RequestParam(required = false) Long idOrigen,
+        @RequestParam(required = false) Long idDestino
+    ) {
+        return ResponseEntity.ok(viajeService.obtenerViaje(id,  idOrigen, idDestino));
     }
 
     @PostMapping

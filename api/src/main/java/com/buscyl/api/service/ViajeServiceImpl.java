@@ -134,7 +134,7 @@ public class ViajeServiceImpl implements ViajeService {
     }
 
     @Override
-    public ViajeResponse obtenerViaje(Long id) {
+    public ViajeResponse obtenerViaje(Long id, Long idOrigen, Long idDestino) {
         JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -150,11 +150,29 @@ public class ViajeServiceImpl implements ViajeService {
 
         if (usuario.getRol().getNombre().toLowerCase().equals("coordinador empresa")) {
             Long idEmpresa = usuario.getEmpresa().getId();
-            
+
             if (viaje.getAutobus().getEmpresa().getId() != idEmpresa
                     || viaje.getConductor().getEmpresa().getId() != idEmpresa) {
                 throw new NoPerteneceEmpresaException("El viaje no pertenece a la empresa del usuario");
             }
+        }
+
+        if (idOrigen != null && idDestino != null) {
+            if (viaje.getParadas()
+                    .stream()
+                    .noneMatch(parada -> Objects.equals(parada.getLocalidad().getId(), idOrigen))) {
+                throw new NoValidException(
+                        "El origen indicado no pertenece a las paradas del viaje");
+            }
+
+            if (viaje.getParadas()
+                    .stream()
+                    .noneMatch(parada -> Objects.equals(parada.getLocalidad().getId(), idDestino))) {
+                throw new NoValidException(
+                        "El destino indicado no pertenece a las paradas del viaje");
+            }
+            
+            viaje.setParadas(paradaRepository.obtenerParadasViaje(idOrigen, idDestino, viaje.getId()));
         }
 
         return Mapper.toDto(viaje, false);

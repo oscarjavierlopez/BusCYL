@@ -12,7 +12,7 @@ public interface ViajeService {
 
     ViajesResponse obtenerViajes(int pagina, Long idOrigen, Long idDestino, LocalDate fecha);
 
-    ViajeResponse obtenerViaje(Long id);
+    ViajeResponse obtenerViaje(Long id, Long idOrigen, Long idDestino);
 
     List<ViajeResponse> crearViaje( ViajeCreateRequest request);
 
