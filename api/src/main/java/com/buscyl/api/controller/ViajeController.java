@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.buscyl.api.dto.AsientoResponse;
 import com.buscyl.api.dto.ViajeCreateRequest;
 import com.buscyl.api.dto.ViajeResponse;
 import com.buscyl.api.dto.ViajeUpdateRequest;
@@ -49,6 +50,15 @@ public class ViajeController {
         @RequestParam(required = false) Long idDestino
     ) {
         return ResponseEntity.ok(viajeService.obtenerViaje(id,  idOrigen, idDestino));
+    }
+
+    @GetMapping("/{id}/asientos")
+    public ResponseEntity<List<AsientoResponse>> obtenerAsientosViaje(
+        @PathVariable Long id,
+            @RequestParam Long idParadaOrigen,
+            @RequestParam Long idParadaDestino
+    ){
+        return ResponseEntity.ok(viajeService.obtenerAsientosViaje(id, idParadaOrigen, idParadaDestino));
     }
 
     @PostMapping
