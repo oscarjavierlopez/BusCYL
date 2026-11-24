@@ -1,5 +1,7 @@
 package com.buscyl.api.entity;
 
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -44,4 +47,7 @@ public class Asiento {
     @Builder.Default
     @Column(name = "activo", nullable = false)
     private Boolean activo = true;
+
+    @OneToMany(mappedBy = "asiento")
+    private List<Reserva> reservas;
 }
