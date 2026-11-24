@@ -56,6 +56,8 @@ public class SecurityConfig {
                                                 .hasRole("COORDINADOR_EMPRESA")
                                                 .requestMatchers("/conductores", "/conductores/**")
                                                 .hasRole("COORDINADOR_EMPRESA")
+                                                .requestMatchers(HttpMethod.GET, "/viajes/*/asientos")
+                                                .hasRole("PASAJERO")
                                                 .requestMatchers(HttpMethod.GET, "/viajes", "/viajes/**")
                                                 .hasAnyRole("COORDINADOR_EMPRESA", "PASAJERO")
                                                 .requestMatchers("/viajes", "/viajes/**").hasRole("COORDINADOR_EMPRESA")

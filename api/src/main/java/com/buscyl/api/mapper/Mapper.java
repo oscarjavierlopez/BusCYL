@@ -66,12 +66,13 @@ public class Mapper {
                                 .build();
         }
 
-        public static AsientoResponse toDto(Asiento asiento) {
+        public static AsientoResponse toDto(Asiento asiento, Boolean reservado) {
                 return AsientoResponse.builder()
                                 .id(asiento.getId())
                                 .numero(asiento.getNumero())
                                 .tipo(asiento.getTipo())
                                 .activo(asiento.getActivo())
+                                .reservado(reservado)
                                 .build();
         }
 
@@ -81,7 +82,7 @@ public class Mapper {
                 ? autobus.getAsientos()
                 .stream()
                 .sorted(Comparator.comparingInt(Asiento::getNumero))
-                .map(Mapper::toDto)
+                .map(a -> toDto(a, null))
                 .toList()
                 : null;
 
