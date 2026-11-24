@@ -5,10 +5,11 @@ import { ViajesService } from '../../../../services/viajes.service';
 import { LocalidadesService } from '../../../../services/localidades.service';
 import { ViajesPaginados } from '../../../../models/viajes-paginados';
 import { Localidad } from '../../../../models/localidad';
+import { CargadorViajes } from '../../../../components/cargador-viajes/cargador-viajes';
 
 @Component({
   selector: 'app-buscar-viajes',
-  imports: [RouterLink, ViajeCard],
+  imports: [RouterLink, ViajeCard, CargadorViajes],
   templateUrl: './buscar-viajes.html',
   styleUrl: './buscar-viajes.css',
 })
@@ -36,6 +37,7 @@ export class BuscarViajes implements OnInit {
   errorDestino = signal<boolean>(false);
   errorFecha = signal<boolean>(false);
   busquedaRealizada = signal<boolean>(false);
+  loading = signal<boolean>(false);
 
   ngOnInit(): void {
     this.localidadesService.obtenerLocalidades()
@@ -43,7 +45,7 @@ export class BuscarViajes implements OnInit {
         next: (localidades) => {
           this.localidades.set(localidades);
           this.leerQueryParams();
-          this.buscar()
+          this.buscar(false);
         },
         error: (error) => {
           console.error('Ocurrió un error:', error);
@@ -92,12 +94,18 @@ export class BuscarViajes implements OnInit {
     this.localidadesDestinoFiltradas.set(this.filtrarLocalidades(textoBusqueda));
   }
 
-  buscar(): void {
-    this.errorOrigen.set(this.origen() === null);
-    this.errorDestino.set(this.destino() === null);
-    this.errorFecha.set(this.fecha() === null);
+  buscar(mostrarErrores = true): void {
+    const origenNoSeleccionado = this.origen() === null;
+    const destinoNoSeleccionado = this.destino() === null;
+    const fechaNoSeleccionada = this.fecha() === null;
 
-    if (this.errorOrigen() || this.errorDestino() || this.errorFecha()) {
+    if (mostrarErrores) {
+      this.errorOrigen.set(origenNoSeleccionado);
+      this.errorDestino.set(destinoNoSeleccionado);
+      this.errorFecha.set(fechaNoSeleccionada);
+    }
+
+    if (origenNoSeleccionado || destinoNoSeleccionado || fechaNoSeleccionada) {
       return;
     }
 
@@ -133,14 +141,17 @@ export class BuscarViajes implements OnInit {
   }
 
   private obtenerViajes(): void {
+    this.loading.set(true);
     this.busquedaRealizada.set(true);
     this.viajesService.obtenerViajes(this.pagina(), this.origen()!, this.destino()!, this.fecha()!)
       .subscribe({
         next: (response) => {
           this.viajesPaginados.set(response);
+          this.loading.set(false);
         },
         error: (err) => {
           console.error('Error al obtener datos:', err);
+          this.loading.set(false);
         }
       });
   }
