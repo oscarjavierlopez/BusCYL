@@ -94,29 +94,45 @@ public class ReservaServiceImpl implements ReservaService {
             throw new ReservaConflictException("El asiento escogido ya está reservado");
         }
 
-        Long numReservasSolapadas = reservaRepository.obtenerNumReservasSolapadas(idUsuario, viaje.getFechaViaje(), paradaDestino.getHoraLlegada(), paradaOrigen.getHoraSalida());
+        Long numReservasSolapadas = reservaRepository.obtenerNumReservasSolapadas(idUsuario, viaje.getFechaViaje(),
+                paradaDestino.getHoraLlegada(), paradaOrigen.getHoraSalida());
         if (numReservasSolapadas > 0) {
             throw new ReservaConflictException("El usuario ya tiene una reserva en el horario de este viaje");
         }
 
         Reserva nuevaReserva = Reserva.builder()
-        .pasajero(usuario)
-        .viaje(viaje)
-        .asiento(asiento)
-        .paradaOrigen(paradaOrigen)
-        .paradaDestino(paradaDestino)
-        .estado("confirmada")
-        .fechaReserva(LocalDate.now())
-        .codigoQr("")
-        .build();
+                .pasajero(usuario)
+                .viaje(viaje)
+                .asiento(asiento)
+                .paradaOrigen(paradaOrigen)
+                .paradaDestino(paradaDestino)
+                .estado("confirmada")
+                .fechaReserva(LocalDate.now())
+                .codigoQr("")
+                .build();
 
         return Mapper.toDto(reservaRepository.save(nuevaReserva));
     }
 
     @Override
     public void cancelarReserva(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'cancelarReserva'");
+        JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        Long idUsuario = principal.userId();
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        Reserva reserva = usuario.getReservas().stream()
+                .filter(r -> Objects.equals(r.getId(), id))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Reserva no válida"));
+
+        reserva.setEstado("cancelada");
+        reserva.setFechaCancelacion(LocalDate.now());
+        reservaRepository.save(reserva);
     }
 
 }
