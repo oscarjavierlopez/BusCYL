@@ -14,86 +14,94 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 @RestControllerAdvice
 public class ExceptionsHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationException(
-            MethodArgumentNotValidException exception) {
-        Map<String, String> errors = new LinkedHashMap<>();
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<Map<String, String>> handleValidationException(
+                        MethodArgumentNotValidException exception) {
+                Map<String, String> errors = new LinkedHashMap<>();
 
-        exception.getBindingResult().getFieldErrors()
-                .forEach(error -> errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
+                exception.getBindingResult().getFieldErrors()
+                                .forEach(error -> errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    }
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(
-            HttpMessageNotReadableException exception) {
+        @ExceptionHandler(HttpMessageNotReadableException.class)
+        public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(
+                        HttpMessageNotReadableException exception) {
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("error", "El cuerpo de la petición contiene un formato no válido. Las fechas deben usar yyyy-MM-dd y las horas HH:mm:ss"));
-    }
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(Map.of("error",
+                                                "El cuerpo de la petición contiene un formato no válido. Las fechas deben usar yyyy-MM-dd y las horas HH:mm:ss"));
+        }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalStateException(
-            IllegalStateException exception) {
+        @ExceptionHandler(IllegalStateException.class)
+        public ResponseEntity<Map<String, String>> handleIllegalStateException(
+                        IllegalStateException exception) {
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("error", exception.getMessage()));
-    }
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(Map.of("error", exception.getMessage()));
+        }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Map<String, String>> NotFoundException(
-            NotFoundException exception) {
+        @ExceptionHandler(NotFoundException.class)
+        public ResponseEntity<Map<String, String>> NotFoundException(
+                        NotFoundException exception) {
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("error", exception.getMessage()));
-    }
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(Map.of("error", exception.getMessage()));
+        }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String, String>> DataIntegrityViolationException(
-            DataIntegrityViolationException exception) {
+        @ExceptionHandler(DataIntegrityViolationException.class)
+        public ResponseEntity<Map<String, String>> DataIntegrityViolationException(
+                        DataIntegrityViolationException exception) {
 
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("error", "Ya existe un registro con los datos proporcionados"));
-    }
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                                .body(Map.of("error", "Ya existe un registro con los datos proporcionados"));
+        }
 
-    @ExceptionHandler(TokenAlreadyCreateException.class)
-    public ResponseEntity<Map<String, String>> TokenAlreadyCreateException(
-            TokenAlreadyCreateException exception) {
+        @ExceptionHandler(TokenAlreadyCreateException.class)
+        public ResponseEntity<Map<String, String>> TokenAlreadyCreateException(
+                        TokenAlreadyCreateException exception) {
 
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("error", exception.getMessage()));
-    }
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                                .body(Map.of("error", exception.getMessage()));
+        }
 
-    @ExceptionHandler(PasswordMatchException.class)
-    public ResponseEntity<Map<String, String>> PasswordMatchException(
-            PasswordMatchException exception) {
+        @ExceptionHandler(PasswordMatchException.class)
+        public ResponseEntity<Map<String, String>> PasswordMatchException(
+                        PasswordMatchException exception) {
 
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("error", exception.getMessage()));
-    }
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                                .body(Map.of("error", exception.getMessage()));
+        }
 
-    @ExceptionHandler(PaginaNoValidaException.class)
-    public ResponseEntity<Map<String, String>> PaginaNoValidaException(
-            PaginaNoValidaException exception) {
+        @ExceptionHandler(PaginaNoValidaException.class)
+        public ResponseEntity<Map<String, String>> PaginaNoValidaException(
+                        PaginaNoValidaException exception) {
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("error", exception.getMessage()));
-    }
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(Map.of("error", exception.getMessage()));
+        }
 
-    @ExceptionHandler(NoPerteneceEmpresaException.class)
-    public ResponseEntity<Map<String, String>> AutobusNoPerteneceEmpresaException(
-            NoPerteneceEmpresaException exception) {
+        @ExceptionHandler(NoPerteneceEmpresaException.class)
+        public ResponseEntity<Map<String, String>> AutobusNoPerteneceEmpresaException(
+                        NoPerteneceEmpresaException exception) {
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(Map.of("error", exception.getMessage()));
-    }
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                .body(Map.of("error", exception.getMessage()));
+        }
 
-    @ExceptionHandler(NoValidException.class)
-    public ResponseEntity<Map<String, String>> NoValidException(
-            NoValidException exception) {
+        @ExceptionHandler(NoValidException.class)
+        public ResponseEntity<Map<String, String>> NoValidException(
+                        NoValidException exception) {
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("error", exception.getMessage()));
-    }
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(Map.of("error", exception.getMessage()));
+        }
+
+        @ExceptionHandler(ReservaConflictException.class)
+        public ResponseEntity<Map<String, String>> handleReservaConflictException(
+                        ReservaConflictException exception) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                                .body(Map.of("error", exception.getMessage()));
+        }
 }

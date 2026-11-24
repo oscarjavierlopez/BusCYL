@@ -61,6 +61,7 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.GET, "/viajes", "/viajes/**")
                                                 .hasAnyRole("COORDINADOR_EMPRESA", "PASAJERO")
                                                 .requestMatchers("/viajes", "/viajes/**").hasRole("COORDINADOR_EMPRESA")
+                                                .requestMatchers("/reservas", "/reservas/**").hasRole("PASAJERO")
                                                 .anyRequest().authenticated())
                                 .exceptionHandling(exceptionHandling -> exceptionHandling
                                                 .authenticationEntryPoint((request, response, exception) -> {
