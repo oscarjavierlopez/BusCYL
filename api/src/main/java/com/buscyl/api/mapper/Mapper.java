@@ -9,6 +9,7 @@ import com.buscyl.api.dto.ConductorResponse;
 import com.buscyl.api.dto.EmpresaResponse;
 import com.buscyl.api.dto.LocalidadResponse;
 import com.buscyl.api.dto.ParadaResponse;
+import com.buscyl.api.dto.ReservaResponse;
 import com.buscyl.api.dto.RolResponse;
 import com.buscyl.api.dto.UsuarioResponse;
 import com.buscyl.api.dto.ViajeResponse;
@@ -17,6 +18,7 @@ import com.buscyl.api.entity.Autobus;
 import com.buscyl.api.entity.Empresa;
 import com.buscyl.api.entity.Localidad;
 import com.buscyl.api.entity.Parada;
+import com.buscyl.api.entity.Reserva;
 import com.buscyl.api.entity.Rol;
 import com.buscyl.api.entity.Usuario;
 import com.buscyl.api.entity.Viaje;
@@ -138,5 +140,18 @@ public class Mapper {
                                                 .toList())
                                 .activo(viaje.getActivo())
                                 .build();
+        }
+
+        public static ReservaResponse toDto(Reserva reserva){
+                return ReservaResponse.builder()
+                .id(reserva.getId())
+                .pasajero(reserva.getPasajero().getEmail())
+                .viaje(reserva.getViaje().getId())
+                .origen(reserva.getParadaOrigen().getLocalidad().getNombre())
+                .destino(reserva.getParadaDestino().getLocalidad().getNombre())
+                .estado(reserva.getEstado())
+                .fechaReserva(reserva.getFechaReserva())
+                .codigoQR(reserva.getCodigoQr())
+                .build();
         }
 }
