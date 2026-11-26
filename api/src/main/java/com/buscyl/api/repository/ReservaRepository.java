@@ -2,6 +2,7 @@ package com.buscyl.api.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,14 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             @Param("fechaViaje") LocalDate fechaViaje,
             @Param("horaLlegadaParadaDestino") LocalTime horaLlegadaParadaDestino,
             @Param("horaSalidaParadaOrigen") LocalTime horaSalidaParadaOrigen);
+
+
+        @Query(value = "SELECT r.id, r.id_pasajero, r.id_asiento, r.id_parada_origen, r.id_parada_destino, r.estado, r.fecha_reserva, r.fecha_cancelacion, r.token\r\n" + //
+                                "FROM buscyl.reservas r\r\n" + //
+                                "JOIN buscyl.viajes v ON v.id = r.id_viaje\r\n" + //
+                                "WHERE id_pasajero = :idPasajero\r\n" + //
+                                "AND estado = 'confirmada'\r\n" + //
+                                "AND v.fecha_viaje >= NOW()\r\n" + //
+                                "ORDER BY v.fecha_viaje, v.hora_salida", nativeQuery = true)
+        List<Reserva> obtenerReservasPasajero(@Param("idPasajero") Long idPasajero);
 }

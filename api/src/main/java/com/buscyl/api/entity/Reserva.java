@@ -61,6 +61,6 @@ public class Reserva {
     @Column(name = "fecha_cancelacion")
     private LocalDate fechaCancelacion;
 
-    @Column(name = "codigo_qr", nullable = false, length = 255)
-    private String codigoQr;
+    @Column(name = "token", nullable = false, length = 255)
+    private String token;
 }

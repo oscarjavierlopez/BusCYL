@@ -4,9 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Builder;
 
 @Builder 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record ViajeResponse(
     Long id,
     String origen,
@@ -18,7 +21,8 @@ public record ViajeResponse(
     LocalTime horaSalida,
     LocalTime horaLLegada,
     List<ParadaResponse> paradas,
-    Boolean activo 
+    Boolean activo,
+    Integer asiento
 ) {
 
 }

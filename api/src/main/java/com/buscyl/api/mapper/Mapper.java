@@ -122,7 +122,7 @@ public class Mapper {
                                 .build();
         }
 
-        public static ViajeResponse toDto(Viaje viaje, boolean incluirAsientos) {
+        public static ViajeResponse toDto(Viaje viaje, boolean incluirAsientos, Integer asiento) {
                 return ViajeResponse.builder()
                                 .id(viaje.getId())
                                 .origen(viaje.getOrigen().getNombre())
@@ -139,6 +139,7 @@ public class Mapper {
                                                 .map(p -> toDto(p))
                                                 .toList())
                                 .activo(viaje.getActivo())
+                                .asiento(asiento)
                                 .build();
         }
 
@@ -151,7 +152,7 @@ public class Mapper {
                 .destino(reserva.getParadaDestino().getLocalidad().getNombre())
                 .estado(reserva.getEstado())
                 .fechaReserva(reserva.getFechaReserva())
-                .codigoQR(reserva.getCodigoQr())
+                .token(reserva.getToken())
                 .build();
         }
 }

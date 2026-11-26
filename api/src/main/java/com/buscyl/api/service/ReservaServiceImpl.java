@@ -1,8 +1,10 @@
 package com.buscyl.api.service;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,9 +56,6 @@ public class ReservaServiceImpl implements ReservaService {
 
         @Override
         public ReservaResponse crearReserva(ReservaRequest request) {
-                LocalDateTime limiteReserva = LocalDateTime.now(
-                                ZoneId.of("Europe/Madrid")).plusMinutes(30);
-
                 JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
                                 .getContext()
                                 .getAuthentication()
@@ -84,10 +83,16 @@ public class ReservaServiceImpl implements ReservaService {
                 if (paradaOrigen.getLocalidad().getId() == paradaDestino.getLocalidad().getId()) {
                         throw new NoValidException("La localidad de origen no puede ser la localidad destino");
                 }
-
+                LocalDateTime ahora = LocalDateTime.now(ZoneId.of("Europe/Madrid"));
+                LocalDateTime limiteReserva = ahora.plusMinutes(30);
                 LocalDateTime fechaHoraSalida = LocalDateTime.of(
                                 viaje.getFechaViaje(),
                                 paradaOrigen.getHoraSalida());
+
+                if (ahora.isAfter(fechaHoraSalida)) {
+                        throw new NoValidException("No se puede reservar un viaje pasado");
+                }
+
                 if (!fechaHoraSalida.isAfter(limiteReserva)) {
                         throw new NoValidException(
                                         "La reserva debe realizarse al menos 30 minutos antes de la salida del viaje");
@@ -116,6 +121,8 @@ public class ReservaServiceImpl implements ReservaService {
                                         "El usuario ya tiene una reserva en el horario de este viaje");
                 }
 
+                String token = generarToken();
+
                 Reserva nuevaReserva = Reserva.builder()
                                 .pasajero(usuario)
                                 .viaje(viaje)
@@ -124,7 +131,7 @@ public class ReservaServiceImpl implements ReservaService {
                                 .paradaDestino(paradaDestino)
                                 .estado("confirmada")
                                 .fechaReserva(LocalDate.now())
-                                .codigoQr("")
+                                .token(token)
                                 .build();
 
                 return Mapper.toDto(reservaRepository.save(nuevaReserva));
@@ -174,4 +181,12 @@ public class ReservaServiceImpl implements ReservaService {
                 reservaRepository.save(reserva);
         }
 
+        private String generarToken() {
+                byte[] bytes = new byte[32];
+                new SecureRandom().nextBytes(bytes);
+
+                return Base64.getUrlEncoder()
+                                .withoutPadding()
+                                .encodeToString(bytes);
+        }
 }
