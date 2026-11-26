@@ -1,15 +1,16 @@
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../../../services/auth.service';
 import { ViajesService } from '../../../../services/viajes.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgxSonnerToaster, toast } from 'ngx-sonner';
 import { Viaje as ViajeModel } from '../../../../models/viaje';
-import { Parada } from '../../../../models/parada';
 import { CargadorViajes } from '../../../../components/cargador-viajes/cargador-viajes';
 
 @Component({
   selector: 'app-viaje',
-  imports: [CargadorViajes, NgxSonnerToaster],
+  imports: [CargadorViajes, NgxSonnerToaster, RouterLink],
   templateUrl: './viaje.html',
   styleUrl: './viaje.css',
 })
@@ -20,6 +21,16 @@ export class Viaje implements OnInit {
   @Input() id!: string;
   viaje = signal<ViajeModel | null>(null);
   loading = signal<boolean>(false);
+  pasajero = toSignal(inject(AuthService).UserData);
+  paradasOrdenadas = computed(() =>
+    [...(this.viaje()?.paradas ?? [])].sort((a, b) => a.orden - b.orden)
+  );
+  fechaBillete = computed(() => {
+    const fecha = this.viaje()?.fecha;
+    if (!fecha) return '';
+    return new Intl.DateTimeFormat('es-ES', { dateStyle: 'full', timeZone: 'UTC' })
+      .format(new Date(fecha));
+  });
 
   ngOnInit(): void {
     this.loading.set(true);
@@ -40,10 +51,6 @@ export class Viaje implements OnInit {
           }
         }
       });
-  }
-
-  obtenerParadasOrdenadas(paradas?: Parada[]): Parada[] {
-    return [...(paradas ?? [])].sort((paradaA, paradaB) => paradaA.orden - paradaB.orden);
   }
 
   formatearHora(hora?: string | null): string {
