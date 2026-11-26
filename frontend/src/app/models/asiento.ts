@@ -3,4 +3,5 @@ export interface Asiento {
     numero: number;
     tipo: string;
     activo: boolean;
+    reservado?: boolean;
 }

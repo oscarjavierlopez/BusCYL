@@ -11,7 +11,7 @@ export interface Viaje {
   fecha?: string;
   horaSalida: string;
   horaLLegada?: string;
-  paradas: Parada[];
+  paradas?: Parada[];
   activo?: boolean;
   idOrigen?: number;
   idDestino?: number;
@@ -20,4 +20,5 @@ export interface Viaje {
   conductor?: Conductor;
   fechas?: string[];
   horaLlegada?: string;
+  asiento?: Number;
 }
