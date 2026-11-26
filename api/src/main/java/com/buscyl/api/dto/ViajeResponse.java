@@ -21,7 +21,8 @@ public record ViajeResponse(
     LocalTime horaSalida,
     LocalTime horaLLegada,
     List<ParadaResponse> paradas,
-    Boolean activo 
+    Boolean activo,
+    Integer asiento
 ) {
 
 }

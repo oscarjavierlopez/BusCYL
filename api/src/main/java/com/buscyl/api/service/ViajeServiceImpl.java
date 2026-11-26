@@ -92,7 +92,7 @@ public class ViajeServiceImpl implements ViajeService {
                                         .obtenerViajesPaginadosCoordinador(pagina, idEmpresa, idOrigen, idDestino,
                                                         fecha)
                                         .stream()
-                                        .map(v -> Mapper.toDto(v, false))
+                                        .map(v -> Mapper.toDto(v, false, null))
                                         .toList();
 
                         Integer paginaPrevia = (pagina - 1) > 0 ? (pagina - 1) : null;
@@ -142,7 +142,7 @@ public class ViajeServiceImpl implements ViajeService {
                 }
 
                 List<ViajeResponse> viajesResponse = viajes.stream()
-                                .map(v -> Mapper.toDto(v, false))
+                                .map(v -> Mapper.toDto(v, false, null))
                                 .toList();
 
                 Integer paginaPrevia = (pagina - 1) > 0 ? (pagina - 1) : null;
@@ -217,10 +217,10 @@ public class ViajeServiceImpl implements ViajeService {
 
                         viaje.setHoraSalida(horaSalida);
                         viaje.setHoraLlegada(horaLlegada);
-                        return Mapper.toDto(viaje, false);
+                        return Mapper.toDto(viaje, false, null);
                 }
 
-                return Mapper.toDto(viaje, false);
+                return Mapper.toDto(viaje, false, null);
         }
 
         @Override
@@ -390,7 +390,7 @@ public class ViajeServiceImpl implements ViajeService {
                 }
 
                 return viajesCreados.stream()
-                                .map(v -> Mapper.toDto(v, false))
+                                .map(v -> Mapper.toDto(v, false, null))
                                 .toList();
 
         }
@@ -633,7 +633,7 @@ public class ViajeServiceImpl implements ViajeService {
                         }
                 }
 
-                return Mapper.toDto(viaje, false);
+                return Mapper.toDto(viaje, false, null);
         }
 
         @Override
