@@ -109,6 +109,14 @@
   font-size: 1.75rem;
 }
 
+.viaje-card__fecha {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  margin-top: 1.25rem;
+  color: #4a4a4a;
+}
+
 .viaje-card__empresa {
   display: flex;
   gap: 0.55rem;

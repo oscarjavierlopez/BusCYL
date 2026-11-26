@@ -75,7 +75,7 @@
   align-items: end;
   max-width: 22rem;
   margin: auto;
-  text-align: left;
+  text-align: center;
 }
 
 .trayecto span, .trayecto strong, .trayecto time { display: block; }

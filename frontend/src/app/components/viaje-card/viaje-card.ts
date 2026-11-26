@@ -49,6 +49,15 @@ export class ViajeCard implements OnInit{
     return hora ? hora.slice(0, 5) : '-';
   }
 
+  formatearFecha(fecha?: string): string {
+    if (!fecha) {
+      return '-';
+    }
+
+    const partes = /^(\d{4})-(\d{2})-(\d{2})$/.exec(fecha);
+    return partes ? `${partes[3]}/${partes[2]}/${partes[1]}` : fecha;
+  }
+
   private crearFechaHoraSalida(): Date | null {
     const coincidenciasFecha = /^(\d{4})-(\d{2})-(\d{2})$/.exec(this.viaje.fecha!);
     const coincidenciasHora = /^(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(this.viaje.horaSalida);

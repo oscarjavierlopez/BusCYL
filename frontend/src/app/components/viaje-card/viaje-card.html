@@ -28,6 +28,13 @@
       </span>
     </span>
 
+    @if (!permitirDesplegar()) {
+    <span class="viaje-card__fecha">
+      <i class="bi bi-calendar-event" aria-hidden="true"></i>
+      <span><strong>Fecha:</strong> {{ formatearFecha(viaje.fecha) }}</span>
+    </span>
+    }
+
     @if (usuario.rol == "pasajero") {
     <span class="viaje-card__empresa">
       <i class="bi bi-buildings-fill" aria-hidden="true"></i>
