@@ -1,0 +1,231 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.viaje-detalle {
+  box-sizing: border-box;
+  width: min(100%, 58rem);
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  color: #292929;
+}
+
+.viaje-detalle__trayecto {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding: 2rem;
+  background: #ffffff;
+  border: 0.1rem solid #d8d8d8;
+  border-top: 0.3rem solid #bd1934;
+  box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 8%);
+}
+
+.viaje-detalle__localidad {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: clamp(1.6rem, 4vw, 2.45rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.viaje-detalle__localidad--destino {
+  text-align: right;
+}
+
+.viaje-detalle__autobus {
+  color: #bd1934;
+  font-size: clamp(2.25rem, 5vw, 3.2rem);
+}
+
+.viaje-detalle__itinerario {
+  margin-top: 2rem;
+  background: #ffffff;
+  border: 0.1rem solid #d8d8d8;
+}
+
+.viaje-detalle__itinerario h2 {
+  margin: 0;
+  padding: 1.1rem 1.5rem;
+  font-size: 1.3rem;
+  border-bottom: 0.1rem solid #d8d8d8;
+}
+
+.viaje-detalle__itinerario-desplazable {
+  padding: 1.5rem 1.5rem 0.25rem;
+}
+
+.viaje-detalle__linea-tiempo {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 3.1rem;
+  list-style: none;
+}
+
+.viaje-detalle__linea-tiempo::before {
+  position: absolute;
+  top: 1rem;
+  bottom: 2.2rem;
+  left: 3.08rem;
+  width: 0.2rem;
+  content: '';
+  background: #bd1934;
+}
+
+.viaje-detalle__parada {
+  position: relative;
+  min-height: 5.5rem;
+  padding: 0 0 1.5rem 2rem;
+}
+
+.viaje-detalle__punto {
+  position: absolute;
+  z-index: 1;
+  top: 0.1rem;
+  left: -0.5rem;
+  width: 1rem;
+  height: 1rem;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 0.18rem solid #bd1934;
+  border-radius: 50%;
+}
+
+.viaje-detalle__parada--primera .viaje-detalle__punto,
+.viaje-detalle__parada--ultima .viaje-detalle__punto {
+  background: #bd1934;
+}
+
+.viaje-detalle__parada-contenido {
+  padding: 0 0 1.4rem;
+  border-bottom: 0.1rem solid #e8e8e8;
+}
+
+.viaje-detalle__parada:last-child .viaje-detalle__parada-contenido {
+  border-bottom: 0;
+}
+
+.viaje-detalle__parada-contenido h3,
+.viaje-detalle__parada-contenido p,
+.viaje-detalle__parada-contenido dl {
+  margin: 0;
+}
+
+.viaje-detalle__parada-contenido h3 {
+  font-size: 1.15rem;
+}
+
+.viaje-detalle__parada-contenido p {
+  margin-top: 0.4rem;
+  color: #4a4a4a;
+}
+
+.viaje-detalle__parada-contenido dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.5rem;
+  margin-top: 0.8rem;
+}
+
+.viaje-detalle__parada-contenido dt {
+  color: #4a4a4a;
+  font-size: 0.85rem;
+}
+
+.viaje-detalle__parada-contenido dd {
+  margin: 0.1rem 0 0;
+  font-weight: 700;
+}
+
+.viaje-detalle__resumen {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 2rem;
+  background: #ffffff;
+  border: 0.1rem solid #d8d8d8;
+}
+
+.viaje-detalle__dato {
+  display: grid;
+  min-height: 7.5rem;
+  padding: 1.15rem 0.75rem;
+  place-content: center;
+  gap: 0.65rem;
+  text-align: center;
+}
+
+.viaje-detalle__dato + .viaje-detalle__dato {
+  border-left: 0.1rem solid #d8d8d8;
+}
+
+.viaje-detalle__dato i {
+  color: #bd1934;
+  font-size: 2rem;
+}
+
+.viaje-detalle__dato strong {
+  overflow-wrap: anywhere;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 40rem) {
+  .viaje-detalle {
+    padding: 1.5rem 1rem;
+  }
+
+  .viaje-detalle__trayecto {
+    gap: 0.75rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .viaje-detalle__localidad {
+    font-size: 1.35rem;
+  }
+
+  .viaje-detalle__autobus {
+    font-size: 2rem;
+  }
+
+  .viaje-detalle__itinerario {
+    margin-top: 1.5rem;
+  }
+
+  .viaje-detalle__itinerario h2 {
+    padding: 1rem;
+  }
+
+  .viaje-detalle__itinerario-desplazable {
+    padding: 1.25rem 1rem 0.15rem;
+  }
+
+  .viaje-detalle__linea-tiempo {
+    padding-left: 2.6rem;
+  }
+
+  .viaje-detalle__linea-tiempo::before {
+    left: 2.58rem;
+  }
+
+  .viaje-detalle__parada {
+    padding-left: 1.7rem;
+  }
+
+  .viaje-detalle__resumen {
+    margin-top: 1.5rem;
+  }
+
+  .viaje-detalle__dato {
+    min-height: 6.25rem;
+    padding: 0.85rem 0.35rem;
+  }
+
+  .viaje-detalle__dato i {
+    font-size: 1.65rem;
+  }
+
+  .viaje-detalle__dato strong {
+    font-size: 0.95rem;
+  }
+}

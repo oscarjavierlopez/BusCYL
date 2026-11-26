@@ -1,0 +1,60 @@
+@if (loading()) {
+  <app-cargador-viajes [cargando]="true" />
+} @else if (viaje(); as viaje) {
+  <section class="viaje-detalle" aria-labelledby="viaje-detalle-title">
+    <header class="viaje-detalle__trayecto">
+      <h1 id="viaje-detalle-title" class="viaje-detalle__localidad viaje-detalle__localidad--origen">
+        {{ viaje.origen }}
+      </h1>
+      <i class="bi bi-bus-front-fill viaje-detalle__autobus" aria-hidden="true"></i>
+      <p class="viaje-detalle__localidad viaje-detalle__localidad--destino">{{ viaje.destino }}</p>
+    </header>
+
+    <section class="viaje-detalle__itinerario" aria-labelledby="itinerario-title">
+      <h2 id="itinerario-title">Itinerario</h2>
+      <div class="viaje-detalle__itinerario-desplazable">
+        <ol class="viaje-detalle__linea-tiempo">
+          @for (parada of obtenerParadasOrdenadas(viaje.paradas); track parada.id ?? parada.orden; let primera = $first; let ultima = $last) {
+            <li class="viaje-detalle__parada" [class.viaje-detalle__parada--primera]="primera"
+              [class.viaje-detalle__parada--ultima]="ultima">
+              <span class="viaje-detalle__punto" aria-hidden="true"></span>
+              <div class="viaje-detalle__parada-contenido">
+                <h3>{{ parada.localidad }}</h3>
+                <p>{{ parada.direccion }}</p>
+                <dl>
+                  <div>
+                    <dt>Llegada</dt>
+                    <dd>{{ formatearHora(parada.horaLlegada) }}</dd>
+                  </div>
+                  @if (parada.horaSalida) {
+                    <div>
+                      <dt>Salida</dt>
+                      <dd>{{ formatearHora(parada.horaSalida) }}</dd>
+                    </div>
+                  }
+                </dl>
+              </div>
+            </li>
+          }
+        </ol>
+      </div>
+    </section>
+
+    <footer class="viaje-detalle__resumen" aria-label="Datos de la reserva">
+      <div class="viaje-detalle__dato" aria-label="Matrícula del autobús">
+        <i class="bi bi-bus-front-fill" aria-hidden="true"></i>
+        <strong>{{ viaje.autobus?.matricula ?? '-' }}</strong>
+      </div>
+      <div class="viaje-detalle__dato" aria-label="Duración del trayecto">
+        <i class="bi bi-clock-fill" aria-hidden="true"></i>
+        <strong>{{ obtenerDuracion(viaje) }}</strong>
+      </div>
+      <div class="viaje-detalle__dato" aria-label="Número de asiento">
+        <i class="bi bi-person-vcard-fill" aria-hidden="true"></i>
+        <strong>{{ viaje.asiento ?? '-' }}</strong>
+      </div>
+    </footer>
+  </section>
+}
+
+<ngx-sonner-toaster position="bottom-right" />

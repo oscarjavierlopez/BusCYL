@@ -63,6 +63,9 @@ export const routes: Routes = [
             {
                 path: 'misViajes', loadComponent: () => import('./pages/private/pasajero/mis-viajes/mis-viajes').then(m => m.MisViajes),
             },
+            {
+                path: 'viaje/:id', loadComponent: () => import('./pages/private/pasajero/viaje/viaje').then(m => m.Viaje),
+            },
         ],
     },
 ];

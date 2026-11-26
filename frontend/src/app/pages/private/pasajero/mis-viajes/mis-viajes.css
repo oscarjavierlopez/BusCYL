@@ -3,6 +3,10 @@
   min-height: 100%;
 }
 
+a{
+  text-decoration: none;
+}
+
 .mis-viajes {
   box-sizing: border-box;
   width: min(100%, 76rem);
