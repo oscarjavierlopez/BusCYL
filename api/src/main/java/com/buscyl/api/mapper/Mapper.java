@@ -151,7 +151,7 @@ public class Mapper {
                 .destino(reserva.getParadaDestino().getLocalidad().getNombre())
                 .estado(reserva.getEstado())
                 .fechaReserva(reserva.getFechaReserva())
-                .codigoQR(reserva.getCodigoQr())
+                .token(reserva.getToken())
                 .build();
         }
 }

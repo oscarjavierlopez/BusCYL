@@ -13,7 +13,7 @@ public record ReservaResponse(
     String destino,
     String estado,
     LocalDate fechaReserva,
-    String codigoQR
+    String token
 ) {
 
 }

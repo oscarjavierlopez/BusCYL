@@ -1,8 +1,10 @@
 package com.buscyl.api.service;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
@@ -119,6 +121,8 @@ public class ReservaServiceImpl implements ReservaService {
                                         "El usuario ya tiene una reserva en el horario de este viaje");
                 }
 
+                String token = generarToken();
+
                 Reserva nuevaReserva = Reserva.builder()
                                 .pasajero(usuario)
                                 .viaje(viaje)
@@ -127,7 +131,7 @@ public class ReservaServiceImpl implements ReservaService {
                                 .paradaDestino(paradaDestino)
                                 .estado("confirmada")
                                 .fechaReserva(LocalDate.now())
-                                .codigoQr("")
+                                .token(token)
                                 .build();
 
                 return Mapper.toDto(reservaRepository.save(nuevaReserva));
@@ -177,4 +181,12 @@ public class ReservaServiceImpl implements ReservaService {
                 reservaRepository.save(reserva);
         }
 
+        private String generarToken() {
+                byte[] bytes = new byte[32];
+                new SecureRandom().nextBytes(bytes);
+
+                return Base64.getUrlEncoder()
+                                .withoutPadding()
+                                .encodeToString(bytes);
+        }
 }
