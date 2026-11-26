@@ -52,6 +52,17 @@ public class ViajeController {
         return ResponseEntity.ok(viajeService.obtenerViaje(id,  idOrigen, idDestino));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<List<ViajeResponse>> obtenerViajesUsuario(){
+        return ResponseEntity.ok(viajeService.obtenerViajesUsuario());
+    }
+
+    @GetMapping("/me/{id}")
+    public ResponseEntity<ViajeResponse> obtenerViajeUsuario(@PathVariable Long id){
+        return ResponseEntity.ok(viajeService.obtenerViajeUsuario(id));
+    }
+
+
     @GetMapping("/{id}/asientos")
     public ResponseEntity<List<AsientoResponse>> obtenerAsientosViaje(
         @PathVariable Long id,

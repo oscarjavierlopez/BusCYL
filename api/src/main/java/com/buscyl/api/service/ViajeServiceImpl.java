@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.buscyl.api.Jwt.JwtPrincipal;
 import com.buscyl.api.dto.AsientoResponse;
 import com.buscyl.api.dto.ParadaRequest;
+import com.buscyl.api.dto.ParadaResponse;
 import com.buscyl.api.dto.ViajeCreateRequest;
 import com.buscyl.api.dto.ViajeResponse;
 import com.buscyl.api.dto.ViajeUpdateRequest;
@@ -26,6 +27,7 @@ import com.buscyl.api.entity.Asiento;
 import com.buscyl.api.entity.Autobus;
 import com.buscyl.api.entity.Localidad;
 import com.buscyl.api.entity.Parada;
+import com.buscyl.api.entity.Reserva;
 import com.buscyl.api.entity.Usuario;
 import com.buscyl.api.entity.Viaje;
 import com.buscyl.api.exception.NoPerteneceEmpresaException;
@@ -37,6 +39,7 @@ import com.buscyl.api.repository.AsientoRepository;
 import com.buscyl.api.repository.AutobusRepository;
 import com.buscyl.api.repository.LocalidadRepository;
 import com.buscyl.api.repository.ParadaRepository;
+import com.buscyl.api.repository.ReservaRepository;
 import com.buscyl.api.repository.UsuarioRepository;
 import com.buscyl.api.repository.ViajeRepository;
 
@@ -62,6 +65,9 @@ public class ViajeServiceImpl implements ViajeService {
 
         @Autowired
         private AsientoRepository asientoRepository;
+
+        @Autowired
+        private ReservaRepository reservaRepository;
 
         @Override
         public ViajesResponse obtenerViajes(int pagina, Long idOrigen, Long idDestino, LocalDate fecha) {
@@ -657,7 +663,7 @@ public class ViajeServiceImpl implements ViajeService {
                         throw new NoValidException(
                                         "La parada de origen debe ser anterior a la parada de destino");
                 }
-                
+
                 List<Asiento> asientosReservados = asientoRepository.obtenerAsientosReservadosViaje(idViaje,
                                 paradaOrigen.getOrden(), paradaDestino.getOrden());
                 List<Asiento> asientosViaje = viaje.getAutobus().getAsientos();
@@ -674,6 +680,76 @@ public class ViajeServiceImpl implements ViajeService {
                         asientos.add(asiento);
                 }
                 return asientos;
+        }
+
+        @Override
+        public List<ViajeResponse> obtenerViajesUsuario() {
+                JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
+                                .getContext()
+                                .getAuthentication()
+                                .getPrincipal();
+
+                Long idUsuario = principal.userId();
+                Usuario usuario = usuarioRepository.findById(idUsuario)
+                                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+                List<Reserva> reservas = reservaRepository.obtenerReservasPasajero(idUsuario);
+
+                List<ViajeResponse> viajes = new ArrayList<>();
+                for (Reserva reserva : reservas) {
+                        ViajeResponse viaje = ViajeResponse.builder()
+                                        .id(reserva.getViaje().getId())
+                                        .origen(reserva.getParadaOrigen().getLocalidad().getNombre())
+                                        .destino(reserva.getParadaDestino().getLocalidad().getNombre())
+                                        .autobus(Mapper.toDto(reserva.getViaje().getAutobus(), false, null, null, null))
+                                        .empresa(reserva.getViaje().getAutobus().getEmpresa().getNombre())
+                                        .fecha(reserva.getViaje().getFechaViaje())
+                                        .horaSalida(reserva.getParadaOrigen().getHoraLlegada())
+                                        .horaLLegada(reserva.getParadaDestino().getHoraLlegada())
+                                        .asiento(reserva.getAsiento().getNumero())
+                                        .build();
+
+                        viajes.add(viaje);
+                }
+
+                return viajes;
+        }
+
+        @Override
+        public ViajeResponse obtenerViajeUsuario(Long id) {
+                JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
+                                .getContext()
+                                .getAuthentication()
+                                .getPrincipal();
+
+                Long idUsuario = principal.userId();
+                Usuario usuario = usuarioRepository.findById(idUsuario)
+                                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+                List<Reserva> reservas = reservaRepository.obtenerReservasPasajero(idUsuario);
+                Reserva reserva = reservas.stream()
+                                .filter(r -> r.getViaje().getId() == id)
+                                .findFirst()
+                                .orElseThrow(() -> new NotFoundException("El pasajero no tiene ese viaje reservado"));
+
+                List<ParadaResponse> paradas = reserva.getViaje().getParadas().stream()
+                                .filter(p -> p.getOrden() >= reserva.getParadaOrigen().getOrden()
+                                                && p.getOrden() <= reserva.getParadaDestino().getOrden())
+                                .map(Mapper::toDto)
+                                .toList();
+
+                return ViajeResponse.builder()
+                                .id(reserva.getViaje().getId())
+                                .origen(reserva.getParadaOrigen().getLocalidad().getNombre())
+                                .destino(reserva.getParadaDestino().getLocalidad().getNombre())
+                                .autobus(Mapper.toDto(reserva.getViaje().getAutobus(), false, null, null, null))
+                                .empresa(reserva.getViaje().getAutobus().getEmpresa().getNombre())
+                                .fecha(reserva.getViaje().getFechaViaje())
+                                .horaSalida(reserva.getParadaOrigen().getHoraLlegada())
+                                .horaLLegada(reserva.getParadaDestino().getHoraLlegada())
+                                .paradas(paradas)
+                                .asiento(reserva.getAsiento().getNumero())
+                                .build();
         }
 
 }

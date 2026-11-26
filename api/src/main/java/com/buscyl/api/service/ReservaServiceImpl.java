@@ -80,6 +80,10 @@ public class ReservaServiceImpl implements ReservaService {
                                 .findFirst()
                                 .orElseThrow(() -> new NotFoundException("Parada destino no válida"));
 
+                if (paradaOrigen.getOrden() > paradaDestino.getOrden()) {
+                        throw new NoValidException("El orden de paradas seleccionado no se corresponde con el orden del viaje");
+                }
+
                 if (paradaOrigen.getLocalidad().getId() == paradaDestino.getLocalidad().getId()) {
                         throw new NoValidException("La localidad de origen no puede ser la localidad destino");
                 }
