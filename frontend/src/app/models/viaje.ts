@@ -20,5 +20,6 @@ export interface Viaje {
   conductor?: Conductor;
   fechas?: string[];
   horaLlegada?: string;
-  asiento?: Number;
+  asiento?: number;
+  reserva?: number;
 }

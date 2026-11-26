@@ -3,8 +3,15 @@
 } @else if (viaje(); as viaje) {
   <section class="detalle" aria-labelledby="titulo-billete">
     <header class="cabecera">
-      <h1 id="titulo-billete">Detalle del billete</h1>
-      <a routerLink="/private/misViajes" aria-label="Volver a mis viajes"><i class="bi bi-x-lg" aria-hidden="true"></i></a>
+      <div class="cabecera__fila">
+        <h1 id="titulo-billete">Detalle del billete</h1>
+        <div class="cabecera__acciones">
+          <button type="button" class="cabecera__cancelar" aria-label="Cancelar viaje" title="Cancelar viaje" (click)="cancelarReserva()">
+            <i class="bi bi-three-dots" aria-hidden="true"></i>
+          </button>
+          <a routerLink="/private/misViajes" aria-label="Volver a mis viajes"><i class="bi bi-x-lg" aria-hidden="true"></i></a>
+        </div>
+      </div>
       @if (fechaBillete(); as fecha) {
         <time [attr.datetime]="viaje.fecha">{{ fecha }}</time>
       }

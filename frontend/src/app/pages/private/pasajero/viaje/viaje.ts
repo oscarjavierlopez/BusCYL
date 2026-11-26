@@ -7,6 +7,19 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { NgxSonnerToaster, toast } from 'ngx-sonner';
 import { Viaje as ViajeModel } from '../../../../models/viaje';
 import { CargadorViajes } from '../../../../components/cargador-viajes/cargador-viajes';
+import { ReservasService } from '../../../../services/reservas.service';
+import { Location } from '@angular/common';
+
+declare const Swal: {
+  fire: (options: {
+    title: string;
+    icon: 'question';
+    showCancelButton: boolean;
+    confirmButtonText: string;
+    cancelButtonText: string;
+    confirmButtonColor: string;
+  }) => Promise<{ isConfirmed: boolean }>;
+};
 
 @Component({
   selector: 'app-viaje',
@@ -16,7 +29,9 @@ import { CargadorViajes } from '../../../../components/cargador-viajes/cargador-
 })
 export class Viaje implements OnInit {
   private viajeService = inject(ViajesService);
+  private reservasService = inject(ReservasService);
   private router = inject(Router);
+  private location = inject(Location);
 
   @Input() id!: string;
   viaje = signal<ViajeModel | null>(null);
@@ -96,5 +111,34 @@ export class Viaje implements OnInit {
     }
 
     return horas * 60 + minutos;
+  }
+
+  private confirmarCambioEstado(mensaje: string, colorConfirmacion: string, accion: () => void): void {
+    Swal.fire({
+      title: mensaje,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: colorConfirmacion,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        accion();
+      }
+    });
+  }
+
+  cancelarReserva() {
+    let idReserva: number = this.viaje()?.reserva!;
+    this.confirmarCambioEstado(`¿Desea cancelar su viaje?`, '#a6001c', () => {
+      this.reservasService.cancelarReserva(idReserva).subscribe({
+        next: () => {
+          toast.success("Reserva cancelada");
+          setTimeout(() => {
+            this.location.back();
+          }, 1000);
+        }
+      })
+    })
   }
 }
