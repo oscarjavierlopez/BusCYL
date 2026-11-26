@@ -17,6 +17,7 @@
 
         @if (usuario()?.rol == "pasajero") {
         <a class="buscar-link" routerLink="/private/viajes/pasajero/buscar" routerLinkActive="buscar-link-active" [routerLinkActiveOptions]="{ exact: false }">Buscar</a>
+        <a class="misViajes-link" routerLink="/private/misViajes" routerLinkActive="misViajes-link-active" [routerLinkActiveOptions]="{ exact: false }">Mis Viajes</a>
         }
       </div>
 

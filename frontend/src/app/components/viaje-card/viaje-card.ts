@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, input, Input, OnInit, Output, signal } from '@angular/core';
 import { Viaje } from '../../models/viaje';
 import { Parada } from '../../models/parada';
 import { AuthResponse } from '../../models/auth-response';
@@ -15,6 +15,7 @@ export class ViajeCard implements OnInit{
   usuario!: AuthResponse;
   @Output() viajeDesactivado = new EventEmitter<number>();
   @Output() viajeActivado = new EventEmitter<number>();
+  permitirDesplegar = input(true);
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem("usuario")!);
@@ -23,7 +24,7 @@ export class ViajeCard implements OnInit{
   desplegado = signal(false);
 
   get paradasOrdenadas(): Parada[] {
-    return [...this.viaje.paradas].sort((paradaA, paradaB) => paradaA.orden - paradaB.orden);
+    return [...(this.viaje.paradas ?? [])].sort((paradaA, paradaB) => paradaA.orden - paradaB.orden);
   }
 
   get viajeNoDisponible(): boolean {
@@ -37,6 +38,10 @@ export class ViajeCard implements OnInit{
   }
 
   alternarParadas(): void {
+    if (!this.permitirDesplegar()) {
+      return;
+    }
+
     this.desplegado.update((desplegado) => !desplegado);
   }
 

@@ -60,6 +60,9 @@ export const routes: Routes = [
             {
                 path: 'viajes/pasajero/buscar', loadComponent: () => import('./pages/private/pasajero/buscar-viajes/buscar-viajes').then(m => m.BuscarViajes),
             },
+            {
+                path: 'misViajes', loadComponent: () => import('./pages/private/pasajero/mis-viajes/mis-viajes').then(m => m.MisViajes),
+            },
         ],
     },
 ];

@@ -36,6 +36,13 @@
   background: #fafafa;
 }
 
+.viaje-card__resumen--estatico,
+.viaje-card__resumen--estatico:hover {
+  cursor: default;
+  background: #ffffff;
+  opacity: 1;
+}
+
 .viaje-card__resumen:focus-visible {
   outline: 0.2rem solid #1a73a8;
   outline-offset: -0.2rem;
