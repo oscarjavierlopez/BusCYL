@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS buscyl.reservas (
     estado              VARCHAR(10)  NOT NULL DEFAULT 'confirmada',
     fecha_reserva       DATE         NOT NULL,
     fecha_cancelacion   DATE         NULL,
-    codigo_qr           VARCHAR(255) NOT NULL,
+    token           VARCHAR(255) NOT NULL,
     CONSTRAINT pk_reservas               PRIMARY KEY (id),
     CONSTRAINT ck_reservas_estado        CHECK (estado IN ('confirmada', 'cancelada')),
     CONSTRAINT fk_reservas_pasajero      FOREIGN KEY (id_pasajero)       REFERENCES buscyl.usuarios (id),
