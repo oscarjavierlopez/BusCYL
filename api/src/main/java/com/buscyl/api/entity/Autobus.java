@@ -2,6 +2,7 @@ package com.buscyl.api.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -50,7 +51,7 @@ public class Autobus {
     @OneToMany(mappedBy = "autobus")
     private List<Asiento> asientos;
 
-    @OneToMany(mappedBy = "autobus")
+    @OneToMany(mappedBy = "autobus", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Viaje> viajes;
 
     public void setAsiento(int indice, Asiento asiento){

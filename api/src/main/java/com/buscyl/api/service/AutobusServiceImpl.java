@@ -3,6 +3,8 @@ package com.buscyl.api.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -253,6 +255,17 @@ public class AutobusServiceImpl implements AutobusService {
                                 }
                         }
                 }
+
+                // Eliminación de asientos que ya no existan
+                Set<Integer> numerosAsientoRequest = request.asientos().stream()
+                                .map(AsientoRequest::numero)
+                                .collect(Collectors.toSet());
+
+                List<Asiento> asientosEliminar = autobusEditar.getAsientos().stream()
+                                .filter(a -> !numerosAsientoRequest.contains(a.getNumero()))
+                                .toList();
+                asientoRepository.deleteAll(asientosEliminar);
+                autobusEditar.getAsientos().removeAll(asientosEliminar);
 
                 return Mapper.toDto(autobusEditar, true,
                                 asientoRepository.obtenerTotalAsientos(autobusEditar.getId()),
