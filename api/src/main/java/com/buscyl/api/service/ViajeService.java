@@ -15,9 +15,13 @@ public interface ViajeService {
 
     ViajeResponse obtenerViaje(Long id, Long idOrigen, Long idDestino);
 
+    List<ViajeResponse> obtenerViajesUsuario();
+
+    ViajeResponse obtenerViajeUsuario(Long id);
+
     List<AsientoResponse> obtenerAsientosViaje(Long idViaje, Long idParadaOrigen, Long idParadaDestino);
 
-    List<ViajeResponse> crearViaje( ViajeCreateRequest request);
+    List<ViajeResponse> crearViaje(ViajeCreateRequest request);
 
     ViajeResponse actualizarViaje(Long id, ViajeUpdateRequest request);
 
