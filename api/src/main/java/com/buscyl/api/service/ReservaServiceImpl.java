@@ -54,9 +54,6 @@ public class ReservaServiceImpl implements ReservaService {
 
         @Override
         public ReservaResponse crearReserva(ReservaRequest request) {
-                LocalDateTime limiteReserva = LocalDateTime.now(
-                                ZoneId.of("Europe/Madrid")).plusMinutes(30);
-
                 JwtPrincipal principal = (JwtPrincipal) SecurityContextHolder
                                 .getContext()
                                 .getAuthentication()
@@ -84,10 +81,16 @@ public class ReservaServiceImpl implements ReservaService {
                 if (paradaOrigen.getLocalidad().getId() == paradaDestino.getLocalidad().getId()) {
                         throw new NoValidException("La localidad de origen no puede ser la localidad destino");
                 }
-
+                LocalDateTime ahora = LocalDateTime.now(ZoneId.of("Europe/Madrid"));
+                LocalDateTime limiteReserva = ahora.plusMinutes(30);
                 LocalDateTime fechaHoraSalida = LocalDateTime.of(
                                 viaje.getFechaViaje(),
                                 paradaOrigen.getHoraSalida());
+
+                if (ahora.isAfter(fechaHoraSalida)) {
+                        throw new NoValidException("No se puede reservar un viaje pasado");
+                }
+
                 if (!fechaHoraSalida.isAfter(limiteReserva)) {
                         throw new NoValidException(
                                         "La reserva debe realizarse al menos 30 minutos antes de la salida del viaje");
