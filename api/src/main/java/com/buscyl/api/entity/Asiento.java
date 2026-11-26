@@ -32,7 +32,7 @@ public class Asiento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "id_autobus", nullable = false)
     private Autobus autobus;
 
