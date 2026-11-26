@@ -98,7 +98,7 @@ public class Usuario implements UserDetails {
         return this.email;
     }
 
-    private void addAviso(Aviso aviso){
+    public void addAviso(Aviso aviso){
         this.avisos.add(aviso);
     }
 }
