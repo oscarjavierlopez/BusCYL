@@ -74,6 +74,9 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario")
     private List<Invitacion> invitaciones;
 
+    @OneToMany(mappedBy = "usuario")
+    private List<Aviso> avisos;
+
     @OneToMany(mappedBy = "conductor")
     private List<Viaje> viajesConducidos;
 
@@ -93,5 +96,9 @@ public class Usuario implements UserDetails {
     @Override
     public String getUsername() {
         return this.email;
+    }
+
+    public void addAviso(Aviso aviso){
+        this.avisos.add(aviso);
     }
 }
