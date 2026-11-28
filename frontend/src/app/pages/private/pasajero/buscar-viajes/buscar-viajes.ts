@@ -223,4 +223,11 @@ export class BuscarViajes implements OnInit {
     });
   }
 
+  reservarViaje(id:number): void {
+    this.router.navigate(["/private/viaje/reservar", id], {
+      queryParams: {idOrigen: this.origen(), idDestino: this.destino()}
+    }
+    )
+  }
+
 }

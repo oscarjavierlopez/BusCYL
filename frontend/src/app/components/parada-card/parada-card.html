@@ -1,0 +1,35 @@
+<article class="parada-card" [class.parada-card--origen]="tipo === 'origen'"
+  [class.parada-card--destino]="tipo === 'destino'">
+  <div class="parada-card__marcador" aria-hidden="true">
+    <i class="bi" [class.bi-box-arrow-right]="tipo === 'origen'" [class.bi-flag-fill]="tipo === 'destino'"></i>
+  </div>
+
+  <div class="parada-card__contenido">
+    <span class="parada-card__tipo">{{ tipo === 'origen' ? 'Origen' : 'Destino' }}</span>
+    <h3>{{ parada.localidad || 'Localidad no indicada' }}</h3>
+    <p>
+      <i class="bi bi-geo-alt" aria-hidden="true"></i>
+      <span>{{ parada.direccion || 'Dirección no indicada' }}</span>
+    </p>
+  </div>
+
+  @if (tipo === 'origen') {
+  <div class="parada-card__hora">
+    <i class="bi bi-clock" aria-hidden="true"></i>
+    <span>
+      <small>Salida</small>
+      <strong>{{ parada.horaSalida ? parada.horaSalida.slice(0, 5) : '--:--' }}</strong>
+    </span>
+  </div>
+  }
+
+  @if (tipo === 'destino') {
+  <div class="parada-card__hora">
+    <i class="bi bi-clock" aria-hidden="true"></i>
+    <span>
+      <small>Llegada</small>
+      <strong>{{ parada.horaLlegada ? parada.horaLlegada.slice(0, 5) : '--:--' }}</strong>
+    </span>
+  </div>
+  }
+</article>

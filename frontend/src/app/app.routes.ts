@@ -66,6 +66,9 @@ export const routes: Routes = [
             {
                 path: 'viaje/:id', loadComponent: () => import('./pages/private/pasajero/viaje/viaje').then(m => m.Viaje),
             },
+            {
+                path: 'viaje/reservar/:id', loadComponent: () => import('./pages/private/pasajero/reservar-viaje/reservar-viaje').then(m => m.ReservarViaje),
+            },
         ],
     },
 ];

@@ -28,8 +28,18 @@ export class ViajesService {
     return this.httpClient.get<ViajesPaginados>(this.baseUrl, { params });
   }
 
-  obtenerViaje(id: number): Observable<Viaje> {
-    return this.httpClient.get<Viaje>(`${this.baseUrl}/${id}`);
+  obtenerViaje(id: number, idOrigen?: number, idDestino?: number): Observable<Viaje> {
+    let params = new HttpParams();
+
+    if (idOrigen !== undefined) {
+      params = params.set('idOrigen', idOrigen);
+    }
+
+    if (idDestino !== undefined) {
+      params = params.set('idDestino', idDestino);
+    }
+
+    return this.httpClient.get<Viaje>(`${this.baseUrl}/${id}`, { params });
   }
 
   obtenerViajesUsuario(): Observable<Viaje[]> {

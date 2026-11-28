@@ -10,14 +10,10 @@ import { toast, NgxSonnerToaster } from 'ngx-sonner';
 import { Location } from '@angular/common';
 import { obtenerMensajeErrorAutenticacion } from '../../../../utils/auth-error-message';
 import { HttpErrorResponse } from '@angular/common/http';
+import { organizarAsientosEnFilas } from '../../../../utils/asientos-layout';
 
 type Estado = "No averiado" | "averiado";
 type Tipo = "normal" | "adaptado";
-
-interface FilaAsientos {
-  asientos: Asiento[];
-  ultima: boolean;
-}
 
 @Component({
   selector: 'app-crear-autobus',
@@ -35,7 +31,7 @@ export class CrearAutobus implements OnInit {
   asientos = signal<Asiento[]>([]);
   tipo = signal<Tipo>("normal");
   estado = signal<Estado>("No averiado");
-  filasAsientos = computed<FilaAsientos[]>(() => this.organizarAsientosEnFilas(this.asientos()));
+  filasAsientos = computed(() => organizarAsientosEnFilas(this.asientos()));
   numeroAsientosAdaptados = computed(() => this.asientos().filter((asiento) => asiento.tipo === 'adaptado').length);
   numeroAsientosAveriados = computed(() => this.asientos().filter((asiento) => !asiento.activo).length);
 
@@ -93,28 +89,6 @@ export class CrearAutobus implements OnInit {
 
       return [...asientos, ...nuevosAsientos];
     });
-  }
-
-  private organizarAsientosEnFilas(asientos: Asiento[]): FilaAsientos[] {
-    const asientosPorFila = 4;
-    let plazasUltimaFila = asientos.length % asientosPorFila;
-
-    if (plazasUltimaFila === 1 && asientos.length > 5) {
-      plazasUltimaFila = 5;
-    }
-
-    const plazasFilasCompletas = asientos.length - plazasUltimaFila;
-    const filas: FilaAsientos[] = [];
-
-    for (let indice = 0; indice < plazasFilasCompletas; indice += asientosPorFila) {
-      filas.push({ asientos: asientos.slice(indice, indice + asientosPorFila), ultima: false });
-    }
-
-    if (plazasUltimaFila > 0) {
-      filas.push({ asientos: asientos.slice(plazasFilasCompletas), ultima: true });
-    }
-
-    return filas;
   }
 
   submit(): void {

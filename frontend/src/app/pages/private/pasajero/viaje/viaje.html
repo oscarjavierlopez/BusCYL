@@ -55,13 +55,13 @@
       </header>
       @if (paradasOrdenadas().length) {
         <ol class="paradas">
-          @for (parada of paradasOrdenadas(); track parada.id ?? parada.orden) {
+          @for (parada of paradasOrdenadas(); track parada.id ?? parada.orden; let ultima = $last) {
             <li>
               <h3>{{ parada.localidad }}</h3>
               <p>{{ parada.direccion }}</p>
               <dl class="horarios">
                 <div><dt>Llegada</dt><dd>{{ formatearHora(parada.horaLlegada) }}</dd></div>
-                @if (parada.horaSalida) {
+                @if (!ultima && parada.horaSalida) {
                   <div><dt>Salida</dt><dd>{{ formatearHora(parada.horaSalida) }}</dd></div>
                 }
               </dl>

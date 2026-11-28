@@ -69,6 +69,14 @@
   </div>
   }
 
+  @if (usuario.rol == "pasajero" && viajeFuturo && permitirDesplegar()) {
+  <div class="viaje-card__acciones" aria-label="Acciones del viaje">
+    <button type="button" class="viaje-card__accion viaje-card__accion--reservar" (click)="reservarViaje(viaje.id!)">
+      Reservar viaje
+    </button>
+  </div>
+  }
+
   @if (permitirDesplegar() && desplegado()) {
   <section class="viaje-card__detalle" aria-label="Paradas del trayecto">
     <h2><i class="bi bi-signpost-split-fill" aria-hidden="true"></i> Paradas del trayecto</h2>

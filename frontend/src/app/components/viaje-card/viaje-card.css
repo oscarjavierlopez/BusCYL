@@ -189,6 +189,21 @@
   background: #217a43;
 }
 
+.viaje-card__accion--reservar {
+  width: auto;
+  height: auto;
+  min-height: 2.4rem;
+  padding: 0.45rem 0.9rem;
+  color: #ffffff;
+  background: #bd1934;
+  border-color: #bd1934;
+}
+
+.viaje-card__accion--reservar:hover {
+  background: #941126;
+  border-color: #941126;
+}
+
 .viaje-card__accion:focus-visible {
   outline: 0.2rem solid #1a73a8;
   outline-offset: 0.15rem;

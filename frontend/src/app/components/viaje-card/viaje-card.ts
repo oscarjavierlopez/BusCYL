@@ -15,6 +15,7 @@ export class ViajeCard implements OnInit{
   usuario!: AuthResponse;
   @Output() viajeDesactivado = new EventEmitter<number>();
   @Output() viajeActivado = new EventEmitter<number>();
+  @Output() viajeReservar = new EventEmitter<number>();
   permitirDesplegar = input(true);
 
   ngOnInit(): void {
@@ -35,6 +36,12 @@ export class ViajeCard implements OnInit{
     const fechaHoraSalida = this.crearFechaHoraSalida();
 
     return fechaHoraSalida !== null && fechaHoraSalida.getTime() < Date.now();
+  }
+
+  get viajeFuturo(): boolean {
+    const fechaHoraSalida = this.crearFechaHoraSalida();
+
+    return fechaHoraSalida !== null && fechaHoraSalida.getTime() > Date.now();
   }
 
   alternarParadas(): void {
@@ -94,5 +101,9 @@ export class ViajeCard implements OnInit{
 
   activarViaje(id:number):void{
     this.viajeActivado.emit(id);
+  }
+
+  reservarViaje(id:number): void{
+    this.viajeReservar.emit(id);
   }
 }
