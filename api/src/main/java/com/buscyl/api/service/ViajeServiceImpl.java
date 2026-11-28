@@ -747,7 +747,7 @@ public class ViajeServiceImpl implements ViajeService {
 
                 List<Reserva> reservas = reservaRepository.obtenerReservasPasajero(idUsuario);
                 Reserva reserva = reservas.stream()
-                                .filter(r -> r.getViaje().getId() == id)
+                                .filter(r -> Objects.equals(r.getViaje().getId(), id))
                                 .findFirst()
                                 .orElseThrow(() -> new NotFoundException("El pasajero no tiene ese viaje reservado"));
 

@@ -135,7 +135,7 @@ export class Viaje implements OnInit {
         next: () => {
           toast.success("Reserva cancelada");
           setTimeout(() => {
-            this.location.back();
+            this.router.navigate(["/private/misViajes"]);
           }, 1000);
         }
       })
