@@ -44,6 +44,7 @@ import com.buscyl.api.repository.UsuarioRepository;
 import com.buscyl.api.repository.ViajeRepository;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Email;
 
 @Service
 public class ViajeServiceImpl implements ViajeService {
@@ -68,6 +69,9 @@ public class ViajeServiceImpl implements ViajeService {
 
         @Autowired
         private ReservaRepository reservaRepository;
+
+        @Autowired
+        private EmailService emailService;
 
         @Override
         public ViajesResponse obtenerViajes(int pagina, Long idOrigen, Long idDestino, LocalDate fecha) {
@@ -424,6 +428,20 @@ public class ViajeServiceImpl implements ViajeService {
 
                 viaje.setActivo(false);
                 viajeRepository.save(viaje);
+
+                for (Reserva reserva : viaje.getReservas()) {
+                        String destinatario = reserva.getPasajero().getEmail();
+                        String nombreDestinatario = reserva.getPasajero().getNombre();
+                        String localidadOrigen = reserva.getParadaOrigen().getLocalidad().getNombre();
+                        String localidadDestino = reserva.getParadaDestino().getLocalidad().getNombre();
+                        String asunto = "Cancelación de viaje";
+                        String cuerpo = "Estimado " + nombreDestinatario + " le informamos de que su viaje "
+                                        + localidadOrigen + "-" + localidadDestino + " del " + viaje.getFechaViaje()
+                                        + " ha sido suspendido.\n" +
+                                        "Disculpe las molestias.";
+
+                        emailService.enviarEmail(destinatario, asunto, cuerpo);
+                }
         }
 
         @Override
@@ -729,7 +747,7 @@ public class ViajeServiceImpl implements ViajeService {
 
                 List<Reserva> reservas = reservaRepository.obtenerReservasPasajero(idUsuario);
                 Reserva reserva = reservas.stream()
-                                .filter(r -> r.getViaje().getId() == id)
+                                .filter(r -> Objects.equals(r.getViaje().getId(), id))
                                 .findFirst()
                                 .orElseThrow(() -> new NotFoundException("El pasajero no tiene ese viaje reservado"));
 
