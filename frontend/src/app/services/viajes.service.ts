@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Asiento } from '../models/asiento';
 import { Viaje } from '../models/viaje';
 import { ViajesPaginados } from '../models/viajes-paginados';
 
@@ -27,8 +28,38 @@ export class ViajesService {
     return this.httpClient.get<ViajesPaginados>(this.baseUrl, { params });
   }
 
-  obtenerViaje(id: number): Observable<Viaje> {
-    return this.httpClient.get<Viaje>(`${this.baseUrl}/${id}`);
+  obtenerViaje(id: number, idOrigen?: number, idDestino?: number): Observable<Viaje> {
+    let params = new HttpParams();
+
+    if (idOrigen !== undefined) {
+      params = params.set('idOrigen', idOrigen);
+    }
+
+    if (idDestino !== undefined) {
+      params = params.set('idDestino', idDestino);
+    }
+
+    return this.httpClient.get<Viaje>(`${this.baseUrl}/${id}`, { params });
+  }
+
+  obtenerViajesUsuario(): Observable<Viaje[]> {
+    return this.httpClient.get<Viaje[]>(`${this.baseUrl}/me`);
+  }
+
+  obtenerViajeUsuario(id: number): Observable<Viaje> {
+    return this.httpClient.get<Viaje>(`${this.baseUrl}/me/${id}`);
+  }
+
+  obtenerAsientosViaje(
+    id: number,
+    idParadaOrigen: number,
+    idParadaDestino: number,
+  ): Observable<Asiento[]> {
+    const params = new HttpParams()
+      .set('idParadaOrigen', idParadaOrigen)
+      .set('idParadaDestino', idParadaDestino);
+
+    return this.httpClient.get<Asiento[]>(`${this.baseUrl}/${id}/asientos`, { params });
   }
 
   crearViaje(viaje: Viaje): Observable<Viaje[]> {

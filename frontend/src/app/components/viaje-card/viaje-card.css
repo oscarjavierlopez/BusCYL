@@ -36,6 +36,13 @@
   background: #fafafa;
 }
 
+.viaje-card__resumen--estatico,
+.viaje-card__resumen--estatico:hover {
+  cursor: default;
+  background: #ffffff;
+  opacity: 1;
+}
+
 .viaje-card__resumen:focus-visible {
   outline: 0.2rem solid #1a73a8;
   outline-offset: -0.2rem;
@@ -100,6 +107,14 @@
 
 .viaje-card__recorrido i {
   font-size: 1.75rem;
+}
+
+.viaje-card__fecha {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  margin-top: 1.25rem;
+  color: #4a4a4a;
 }
 
 .viaje-card__empresa {
@@ -172,6 +187,21 @@
 
 .viaje-card__accion--activar:hover {
   background: #217a43;
+}
+
+.viaje-card__accion--reservar {
+  width: auto;
+  height: auto;
+  min-height: 2.4rem;
+  padding: 0.45rem 0.9rem;
+  color: #ffffff;
+  background: #bd1934;
+  border-color: #bd1934;
+}
+
+.viaje-card__accion--reservar:hover {
+  background: #941126;
+  border-color: #941126;
 }
 
 .viaje-card__accion:focus-visible {

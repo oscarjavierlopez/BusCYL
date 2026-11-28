@@ -60,6 +60,15 @@ export const routes: Routes = [
             {
                 path: 'viajes/pasajero/buscar', loadComponent: () => import('./pages/private/pasajero/buscar-viajes/buscar-viajes').then(m => m.BuscarViajes),
             },
+            {
+                path: 'misViajes', loadComponent: () => import('./pages/private/pasajero/mis-viajes/mis-viajes').then(m => m.MisViajes),
+            },
+            {
+                path: 'viaje/:id', loadComponent: () => import('./pages/private/pasajero/viaje/viaje').then(m => m.Viaje),
+            },
+            {
+                path: 'viaje/reservar/:id', loadComponent: () => import('./pages/private/pasajero/reservar-viaje/reservar-viaje').then(m => m.ReservarViaje),
+            },
         ],
     },
 ];

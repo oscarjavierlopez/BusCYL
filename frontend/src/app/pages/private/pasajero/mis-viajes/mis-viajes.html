@@ -1,0 +1,25 @@
+<section class="mis-viajes" aria-labelledby="mis-viajes-title">
+  <header class="mis-viajes__cabecera">
+    <h1 id="mis-viajes-title">Próximos Viajes</h1>
+  </header>
+
+  @if (loading()) {
+    <app-cargador-viajes [cargando]="true" />
+  } @else if (viajes().length === 0) {
+    <section class="mis-viajes__vacio" aria-live="polite">
+      <i class="bi bi-calendar-x" aria-hidden="true"></i>
+      <h2>No tienes viajes previstos</h2>
+      <p>Empieza un nuevo viaje con BusCyL</p>
+      <a routerLink="/private/viajes/pasajero/buscar">Reservar viajes</a>
+    </section>
+  } @else {
+    <div class="mis-viajes__listado" aria-live="polite">
+      @for (viaje of viajes(); track viaje.id) {
+        <a [routerLink]="['/private/viaje', viaje.id]">
+        <app-viaje-card [viaje]="viaje" [permitirDesplegar]="false" />
+        </a>
+      }
+    </div>
+  }
+  <ngx-sonner-toaster position="bottom-right" />
+</section>

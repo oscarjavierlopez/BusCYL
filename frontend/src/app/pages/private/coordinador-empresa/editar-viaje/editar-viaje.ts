@@ -125,7 +125,7 @@ export class EditarViaje implements OnInit {
           this.localidadesService.obtenerLocalidades().subscribe({
             next: (localidades) => {
               this.localidades.set(localidades);
-              this.cargarParadas(this.viaje.paradas);
+              this.cargarParadas(this.viaje.paradas!);
               this.editarViajeForm.patchValue({
                 idOrigen: this.obtenerLocalidad(this.viaje.origen!).id,
                 idDestino: this.obtenerLocalidad(this.viaje.destino!).id,

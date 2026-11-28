@@ -1,6 +1,9 @@
-<article class="viaje-card" [class.viaje-card--desplegado]="desplegado()"
+<article class="viaje-card" [class.viaje-card--desplegado]="permitirDesplegar() && desplegado()"
   [class.viaje-card--no-disponible]="viajeNoDisponible">
-  <button type="button" class="viaje-card__resumen" [attr.aria-expanded]="desplegado()" (click)="alternarParadas()">
+  <div class="viaje-card__resumen" [class.viaje-card__resumen--estatico]="!permitirDesplegar()"
+    [attr.role]="permitirDesplegar() ? 'button' : null" [attr.tabindex]="permitirDesplegar() ? 0 : null"
+    [attr.aria-expanded]="permitirDesplegar() ? desplegado() : null" (click)="alternarParadas()"
+    (keydown.enter)="alternarParadas()" (keydown.space)="$event.preventDefault(); alternarParadas()">
     <span class="viaje-card__trayecto">
       <span class="viaje-card__localidad viaje-card__localidad--origen">
         <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
@@ -25,6 +28,13 @@
       </span>
     </span>
 
+    @if (!permitirDesplegar()) {
+    <span class="viaje-card__fecha">
+      <i class="bi bi-calendar-event" aria-hidden="true"></i>
+      <span><strong>Fecha:</strong> {{ formatearFecha(viaje.fecha) }}</span>
+    </span>
+    }
+
     @if (usuario.rol == "pasajero") {
     <span class="viaje-card__empresa">
       <i class="bi bi-buildings-fill" aria-hidden="true"></i>
@@ -32,10 +42,12 @@
     </span>
     }
 
+    @if (permitirDesplegar()) {
     <span class="viaje-card__toggle" [attr.aria-label]="desplegado() ? 'Ocultar paradas' : 'Ver paradas'">
       <i class="bi" [class.bi-chevron-up]="desplegado()" [class.bi-chevron-down]="!desplegado()" aria-hidden="true"></i>
     </span>
-  </button>
+    }
+  </div>
 
   @if (usuario.rol == "coordinador empresa") {
   <div class="viaje-card__acciones" aria-label="Acciones del viaje">
@@ -57,7 +69,15 @@
   </div>
   }
 
-  @if (desplegado()) {
+  @if (usuario.rol == "pasajero" && viajeFuturo && permitirDesplegar()) {
+  <div class="viaje-card__acciones" aria-label="Acciones del viaje">
+    <button type="button" class="viaje-card__accion viaje-card__accion--reservar" (click)="reservarViaje(viaje.id!)">
+      Reservar viaje
+    </button>
+  </div>
+  }
+
+  @if (permitirDesplegar() && desplegado()) {
   <section class="viaje-card__detalle" aria-label="Paradas del trayecto">
     <h2><i class="bi bi-signpost-split-fill" aria-hidden="true"></i> Paradas del trayecto</h2>
 

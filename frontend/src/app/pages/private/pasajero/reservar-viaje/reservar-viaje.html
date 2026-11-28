@@ -1,0 +1,135 @@
+<section class="reserva-viaje" aria-labelledby="reserva-viaje-title">
+    @if (paso() < 3) {}
+    <header class="reserva-viaje__encabezado">
+        <h1 id="reserva-viaje-title">Reservar viaje</h1>
+    </header>
+
+    @switch (paso()) {
+    @case (1) {
+    <form class="reserva-viaje__formulario" novalidate>
+        <section class="reserva-viaje__grupo" aria-labelledby="origen-title">
+            <div class="reserva-viaje__grupo-encabezado">
+                <h2 id="origen-title">Parada de origen</h2>
+                <p>Elija dónde iniciará su viaje.</p>
+            </div>
+
+            <div class="reserva-viaje__opciones">
+                @for (parada of paradasOrigen(); track parada.id ?? parada.orden) {
+                <button type="button" class="reserva-viaje__opcion"
+                    [class.reserva-viaje__opcion--seleccionada]="idParadaOrigen() === parada.id"
+                    [attr.aria-pressed]="idParadaOrigen() === parada.id" (click)="seleccionarParadaOrigen(parada.id!)">
+                    <app-parada-card [parada]="parada" tipo="origen"></app-parada-card>
+                </button>
+                }
+            </div>
+        </section>
+
+        <section class="reserva-viaje__grupo" aria-labelledby="destino-title">
+            <div class="reserva-viaje__grupo-encabezado">
+                <h2 id="destino-title">Parada de destino</h2>
+                <p>Elija dónde finalizará su viaje.</p>
+            </div>
+
+            <div class="reserva-viaje__opciones">
+                @for (parada of paradasDestino(); track parada.id ?? parada.orden) {
+                <button type="button" class="reserva-viaje__opcion"
+                    [class.reserva-viaje__opcion--seleccionada]="idParadaDestino() === parada.id"
+                    [attr.aria-pressed]="idParadaDestino() === parada.id"
+                    (click)="seleccionarParadaDestino(parada.id!)">
+                    <app-parada-card [parada]="parada" tipo="destino"></app-parada-card>
+                </button>
+                }
+            </div>
+        </section>
+
+        @if (mostrarMensajeError()) {
+        <p class="reserva-viaje__error" role="alert">{{ mensajeError() }}</p>
+        }
+
+        <div class="reserva-viaje__acciones">
+            <button type="button" class="reserva-viaje__boton reserva-viaje__boton--cancelar" (click)="goBack()">
+                Cancelar
+            </button>
+            <button type="button" class="reserva-viaje__boton reserva-viaje__boton--siguiente"
+                (click)="siguientePaso()">
+                Siguiente
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            </button>
+        </div>
+    </form>
+    }
+    @case (2) {
+    <section class="reserva-asientos" aria-labelledby="reserva-asientos-title">
+        <header class="reserva-asientos__encabezado">
+            <h2 id="reserva-asientos-title">Seleccione su asiento</h2>
+            <p>Elija su plaza.</p>
+        </header>
+
+        <div class="reserva-asientos__plano" aria-label="Plano de asientos del autobús">
+            <div class="reserva-asientos__interior">
+                @for (fila of filasAsientos(); track $index) {
+                <div class="reserva-asientos__fila" [class.reserva-asientos__fila--ultima]="fila.ultima">
+                    @for (asiento of fila.asientos; track asiento.id ?? asiento.numero; let indice = $index) {
+                    @if (!fila.ultima && indice === 2) {
+                    <span class="reserva-asientos__pasillo" aria-hidden="true"></span>
+                    }
+                    <button type="button" class="reserva-asientos__asiento"
+                        [class.reserva-asientos__asiento--adaptado]="asiento.tipo === 'adaptado'"
+                        [class.reserva-asientos__asiento--averiado]="!asiento.activo"
+                        [class.reserva-asientos__asiento--reservado]="asiento.reservado === true"
+                        [class.reserva-asientos__asiento--seleccionado]="idAsiento() === asiento.id"
+                        [disabled]="!asiento.activo || asiento.reservado === true"
+                        (click)="seleccionarAsiento(asiento.id!)" [attr.aria-label]="'Asiento ' + asiento.numero">
+                        <span>{{ asiento.numero }}</span>
+                        @if (asiento.tipo === 'adaptado') {
+                        <i class="bi bi-person-wheelchair" aria-hidden="true"></i>
+                        }
+                        @if (!asiento.activo) {
+                        <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+                        }
+                        @if (asiento.reservado === true) {
+                        <i class="bi bi-person-fill-lock" aria-hidden="true"></i>
+                        }
+                    </button>
+                    }
+                </div>
+                } @empty {
+                <p class="reserva-asientos__vacio">No hay asientos disponibles para este trayecto.</p>
+                }
+            </div>
+        </div>
+
+        @if (mostrarMensajeError()) {
+        <p class="reserva-viaje__error" role="alert">{{ mensajeError() }}</p>
+        }
+
+        <div class="reserva-viaje__acciones">
+            <button type="button" class="reserva-viaje__boton reserva-viaje__boton--cancelar" (click)="goBack()">
+                Cancelar
+            </button>
+            <button type="button" class="reserva-viaje__boton reserva-viaje__boton--anterior" (click)="pasoAnterior()">
+                <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                Anterior
+            </button>
+            <button type="button" class="reserva-viaje__boton reserva-viaje__boton--reservar" (click)="reservar()">
+                Reservar
+            </button>
+        </div>
+    </section>
+    }
+    @case (3) {
+    <section class="reserva-confirmada" aria-labelledby="reserva-confirmada-title">
+        <div class="reserva-confirmada__contenido">
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            <h2 id="reserva-confirmada-title">Reserva realizada correctamente</h2>
+            <p>Su reserva se ha realizado de manera exitosa gracias por confiar en BusCyL.</p>
+            @if (reserva(); as reserva) {
+            <a class="reserva-confirmada__enlace" [routerLink]="['/private/viaje', reserva.viaje]">
+                Ver reserva
+            </a>
+            }
+        </div>
+    </section>
+    }
+    }
+</section>

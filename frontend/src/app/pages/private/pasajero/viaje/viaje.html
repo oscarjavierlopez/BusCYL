@@ -1,0 +1,78 @@
+@if (loading()) {
+  <app-cargador-viajes [cargando]="true" />
+} @else if (viaje(); as viaje) {
+  <section class="detalle" aria-labelledby="titulo-billete">
+    <header class="cabecera">
+      <div class="cabecera__fila">
+        <h1 id="titulo-billete">Detalle del billete</h1>
+        <div class="cabecera__acciones">
+          <button type="button" class="cabecera__cancelar" aria-label="Cancelar viaje" title="Cancelar viaje" (click)="cancelarReserva()">
+            <i class="bi bi-three-dots" aria-hidden="true"></i>
+          </button>
+          <a routerLink="/private/misViajes" aria-label="Volver a mis viajes"><i class="bi bi-x-lg" aria-hidden="true"></i></a>
+        </div>
+      </div>
+      @if (fechaBillete(); as fecha) {
+        <time [attr.datetime]="viaje.fecha">{{ fecha }}</time>
+      }
+    </header>
+
+    <article class="billete" aria-label="Billete de autobús">
+      <div class="marca"><i class="bi bi-bus-front-fill" aria-hidden="true"></i> BusCyL</div>
+      <div class="cuerpo">
+        @if (pasajero(); as usuario) {
+          <p class="titular">{{ usuario.nombre }} {{ usuario.apellidos }}</p>
+        }
+        @if (viaje.empresa) {
+          <p class="empresa">{{ viaje.empresa }}</p>
+        }
+        <div class="espacio-qr" aria-hidden="true"></div>
+
+        <div class="trayecto">
+          <div><span>Origen</span><strong>{{ viaje.origen }}</strong><time>{{ formatearHora(viaje.horaSalida) }}</time></div>
+          <i class="bi bi-chevron-right" aria-hidden="true"></i>
+          <div><span>Destino</span><strong>{{ viaje.destino }}</strong><time>{{ formatearHora(viaje.horaLLegada ?? viaje.horaLlegada) }}</time></div>
+        </div>
+        <button class="ver-detalles" type="button" aria-haspopup="dialog" (click)="itinerario.showModal()">
+          <i class="bi bi-info-circle" aria-hidden="true"></i> Ver detalles del trayecto
+        </button>
+        <dl class="resumen">
+          <div><dt><i class="bi bi-bus-front" aria-hidden="true"></i></dt><dd>{{ viaje.autobus?.matricula ?? '—' }}</dd></div>
+          <div><dt><i class="bi bi-clock" aria-hidden="true"></i></dt><dd>{{ obtenerDuracion(viaje) }}</dd></div>
+          <div><dt><img src="assets/asiento.svg" alt="" /></dt><dd>{{ viaje.asiento ?? '—' }}</dd></div>
+        </dl>
+      </div>
+    </article>
+  </section>
+
+  <dialog #itinerario aria-labelledby="titulo-itinerario" (click)="$event.target === itinerario && itinerario.close()">
+    <section class="panel">
+      <header>
+        <h2 id="titulo-itinerario">Detalles del trayecto</h2>
+        <button type="button" autofocus aria-label="Cerrar detalles del trayecto" (click)="itinerario.close()">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </header>
+      @if (paradasOrdenadas().length) {
+        <ol class="paradas">
+          @for (parada of paradasOrdenadas(); track parada.id ?? parada.orden; let ultima = $last) {
+            <li>
+              <h3>{{ parada.localidad }}</h3>
+              <p>{{ parada.direccion }}</p>
+              <dl class="horarios">
+                <div><dt>Llegada</dt><dd>{{ formatearHora(parada.horaLlegada) }}</dd></div>
+                @if (!ultima && parada.horaSalida) {
+                  <div><dt>Salida</dt><dd>{{ formatearHora(parada.horaSalida) }}</dd></div>
+                }
+              </dl>
+            </li>
+          }
+        </ol>
+      } @else {
+        <p>No hay paradas disponibles para este trayecto.</p>
+      }
+    </section>
+  </dialog>
+}
+
+<ngx-sonner-toaster position="bottom-right" />

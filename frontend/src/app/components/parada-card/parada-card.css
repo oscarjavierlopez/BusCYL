@@ -1,0 +1,115 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.parada-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  min-height: 6.5rem;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 1rem 1.25rem;
+  color: #292929;
+  background: #ffffff;
+  border: 0.1rem solid #b6b6b6;
+  border-radius: 0.5rem;
+}
+
+.parada-card__marcador {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  color: #bd1934;
+  font-size: 1.3rem;
+  background: #fff1f3;
+  border-radius: 50%;
+}
+
+.parada-card--destino .parada-card__marcador {
+  color: #ffffff;
+  background: #bd1934;
+}
+
+.parada-card__contenido {
+  min-width: 0;
+}
+
+.parada-card__tipo {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #6b6b6b;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.parada-card__contenido h3 {
+  overflow: hidden;
+  margin: 0;
+  font-size: 1.1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.parada-card__contenido p {
+  display: flex;
+  gap: 0.4rem;
+  align-items: flex-start;
+  margin: 0.4rem 0 0;
+  color: #4a4a4a;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.parada-card__contenido p i {
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+  color: #bd1934;
+}
+
+.parada-card__hora {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  min-width: 5.4rem;
+  padding-left: 1rem;
+  color: #292929;
+  border-left: 0.1rem solid #d8d8d8;
+}
+
+.parada-card__hora > i {
+  color: #bd1934;
+  font-size: 1.1rem;
+}
+
+.parada-card__hora span {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.parada-card__hora small {
+  color: #6b6b6b;
+  font-size: 0.78rem;
+}
+
+.parada-card__hora strong {
+  font-size: 1.05rem;
+}
+
+@media (max-width: 32rem) {
+  .parada-card {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.8rem;
+    padding: 1rem;
+  }
+
+  .parada-card__hora {
+    grid-column: 2;
+    padding: 0.75rem 0 0;
+    border-top: 0.1rem solid #d8d8d8;
+    border-left: 0;
+  }
+}

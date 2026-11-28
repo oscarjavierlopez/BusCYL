@@ -707,6 +707,7 @@ public class ViajeServiceImpl implements ViajeService {
                                         .horaSalida(reserva.getParadaOrigen().getHoraLlegada())
                                         .horaLLegada(reserva.getParadaDestino().getHoraLlegada())
                                         .asiento(reserva.getAsiento().getNumero())
+                                        .reserva(reserva.getId())
                                         .build();
 
                         viajes.add(viaje);
@@ -749,6 +750,7 @@ public class ViajeServiceImpl implements ViajeService {
                                 .horaLLegada(reserva.getParadaDestino().getHoraLlegada())
                                 .paradas(paradas)
                                 .asiento(reserva.getAsiento().getNumero())
+                                .reserva(reserva.getId())
                                 .build();
         }
 

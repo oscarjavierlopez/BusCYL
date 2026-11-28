@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, input, Input, OnInit, Output, signal } from '@angular/core';
 import { Viaje } from '../../models/viaje';
 import { Parada } from '../../models/parada';
 import { AuthResponse } from '../../models/auth-response';
@@ -15,6 +15,8 @@ export class ViajeCard implements OnInit{
   usuario!: AuthResponse;
   @Output() viajeDesactivado = new EventEmitter<number>();
   @Output() viajeActivado = new EventEmitter<number>();
+  @Output() viajeReservar = new EventEmitter<number>();
+  permitirDesplegar = input(true);
 
   ngOnInit(): void {
     this.usuario = JSON.parse(localStorage.getItem("usuario")!);
@@ -23,7 +25,7 @@ export class ViajeCard implements OnInit{
   desplegado = signal(false);
 
   get paradasOrdenadas(): Parada[] {
-    return [...this.viaje.paradas].sort((paradaA, paradaB) => paradaA.orden - paradaB.orden);
+    return [...(this.viaje.paradas ?? [])].sort((paradaA, paradaB) => paradaA.orden - paradaB.orden);
   }
 
   get viajeNoDisponible(): boolean {
@@ -36,12 +38,31 @@ export class ViajeCard implements OnInit{
     return fechaHoraSalida !== null && fechaHoraSalida.getTime() < Date.now();
   }
 
+  get viajeFuturo(): boolean {
+    const fechaHoraSalida = this.crearFechaHoraSalida();
+
+    return fechaHoraSalida !== null && fechaHoraSalida.getTime() > Date.now();
+  }
+
   alternarParadas(): void {
+    if (!this.permitirDesplegar()) {
+      return;
+    }
+
     this.desplegado.update((desplegado) => !desplegado);
   }
 
   formatearHora(hora?: string): string {
     return hora ? hora.slice(0, 5) : '-';
+  }
+
+  formatearFecha(fecha?: string): string {
+    if (!fecha) {
+      return '-';
+    }
+
+    const partes = /^(\d{4})-(\d{2})-(\d{2})$/.exec(fecha);
+    return partes ? `${partes[3]}/${partes[2]}/${partes[1]}` : fecha;
   }
 
   private crearFechaHoraSalida(): Date | null {
@@ -80,5 +101,9 @@ export class ViajeCard implements OnInit{
 
   activarViaje(id:number):void{
     this.viajeActivado.emit(id);
+  }
+
+  reservarViaje(id:number): void{
+    this.viajeReservar.emit(id);
   }
 }

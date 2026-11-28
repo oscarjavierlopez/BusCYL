@@ -109,7 +109,7 @@
   } @else if (viajesPaginados(); as paginaViajes) {
     <div class="viajes-resultados" aria-live="polite">
       @for (viaje of paginaViajes.viajes; track viaje.id) {
-        <app-viaje-card [viaje]="viaje"></app-viaje-card>
+        <app-viaje-card [viaje]="viaje" (viajeReservar)="reservarViaje($event)"></app-viaje-card>
       } @empty {
         <p class="viajes-sin-resultados">No hay viajes disponibles para los criterios seleccionados.</p>
       }

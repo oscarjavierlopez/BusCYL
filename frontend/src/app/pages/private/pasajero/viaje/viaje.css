@@ -1,0 +1,323 @@
+:host {
+  --rojo: #bd1934;
+  --tinta: #292929;
+  --secundario: #575757;
+  --separador: #d8d8d8;
+  display: block;
+  color: var(--tinta);
+}
+
+.detalle {
+  box-sizing: border-box;
+  width: min(100%, 31rem);
+  margin: auto;
+  padding: clamp(1rem, 3vw, 2rem) 1rem 2rem;
+}
+
+.cabecera {
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.cabecera__fila {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.cabecera__fila h1 {
+  grid-column: 2;
+}
+
+.cabecera__acciones {
+  display: flex;
+  grid-column: 3;
+  justify-content: flex-end;
+  align-items: center;
+  gap: .25rem;
+}
+
+.cabecera__cancelar {
+  min-height: 2.75rem;
+  padding: .5rem .75rem;
+  color: var(--rojo);
+  background: #fff;
+  border: 0px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cabecera__cancelar:hover {
+  color: #fff;
+  background: var(--rojo);
+}
+
+.cabecera h1,
+.panel h2,
+.paradas h3,
+.resumen dd,
+.horarios dd {
+  margin: 0;
+}
+
+.cabecera h1 {
+  font-size: clamp(1.3rem, 4vw, 1.75rem);
+}
+
+.cabecera time {
+  display: block;
+  margin-top: .45rem;
+  color: var(--secundario);
+}
+
+.cabecera time::first-letter {
+  text-transform: uppercase;
+}
+
+.cabecera a,
+.panel button,
+.ver-detalles {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0;
+  border: 0;
+  color: var(--rojo);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.cabecera a:hover {
+  color: #fff;
+  background: var(--rojo);
+}
+
+:where(a, button):focus-visible {
+  outline: 3px solid #1a73a8;
+  outline-offset: 2px;
+}
+
+.billete {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #dedede;
+  border-radius: .65rem;
+  box-shadow: 0 .3rem 1.2rem rgb(0 0 0 / 12%);
+  text-align: center;
+}
+
+.marca {
+  padding: .85rem;
+  border-bottom: 2px dotted var(--separador);
+  color: var(--rojo);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.cuerpo {
+  padding: 1rem clamp(.75rem, 4vw, 1.5rem);
+}
+
+.titular {
+  margin: 0;
+  font-weight: 750;
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.empresa {
+  margin: .25rem 0 0;
+  color: var(--secundario);
+}
+
+.espacio-qr {
+  width: 53%;
+  aspect-ratio: 1;
+  margin: 1.4rem auto;
+  background: #fff;
+}
+
+.trayecto {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: .8rem;
+  align-items: end;
+  max-width: 22rem;
+  margin: auto;
+  text-align: center;
+}
+
+.trayecto span,
+.trayecto strong,
+.trayecto time {
+  display: block;
+}
+
+.trayecto span {
+  font-size: .8rem;
+  color: var(--secundario);
+}
+
+.trayecto strong {
+  margin-block: .2rem;
+  overflow-wrap: anywhere;
+}
+
+.trayecto time {
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-weight: 750;
+}
+
+.trayecto>i {
+  align-self: center;
+  color: #767676;
+  font-size: 1.6rem;
+}
+
+.ver-detalles {
+  gap: .45rem;
+  margin-block: .35rem;
+  font-weight: 600;
+}
+
+.ver-detalles:hover {
+  text-decoration: underline;
+}
+
+.resumen {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .4rem;
+  margin: 0;
+  padding-block: .85rem .25rem;
+  border-top: 2px dotted var(--separador);
+}
+
+.resumen dt {
+  display: grid;
+  justify-items: center;
+  gap: .3rem;
+  color: var(--secundario);
+  font-size: .8rem;
+}
+
+.resumen i,
+.resumen img {
+  color: var(--rojo);
+  font-size: 1.5rem;
+  height: 1.6rem;
+}
+
+.resumen dd {
+  margin-top: .2rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+dialog {
+  box-sizing: border-box;
+  width: min(calc(100% - 2rem), 32rem);
+  max-height: 85dvh;
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  color: var(--tinta);
+  background: #fff;
+  border: 0;
+  border-radius: .65rem;
+  box-shadow: 0 .75rem 2rem rgb(0 0 0 / 20%);
+}
+
+dialog::backdrop {
+  background: rgb(20 20 20 / 55%);
+}
+
+.panel {
+  padding: 1rem clamp(1rem, 4vw, 1.75rem) 1.5rem;
+}
+
+.panel header {
+  display: flex;
+  gap: .75rem;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--separador);
+}
+
+.panel h2 {
+  font-size: 1.25rem;
+}
+
+.paradas {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+}
+
+.paradas li {
+  position: relative;
+  padding-inline-start: 1.7rem;
+}
+
+.paradas li:not(:last-child) {
+  padding-bottom: 1.25rem;
+}
+
+.paradas li:not(:last-child)::before {
+  position: absolute;
+  content: '';
+  inset: .6rem auto -.6rem .38rem;
+  border-left: 2px solid var(--rojo);
+}
+
+.paradas li::after {
+  position: absolute;
+  content: '';
+  box-sizing: border-box;
+  inset: .2rem auto auto 0;
+  width: .9rem;
+  height: .9rem;
+  background: white;
+  border: 2px solid var(--rojo);
+  border-radius: 50%;
+}
+
+.paradas li:first-child::after,
+.paradas li:last-child::after {
+  background: var(--rojo);
+}
+
+.paradas h3 {
+  font-size: 1.05rem;
+}
+
+.paradas p {
+  margin: .25rem 0 .55rem;
+  color: var(--secundario);
+  overflow-wrap: anywhere;
+}
+
+.horarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin: 0;
+}
+
+.horarios dt {
+  color: var(--secundario);
+  font-size: .85rem;
+}
+
+.horarios dd,
+.trayecto time {
+  font-variant-numeric: tabular-nums;
+}
+
+.horarios dd {
+  font-weight: 700;
+}
